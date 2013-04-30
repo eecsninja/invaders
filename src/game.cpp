@@ -70,6 +70,13 @@ namespace GameEntities {
    GameEntityTypeProperties Explosion::explosion_properties;
 }
 
+#define ALIEN_ARRAY_WIDTH    12
+#define ALIEN_ARRAY_HEIGHT    5
+#define ALIEN_BASE_X        100
+#define ALIEN_BASE_Y         90
+#define ALIEN_STEP_X         50
+#define ALIEN_STEP_Y         35
+
 namespace Game {
 
     void Game::game_control()
@@ -115,21 +122,23 @@ namespace Game {
     {
         alien_count = 0;
         // create a block of aliens (5 rows, by 12 columns), 800x600 res
-        for (int i = 0; i < 5; ++i) {
-            for (int j = 0; j < 12; ++j) {
+        for (int i = 0; i < ALIEN_ARRAY_HEIGHT; ++i) {
+            for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j) {
+                int alien_x = ALIEN_BASE_X+(j*ALIEN_STEP_X);
+                int alien_y = ALIEN_BASE_Y+(i*ALIEN_STEP_Y);
                 switch (i) {
                     case 4:
                     {
                         // initialize the bottom row of aliens to fire
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, true, this, alien_count+1, gen());
+                            new GameEntities::Alien(alien_x, alien_y, -speed, 0, true, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 3:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
@@ -137,14 +146,14 @@ namespace Game {
                     case 1:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien2(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien2(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 0:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien3(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien3(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
