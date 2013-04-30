@@ -43,7 +43,6 @@
 #include <SDL/SDL.h>
 #include <iostream>
 #include <ctime>
-#include <boost/assign/list_of.hpp>
 #include <sstream>
 
 static const int player_center = (screen_w - 43) / 2;
@@ -916,27 +915,26 @@ namespace Game {
     void Game::load_images()
     {
         // a list of image files are loaded into a map and keyed by filename
-        std::vector<const char*> image_list = boost::assign::list_of("ship.png") ("shot.png")
-            ("alien-1-1.png")  ("alien-1-2.png")  ("alien-1-3.png")  ("alien-1-4.png")
-            ("alien-2-1.png")  ("alien-2-2.png")  ("alien-2-3.png")  ("alien-2-4.png")
-            ("alien-3-1.png")  ("alien-3-2.png")  ("alien-3-3.png")  ("alien-3-4.png")
-            ("bonus-1-1.png")  ("bonus-1-2.png")  ("wave_background.png") ("background.png")
-            ("explosion.png") ("shield_piece.png") ("bonus-2-1.png") ("bonus-2-2.png")
-            ("ui_header.png") ("ui_points.png")
-        ;
+        const char* image_list[] = { "ship.png", "shot.png",
+            "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
+            "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
+            "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
+            "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
+            "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
+            "ui_header.png", "ui_points.png", NULL
+        };
 
-        typedef std::vector<const char*>::const_iterator Iter;
-        for (Iter it = image_list.begin(); it != image_list.end(); ++it) {
-            std::string path = datadir + *it;
+        for (int index = 0; image_list[index]; ++index) {
+            std::string path = datadir + image_list[index];
             SDL_Surface* temp = IMG_Load(path.c_str());
             if (temp == NULL) {
                 free_images();
                 std::ostringstream s;
-                s << "Unable to load image file: " << *it << '\n';
+                s << "Unable to load image file: " << image_list[index] << '\n';
                 throw s.str();
             }
             SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
-            image_cache[*it] = image;
+            image_cache[image_list[index]] = image;
             SDL_FreeSurface(temp);
         }
     }
