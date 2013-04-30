@@ -33,8 +33,8 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-#include "SDL_ttf.h"
-#include "SDL.h"
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL.h>
 #include <string>
 
 namespace Ui {

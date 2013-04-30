@@ -34,7 +34,7 @@
 #define GAME_ENTITY_H
 
 #include "game.h"
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include "screen.h"
 #include <boost/shared_ptr.hpp>
 

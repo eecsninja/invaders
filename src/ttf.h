@@ -33,8 +33,8 @@
 #ifndef TTF_H
 #define TTF_H
 
-#include "SDL_ttf.h"
-#include "SDL.h"
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL.h>
 #include <vector>
 
 namespace Ui {

@@ -33,7 +33,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 const int screen_w = 800;
 const int screen_h = 600;

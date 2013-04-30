@@ -35,7 +35,7 @@
 
 #include "ttf.h"
 #include "sound.h"
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include <vector>
 #include <string>
 

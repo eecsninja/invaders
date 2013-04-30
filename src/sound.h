@@ -33,7 +33,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include "SDL_mixer.h"
+#include <SDL/SDL_mixer.h>
 #include <vector>
 
 namespace Sound {

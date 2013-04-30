@@ -39,8 +39,8 @@
 #include "explosion.h"
 #include "shield_piece.h"
 #include "rand_num_gen.h"
-#include "SDL_image.h"
-#include "SDL.h"
+#include <SDL/SDL_image.h>
+#include <SDL/SDL.h>
 #include <iostream>
 #include <ctime>
 #include <boost/assign/list_of.hpp>

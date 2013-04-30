@@ -31,7 +31,7 @@
 */
 
 #include "game.h"
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include <sstream>
 
 SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
