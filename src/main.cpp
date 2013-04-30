@@ -61,13 +61,7 @@ int main(int argc, char* argv[])
             blits[i].src_rect = &src[i];
             blits[i].dst_rect = &dst[i];
         }
-#ifdef AUTOTOOLS_INSTALL
-            std::ostringstream s;
-            s << DATADIR << "/classic_invaders/";
-            datadir = s.str();
-#else
-            datadir = "data/";
-#endif
+        datadir = "data/";
         Game::Game game;
         game.game_control();
     }
