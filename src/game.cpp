@@ -125,40 +125,32 @@ namespace Game {
             for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j) {
                 int alien_x = ALIEN_BASE_X+(j*ALIEN_STEP_X);
                 int alien_y = ALIEN_BASE_Y+(i*ALIEN_STEP_Y);
+                bool active = false;
+                int type = 0;
                 switch (i) {
-                    case 4:
-                    {
-                        // initialize the bottom row of aliens to fire
-                        GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(1, alien_x, alien_y, -speed, 0, true, this, alien_count+1, gen());
-                        aliens.push_back(alien);
-                        break;
-                    }
-                    case 3:
-                    {
-                        GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(1, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
-                        aliens.push_back(alien);
-                        break;
-                    }
-                    case 2:
-                    case 1:
-                    {
-                        GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(2, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
-                        aliens.push_back(alien);
-                        break;
-                    }
-                    case 0:
-                    {
-                        GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(3, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
-                        aliens.push_back(alien);
-                        break;
-                    }
-                    default:
-                        break;
+                case 4:
+                    // initialize the bottom row of aliens to fire
+                    active = true;
+                    type = 1;
+                    break;
+                case 3:
+                    active = false;
+                    type = 1;
+                    break;
+                case 2:
+                case 1:
+                    active = false;
+                    type = 2;
+                    break;
+                case 0:
+                default:
+                    active = false;
+                    type = 3;
+                    break;
                 }
+                GameEntities::GameEntity* alien =
+                    new GameEntities::Alien(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
+                aliens.push_back(alien);
                 ++alien_count;
             }
         }
