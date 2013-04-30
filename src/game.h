@@ -41,6 +41,9 @@
 #include <vector>
 #include <SDL/SDL.h>
 
+#define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
+#define dumphex(x) printf("%s %u: %s = 0x%x\n", __func__, __LINE__, #x, (int)(x))
+
 typedef int (*generator_fun)(void);   // Used for generating random values.
 
 typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
