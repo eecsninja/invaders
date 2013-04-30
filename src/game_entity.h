@@ -46,7 +46,7 @@ namespace GameEntities {
     // When all instances of a class of GameEntity have the same properties,
     // use this struct to store the common property values and save memory.
     struct GameEntityTypeProperties {
-        uint32_t frame_duration;  // How much time before going to next frame.
+        uint16_t frame_duration;  // How much time before going to next frame.
         int points; // point value of individual objects
         // heights, widths, and coords used for reduced bounding box collision detection
         int coll_w, coll_h, coll_x_offset, coll_y_offset;
@@ -60,12 +60,13 @@ namespace GameEntities {
     protected:
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
-        bool active;
+        uint8_t active;
         Game::Game* game;
         SDL_Surface* image;
-        Uint32 frame_time_count; // control in place animation speed
-        int position, fire_chance; // used by Aliens to determine if and when to fire
-        bool hit; // used by Shot to avoid hitting more than one object
+        uint16_t frame_time_count; // control in place animation speed
+        uint16_t position;   // used by Aliens to determine if and when to fire
+        uint8_t fire_chance;
+        uint8_t hit; // used by Shot to avoid hitting more than one object
 
         GameEntityTypeProperties* type_properties;
     public:
