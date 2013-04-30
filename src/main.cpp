@@ -31,6 +31,7 @@
 */
 
 #include "game.h"
+#include <iostream>
 #include <SDL/SDL.h>
 #include <sstream>
 
