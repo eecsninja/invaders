@@ -33,30 +33,20 @@
 #ifndef RAN_NUM_GEN_H
 #define RAN_NUM_GEN_H
 
-#include <ctime>
+#include <stdlib.h>
 
-typedef boost::mt19937 base_generator_type;
-typedef boost::variate_generator<base_generator_type&, boost::uniform_int<> > generator_fun;
+#define CREATE_RAND_GENERATOR(name, min, max) \
+  int name ## _func() { return rand() % (max - min + 1) + min; } \
+  generator_fun name = name ## _func;
 
-// boost random number generator functions
-base_generator_type generator(static_cast<unsigned int>(std::time(0)));
-boost::uniform_int<> two(1,2);
-boost::uniform_int<> three(1,3);
-boost::uniform_int<> four(1,4);
-boost::uniform_int<> five(1,5);
-boost::uniform_int<> six(1,6);
-boost::uniform_int<> seven(1,7);
-boost::uniform_int<> eight(1,8);
-boost::uniform_int<> nine(1,9);
-boost::uniform_int<> ten(1,10);
-generator_fun gen1_2(generator, two);
-generator_fun gen1_3(generator, three);
-generator_fun gen1_4(generator, four);
-generator_fun gen1_5(generator, five);
-generator_fun gen1_6(generator, six);
-generator_fun gen1_7(generator, seven);
-generator_fun gen1_8(generator, eight);
-generator_fun gen1_9(generator, nine);
-generator_fun gen1_10(generator, ten);
+CREATE_RAND_GENERATOR(gen1_2, 1, 2);
+CREATE_RAND_GENERATOR(gen1_3, 1, 3);
+CREATE_RAND_GENERATOR(gen1_4, 1, 4);
+CREATE_RAND_GENERATOR(gen1_5, 1, 5);
+CREATE_RAND_GENERATOR(gen1_6, 1, 6);
+CREATE_RAND_GENERATOR(gen1_7, 1, 7);
+CREATE_RAND_GENERATOR(gen1_8, 1, 8);
+CREATE_RAND_GENERATOR(gen1_9, 1, 9);
+CREATE_RAND_GENERATOR(gen1_10, 1, 10);
 
 #endif  //RAN_NUM_GEN_H

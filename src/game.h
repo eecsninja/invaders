@@ -36,14 +36,12 @@
 #include "ui.h"
 #include "status.h"
 #include "sound.h"
-#include <boost/random.hpp>
 #include <list>
 #include <map>
 #include <vector>
 #include <SDL/SDL.h>
 
-typedef boost::mt19937 base_generator_type;
-typedef boost::variate_generator<base_generator_type&, boost::uniform_int<> > generator_fun;
+typedef int (*generator_fun)(void);   // Used for generating random values.
 
 typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
 
