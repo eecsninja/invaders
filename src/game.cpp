@@ -100,14 +100,14 @@ namespace Game {
         player_shot_counter = alien_shot_counter = explosion_counter = 0;
         factory();
         // output wave message and status display
-        ui.wave_msg(++wave);
-        sound.play_start_wave();
+        //ui.wave_msg(++wave);
+        //sound.play_start_wave();
         SDL_BlitSurface(wave_background, NULL, screen, NULL);
         SDL_UpdateRect(screen,0,0,0,0);
-        status.blit_wave(wave);
-        status.blit_score(score);
-        status.blit_lives(player_life);
-        status.blit_player_ships(player_life, get_image("ship.png"));
+        //status.blit_wave(wave);
+        //status.blit_score(score);
+        //status.blit_lives(player_life);
+        //status.blit_player_ships(player_life, get_image("ship.png"));
     }
     void Game::init_aliens(generator_fun& gen, int speed)
     {
@@ -307,7 +307,7 @@ namespace Game {
             last_loop_time = SDL_GetTicks();
 
             // background track
-            sound.play_bg(alien_count);
+            //sound.play_bg(alien_count);
 
 #ifdef FRAME_COUNTER
             // frame counter
@@ -327,7 +327,7 @@ namespace Game {
             keys = SDL_GetKeyState(NULL);
             while (SDL_PollEvent(&event)) {
                 if (keys[SDLK_ESCAPE]) {
-                    sound.halt_all_sounds();
+                    //sound.halt_all_sounds();
                     player_dead = true;
                     player_life = 0;
                     return;
@@ -396,10 +396,10 @@ namespace Game {
             if (player->is_active())
                 player->movement(delta);
             if (bonus->is_active()) {
-                sound.play_bonus();
+                //sound.play_bonus();
                 bonus->movement(delta);
             } else {
-                sound.halt_bonus();
+                //sound.halt_bonus();
             }
             for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
                 (*it)->movement(delta);
@@ -442,7 +442,7 @@ namespace Game {
                     for (vIter as = alien_shots.begin(); as != alien_shots.end(); ++as) {
                         if ((*as)->is_active()) {
                             if ((*ps)->collides_with(*as)) {
-                                sound.play_shot_collision();
+                                //sound.play_shot_collision();
                                 (*ps)->shot_shot_collision(*as);
                             }
                         }
@@ -493,36 +493,36 @@ namespace Game {
             // the conditions to break out of the game loop
             // the order of these matters
             if (aliens_landed) {
-                sound.halt_bonus();
-                sound.halt_all_bg();
-                sound.wait_for_all_to_finish();
-                sound.play_aliens_landed();
-                ui.screen_msg("Game Over");
-                sound.play_game_over();
-                ui.check_high_scores(score, wave);
+                //sound.halt_bonus();
+                //sound.halt_all_bg();
+                //sound.wait_for_all_to_finish();
+                //sound.play_aliens_landed();
+                //ui.screen_msg("Game Over");
+                //sound.play_game_over();
+                //ui.check_high_scores(score, wave);
                 return;
             }
             // conditions for player death by alien shot or collision
             if (player_dead && none_active(explosions)) {
                 --player_life;
-                status.blit_lives(player_life);
-                sound.halt_bonus();
-                sound.halt_all_bg();
+                //status.blit_lives(player_life);
+                //sound.halt_bonus();
+                //sound.halt_all_bg();
                 if (!player_life) {
-                    sound.halt_all_bg();
-                    sound.play_player_dead();
-                    sound.wait_for_all_to_finish();
-                    ui.screen_msg("Game Over");
-                    sound.play_game_over();
-                    ui.check_high_scores(score, wave);
+                    //sound.halt_all_bg();
+                    //sound.play_player_dead();
+                    //sound.wait_for_all_to_finish();
+                    //ui.screen_msg("Game Over");
+                    //sound.play_game_over();
+                    //ui.check_high_scores(score, wave);
                     return;
                 }
                 dead_pause = SDL_GetTicks();
-                sound.play_player_dead();
-                status.erase_player_ship(player_life, get_image("ship.png"));
+                //sound.play_player_dead();
+                //status.erase_player_ship(player_life, get_image("ship.png"));
                 player_rebirth();
-                sound.play_bonus();
-                sound.play_bg(alien_count);
+                //sound.play_bonus();
+                //sound.play_bg(alien_count);
                 last_loop_time += SDL_GetTicks() - dead_pause;
                 last_bonus_launch = last_alien_shot = SDL_GetTicks();
                 // erase player and alien shots to give player a chance to continue
@@ -535,16 +535,16 @@ namespace Game {
                 player_dead = false;
             }
             // conditions for end of wave
-            if (wave_over) sound.halt_all_bg();
+            //if (wave_over) sound.halt_all_bg();
             if (wave_over && !bonus->is_active()) {
-                sound.halt_bonus();
+                //sound.halt_bonus();
                 bonus_launch_delay = 100000;
                 player_shot_delay = 100000;
                 // wait for explosions and shots to finish
                 if (none_active(explosions) && none_active(player_shots) && none_active(alien_shots)) {
                     wave_cleanup();
-                    sound.wait_for_all_to_finish();
-                    sound.play_end_wave();
+                    //sound.wait_for_all_to_finish();
+                    //sound.play_end_wave();
                     return;
                 }
             }
@@ -613,7 +613,7 @@ namespace Game {
         }
         // update screen
         SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
-        sound.play_player_rebirth();
+        //sound.play_player_rebirth();
     }
     void Game::wave_cleanup()
     {
@@ -634,8 +634,8 @@ namespace Game {
         Uint32 begin_pause;
         Uint8* keys;
         SDL_Event event;
-        sound.halt_bonus();
-        sound.halt_bg(alien_count);
+        //sound.halt_bonus();
+        //sound.halt_bg(alien_count);
         begin_pause = SDL_GetTicks();
         while (1) {
             keys = SDL_GetKeyState(NULL);
@@ -643,7 +643,7 @@ namespace Game {
                 if (keys[SDLK_p]) {
                     last_loop_time +=  SDL_GetTicks() - begin_pause;
                     last_bonus_launch = last_alien_shot = SDL_GetTicks();
-                    sound.play_bonus();
+                    //sound.play_bonus();
                     return;
                 }
             }
@@ -664,7 +664,7 @@ namespace Game {
         if (++player_shot_counter == num_player_shots) {
             player_shot_counter = 0;
         }
-        sound.play_shot();
+        //sound.play_shot();
     }
     void Game::launch_bonus_ship()
     {
@@ -690,7 +690,7 @@ namespace Game {
             bonus->set_x_velocity(-bonus_speed);
             bonus->activate();
         }
-        sound.play_bonus();
+        //sound.play_bonus();
         bonus_launch_delay = base_launch_delay + (1000 * launch_delay[rand_list_count]);
         if (++rand_list_count == random_list_len) {
             rand_list_count = 0;
@@ -722,7 +722,7 @@ namespace Game {
     }
     void Game::msg_alien_player_collide()
     {
-        sound.play_explode();
+        //sound.play_explode();
         player_dead = true;
         if (!(--alien_count)) {
             wave_over = true;
@@ -737,15 +737,15 @@ namespace Game {
     {
         player_shot_delay = 100000;
         player_dead = true;
-        sound.play_explode();
+        //sound.play_explode();
     }
     inline void Game::free_guy_check()
     {
         if (score >= next_free_guy) {
-            sound.play_free_guy();
+            //sound.play_free_guy();
             ++player_life;
-            status.blit_lives(player_life);
-            status.blit_player_ships(player_life, get_image("ship.png"));
+            //status.blit_lives(player_life);
+            //status.blit_player_ships(player_life, get_image("ship.png"));
             next_free_guy += free_guy_val;
         }
     }
@@ -753,19 +753,19 @@ namespace Game {
     {
         score += bonus;
         if (bonus == 1000) {
-            sound.play_rbonus();
+            //sound.play_rbonus();
         } else {
-            sound.play_sbonus();
+            //sound.play_sbonus();
         }
-        status.blit_score(score);
+        //status.blit_score(score);
         free_guy_check();
     }
     void Game::msg_alien_killed(int pos, int points)
     {
-        sound.play_alien_dead();
+        //sound.play_alien_dead();
         score += points;
         free_guy_check();
-        status.blit_score(score);
+        //status.blit_score(score);
         // when all aliens are destroyed, wave over
         if (--alien_count == 0) {
             wave_over = true;
@@ -782,18 +782,18 @@ namespace Game {
             switch (alien_count) {
                 case 4:
                     (*it)->increase_x_speed(1.15);
-                    sound.halt_bg(alien_count);
+                    //sound.halt_bg(alien_count);
                     break;
                 case 3:
-                    sound.halt_bg(alien_count);
+                    //sound.halt_bg(alien_count);
                     break;
                 case 2:
                     (*it)->increase_x_speed(1.15);
-                    sound.halt_bg(alien_count);
+                    //sound.halt_bg(alien_count);
                     break;
                 case 1:
                     (*it)->increase_x_speed(1.15);
-                    sound.halt_bg(alien_count);
+                    //sound.halt_bg(alien_count);
                     break;
                 default:
                     break;
