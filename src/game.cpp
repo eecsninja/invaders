@@ -69,9 +69,6 @@ namespace Game {
 
     void Game::game_control()
     {
-        SDL_WM_SetCaption("Classic Invaders", "");
-        SDL_ShowCursor(SDL_DISABLE);
-
         // init for new game
         wave = score = 0;
         next_free_guy = free_guy_val;
@@ -823,10 +820,6 @@ namespace Game {
     }
     Game::Game() : ui(&sound, this, 0), player_life(0), sdl_quit_event(false)
     {
-#ifdef WINDOWS
-        std::string icon = datadir + "classic-invaders.bmp";
-        SDL_WM_SetIcon(SDL_LoadBMP(icon.c_str()), NULL);
-#endif
         set_video_mode(0);
         load_images();
         wave_background = image_cache["wave_background.png"];
