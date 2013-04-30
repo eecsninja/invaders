@@ -1,0 +1,6 @@
+Classic Invaders 1.0 release.
+
+Although Classic Invaders has been available from
+http://www.noquarterarcade.com/ since 17 April 2009 I didn't put any version
+number in the source distribution. For this 1.0 release the major improvement
+is the addition of the Autotools build system.

@@ -1,0 +1,8 @@
+
+If you are installing on Cygwin you will have to pass the --datadir install
+location to configure, for example:
+
+$ ./configure --datadir=c:/cygwin/usr/local/share
+
+It can be any directory you prefer but it has to be in the format above:
+drive specifier, colon, and forward slashes for path separators.

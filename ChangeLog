@@ -1,0 +1,27 @@
+Classic Invaders -- Version 1.0
+==============================================================================
+Author: Todd Steinackle <todd@noquarterarcade.com>
+Date:   Wed Sep 29 17:49:34 2010 -0400
+
+    Added proper response to SDL_QUIT event
+
+Author: Todd Steinackle <todd@noquarterarcade.com>
+Date:   Sat Sep 25 20:42:58 2010 -0400
+
+    Changes to how the data dir and scores file are found for Autotools
+    installs
+
+Author: Todd Steinackle <todd@noquarterarcade.com>
+Date:   Sat Sep 25 20:42:14 2010 -0400
+
+    Added Autotools build system
+
+Author: Todd Steinackle <todd@noquarterarcade.com>
+Date:   Fri Sep 24 12:36:55 2010 -0400
+
+    Moved *.cpp and *.h files to src dir
+
+
+Classic Invaders -- beta
+==============================================================================
+Initial release on 17 April 2009
