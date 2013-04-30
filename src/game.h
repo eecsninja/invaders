@@ -41,6 +41,7 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <SDL/SDL.h>
 
 typedef boost::mt19937 base_generator_type;
 typedef boost::variate_generator<base_generator_type&, boost::uniform_int<> > generator_fun;
