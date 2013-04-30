@@ -74,7 +74,7 @@ namespace GameEntities {
         dst[0].h = image->h;
         SDL_BlitSurface(image, &src[0], screen, &dst[0]);
     }
-    bool GameEntity::collides_with(const boost::shared_ptr<GameEntity>& other)
+    bool GameEntity::collides_with(GameEntity* other)
     {
         if ( (this->y_int() + this->coll_y_offset >= other->y_int() + other->coll_y_offset + other->coll_h) ||
              (this->x_int() + this->coll_x_offset >= other->x_int() + other->coll_x_offset + other->coll_w) ||
@@ -84,7 +84,7 @@ namespace GameEntities {
         }
         return true;
     }
-    void GameEntity::player_alien_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::player_alien_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         game->explode(other->x_int(), other->y_int(), short_explosion);
@@ -92,14 +92,14 @@ namespace GameEntities {
         game->remove_entity(other);
         game->msg_alien_player_collide();
     }
-    void GameEntity::player_shot_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::player_shot_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         other->active = false;
         this->active = false;
         game->msg_player_dead();
     }
-    void GameEntity::shot_alien_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::shot_alien_collision(GameEntity* other)
     {
         // prevent one bullet from destroying two entities
         if (hit) return;
@@ -109,20 +109,20 @@ namespace GameEntities {
         game->remove_entity(other);
         hit = true;
     }
-    void GameEntity::shot_shield_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::shot_shield_collision(GameEntity* other)
     {
         if (hit) return;
         this->active = false;
         game->remove_entity(other);
         hit = true;
     }
-    void GameEntity::shot_shot_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::shot_shot_collision(GameEntity* other)
     {
         // remove both shots
         this->active = false;
         other->active = false;
     }
-    void GameEntity::bonus_shot_collision(const boost::shared_ptr<GameEntity>& other)
+    void GameEntity::bonus_shot_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         this->active = false;

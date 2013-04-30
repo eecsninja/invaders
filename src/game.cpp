@@ -110,33 +110,36 @@ namespace Game {
     {
         alien_count = 0;
         // create a block of aliens (5 rows, by 12 columns), 800x600 res
-        typedef boost::shared_ptr<GameEntities::GameEntity> s_ptr;
         for (int i = 0; i < 5; ++i) {
             for (int j = 0; j < 12; ++j) {
                 switch (i) {
                     case 4:
                     {
                         // initialize the bottom row of aliens to fire
-                        s_ptr alien(new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, true, this, alien_count+1, gen()));
+                        GameEntities::GameEntity* alien =
+                            new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, true, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 3:
                     {
-                        s_ptr alien(new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen()));
+                        GameEntities::GameEntity* alien =
+                            new GameEntities::Alien(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 2:
                     case 1:
                     {
-                        s_ptr alien(new GameEntities::Alien2(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen()));
+                        GameEntities::GameEntity* alien =
+                            new GameEntities::Alien2(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 0:
                     {
-                        s_ptr alien(new GameEntities::Alien3(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen()));
+                        GameEntities::GameEntity* alien =
+                            new GameEntities::Alien3(100+(j*50), 90+(i*35), -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
@@ -148,50 +151,49 @@ namespace Game {
         }
         // create alien shots
         for (int i= 0; i < num_alien_shots; ++i) {
-            s_ptr shot(new GameEntities::Shot(0, 0, 0, alien_shot_speed, false, this));
+            GameEntityPtr shot = new GameEntities::Shot(0, 0, 0, alien_shot_speed, false, this);
             alien_shots.push_back(shot);
         }
     }
     void Game::factory()
     {
         // create the player ship and place it in the center of the screen
-        typedef boost::shared_ptr<GameEntities::GameEntity> s_ptr;
-        s_ptr sp_player(new GameEntities::Player(player_center, player_top, 0, 0, true, this));
-        player = sp_player;
+        player = new GameEntities::Player(player_center, player_top, 0, 0, true, this);
+
         // create bonus ship and small bonus ship
-        s_ptr sp_rbonus(new GameEntities::BonusShip(0, 0, 0, 0, false, this));
-        rbonus = bonus = sp_rbonus;
-        s_ptr sp_sbonus(new GameEntities::SmallBonusShip(0, 0, 0, 0, false, this));
-        sbonus = sp_sbonus;
+        rbonus = bonus = new GameEntities::BonusShip(0, 0, 0, 0, false, this);
+        sbonus = new GameEntities::SmallBonusShip(0, 0, 0, 0, false, this);
         // create the shields
         int dim = 20; // shield height and width
         int space = 230;
         for (int j = 0; j < 3; ++j) {
             for (int i = 0; i < 6; ++i) {
-                s_ptr shield_piece(new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475, 0, 0, true, this));
+                GameEntities::GameEntity* shield_piece =
+                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475, 0, 0, true, this);
                 shields.push_back(shield_piece);
             }
             for (int i = 0; i < 6; ++i) {
-                s_ptr shield_piece(new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-dim, 0, 0, true, this));
+                GameEntities::GameEntity* shield_piece =
+                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-dim, 0, 0, true, this);
                 shields.push_back(shield_piece);
             }
             for (int i = 0; i < 6; ++i) {
-                s_ptr shield_piece(new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-(dim*2), 0, 0, true, this));
+                GameEntities::GameEntity* shield_piece =
+                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-(dim*2), 0, 0, true, this);
                 shields.push_back(shield_piece);
             }
             for (int i = 0; i < 4; ++i) {
-                s_ptr shield_piece(new GameEntities::ShieldPiece((j*space)+130+(i*dim), 475-(dim*3), 0, 0, true, this));
+                GameEntities::GameEntity* shield_piece =
+                    new GameEntities::ShieldPiece((j*space)+130+(i*dim), 475-(dim*3), 0, 0, true, this);
                 shields.push_back(shield_piece);
             }
         }
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
-            s_ptr explosion(new GameEntities::Explosion(0, 0, 0, 0, false, this));
-            explosions.push_back(explosion);
+            explosions.push_back(new GameEntities::Explosion(0, 0, 0, 0, false, this));
         }
         for (int i= 0; i < num_player_shots; ++i) {
-            s_ptr shot(new GameEntities::Shot(0, 0, 0, shot_speed, false, this));
-            player_shots.push_back(shot);
+            player_shots.push_back(new GameEntities::Shot(0, 0, 0, shot_speed, false, this));
         }
 
         player_shot_delay = 225;
@@ -343,11 +345,11 @@ namespace Game {
                 player->erase();
             if (bonus->is_active())
                 bonus->erase();
-            typedef std::list<boost::shared_ptr<GameEntities::GameEntity> >::iterator Iter;
+            typedef std::list<GameEntityPtr>::iterator Iter;
             for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
                 (*it)->erase();
             }
-            typedef std::vector<boost::shared_ptr<GameEntities::GameEntity> >::iterator vIter;
+            typedef std::vector<GameEntityPtr>::iterator vIter;
             for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
                 if ((*it)->is_active()) {
                     (*it)->erase();
@@ -484,6 +486,7 @@ namespace Game {
                 for (Iter it = dead_entities.begin(); i < num_entities_removed; ++it, ++i) {
                     aliens.remove(*it);
                     shields.remove(*it);
+                    delete *it;
                 }
             }
 
@@ -601,7 +604,7 @@ namespace Game {
         if (bonus->is_active()) {
             bonus->cleanup_draw();
         }
-        typedef std::list<boost::shared_ptr<GameEntities::GameEntity> >::iterator Iter;
+        typedef std::list<GameEntityPtr>::iterator Iter;
         for (Iter it = shields.begin(); it != shields.end(); ++it) {
                 (*it)->cleanup_draw();
         }
@@ -619,7 +622,7 @@ namespace Game {
         // redraw all that should remain
         if (player->is_active())
             player->cleanup_draw();
-        typedef std::list<boost::shared_ptr<GameEntities::GameEntity> >::iterator Iter;
+        typedef std::list<GameEntityPtr>::iterator Iter;
         for (Iter it = shields.begin(); it != shields.end(); ++it) {
                 (*it)->cleanup_draw();
         }
@@ -703,7 +706,7 @@ namespace Game {
         last_alien_shot = SDL_GetTicks();
         static int alien_to_fire = 0;
         ++alien_to_fire;
-        typedef std::list<boost::shared_ptr<GameEntities::GameEntity> >::iterator Iter;
+        typedef std::list<GameEntityPtr>::iterator Iter;
         for (Iter alien = aliens.begin(); alien != aliens.end(); ++alien) {
             if ((*alien)->is_active() && (*alien)->get_fire_chance() == alien_to_fire) {
                 alien_shots[alien_shot_counter]->init_x((*alien)->get_x()+alien_init_x_shot_pos);
@@ -770,7 +773,7 @@ namespace Game {
         }
         // set the alien above the one just killed to active
         // speed up all the existing aliens, whenever one is destroyed
-        typedef std::list<boost::shared_ptr<GameEntities::GameEntity> >::iterator Iter;
+        typedef std::list<GameEntityPtr>::iterator Iter;
         for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
             if ((*it)->get_pos() == pos - 12) {
                 (*it)->activate();
@@ -797,9 +800,9 @@ namespace Game {
             }
         }
     }
-    int Game::none_active(const std::vector<boost::shared_ptr<GameEntities::GameEntity> >& vec)
+    int Game::none_active(const std::vector<GameEntityPtr>& vec)
     {
-        typedef std::vector<boost::shared_ptr<GameEntities::GameEntity> >::const_iterator vIter;
+        typedef std::vector<GameEntityPtr>::const_iterator vIter;
         vIter it = vec.begin();
         while (it != vec.end()) {
             if ((*it)->is_active()) {
@@ -818,7 +821,13 @@ namespace Game {
             explosion_counter = 0;
         }
     }
-    Game::Game() : ui(&sound, this, 0), player_life(0), sdl_quit_event(false)
+    Game::Game() : ui(&sound, this, 0),
+                   player_life(0),
+                   sdl_quit_event(false),
+                   player(NULL),
+                   bonus(NULL),
+                   sbonus(NULL),
+                   rbonus(NULL)
     {
         set_video_mode(0);
         load_images();
@@ -842,6 +851,42 @@ namespace Game {
     Game::~Game()
     {
         free_images();
+        free_entities();
+    }
+    void Game::free_entities()
+    {
+      if (player) {
+        delete player;
+        player = NULL;
+      }
+      if (rbonus) {
+        delete rbonus;
+        rbonus = NULL;
+      }
+      if (sbonus) {
+        delete sbonus;
+        sbonus = NULL;
+      }
+      bonus = NULL;
+
+      std::list<GameEntityPtr>::iterator list_iter;
+      for (list_iter = aliens.begin(); list_iter != aliens.end(); ++list_iter)
+        delete *list_iter;
+      for (list_iter = shields.begin(); list_iter != shields.end(); ++list_iter)
+        delete *list_iter;
+      aliens.clear();
+      shields.clear();
+
+      std::vector<GameEntityPtr>::iterator vec_iter;
+      for (vec_iter = player_shots.begin(); vec_iter != player_shots.end(); ++vec_iter)
+        delete *vec_iter;
+      for (vec_iter = alien_shots.begin(); vec_iter != alien_shots.end(); ++vec_iter)
+        delete *vec_iter;
+      for (vec_iter = explosions.begin(); vec_iter != explosions.end(); ++vec_iter)
+        delete *vec_iter;
+      player_shots.clear();
+      alien_shots.clear();
+      explosions.clear();
     }
     SDL_Surface* Game::get_image(const char* image)
     {

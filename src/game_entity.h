@@ -36,7 +36,6 @@
 #include "game.h"
 #include <SDL/SDL.h>
 #include "screen.h"
-#include <boost/shared_ptr.hpp>
 
 #define FIXED_POINT_FACTOR                            1024
 #define INT_TO_FIXED(x)           (x * FIXED_POINT_FACTOR)
@@ -78,7 +77,7 @@ namespace GameEntities {
         int get_y() const { return y_int(); }
         int x_int() const { return FIXED_TO_INT(x); }
         int y_int() const { return FIXED_TO_INT(y); }
-        bool collides_with(const boost::shared_ptr<GameEntity>& other);
+        bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
         void set_frame_duration(Uint32 dur) { frame_duration = dur; }
         // Explosion
@@ -93,13 +92,13 @@ namespace GameEntities {
         // Shot
         void set_hit(bool h) { hit = h; }
         // collision handling
-        void alien_shield_collision(const boost::shared_ptr<GameEntity>& other) { game->remove_entity(other); }
-        void player_alien_collision(const boost::shared_ptr<GameEntity>& other);
-        void player_shot_collision(const boost::shared_ptr<GameEntity>& other);
-        void shot_alien_collision(const boost::shared_ptr<GameEntity>& other);
-        void shot_shield_collision(const boost::shared_ptr<GameEntity>& other);
-        void shot_shot_collision(const boost::shared_ptr<GameEntity>& other);
-        void bonus_shot_collision(const boost::shared_ptr<GameEntity>& other);
+        void alien_shield_collision(GameEntity* other) { game->remove_entity(other); }
+        void player_alien_collision(GameEntity* other);
+        void player_shot_collision(GameEntity* other);
+        void shot_alien_collision(GameEntity* other);
+        void shot_shield_collision(GameEntity* other);
+        void shot_shot_collision(GameEntity* other);
+        void bonus_shot_collision(GameEntity* other);
     };
 
 }

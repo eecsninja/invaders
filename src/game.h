@@ -36,7 +36,6 @@
 #include "ui.h"
 #include "status.h"
 #include "sound.h"
-#include <boost/shared_ptr.hpp>
 #include <boost/random.hpp>
 #include <list>
 #include <map>
@@ -55,13 +54,14 @@ namespace GameEntities {
 namespace Game {
 
     class Game {
+        typedef GameEntities::GameEntity* GameEntityPtr;
         Sound::Sound sound;
         Ui::Ui ui;
         Ui::Status status;
-        boost::shared_ptr<GameEntities::GameEntity> player, rbonus, sbonus, bonus;
+        GameEntityPtr player, rbonus, sbonus, bonus;
         std::map<const char*, SDL_Surface*> image_cache;
-        std::list<boost::shared_ptr<GameEntities::GameEntity> > aliens, dead_entities, shields;
-        std::vector<boost::shared_ptr<GameEntities::GameEntity> > player_shots, alien_shots, explosions;
+        std::list<GameEntityPtr> dead_entities, aliens, shields;
+        std::vector<GameEntityPtr> player_shots, alien_shots, explosions;
         std::vector<int> direction, bonus_select, launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
@@ -71,7 +71,7 @@ namespace Game {
         void free_guy_check();
         void init_aliens(generator_fun& gen, int speed);
         void pause();
-        int none_active(const std::vector<boost::shared_ptr<GameEntities::GameEntity> >& vec);
+        int none_active(const std::vector<GameEntityPtr>& vec);
         void launch_bonus_ship();
         void alien_fire();
         void load_images();
@@ -82,13 +82,14 @@ namespace Game {
         void game_loop();
         void wave_cleanup();
         void player_rebirth();
+        void free_entities();
     public:
         Game();
         ~Game();
         void explode(fixed x, fixed y, Uint32 duration);
         void game_control();
         SDL_Surface* get_image(const char* image);
-        void remove_entity(const boost::shared_ptr<GameEntities::GameEntity>& e) {
+        void remove_entity(GameEntityPtr e) {
             dead_entities.push_front(e);
             ++num_entities_removed;
         }
