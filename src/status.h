@@ -33,18 +33,9 @@
 #ifndef STATUS_H
 #define STATUS_H
 
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL.h>
-#include <string>
-
 namespace Ui {
 
     class Status {
-        TTF_Font* font;
-        SDL_Surface* surface;
-        SDL_Color fg_color, bg_color;
-        SDL_Rect src, dst;
-        std::string str;
         const static int top_margin_y = 10;
         const static int bottom_margin_y = 575;
         const static int text_padding = 15;
@@ -52,11 +43,6 @@ namespace Ui {
     public:
         Status();
         ~Status();
-        void blit_score(Uint32 score);
-        void blit_wave(int wave);
-        void blit_player_ships(int n, SDL_Surface* ship);
-        void erase_player_ship(int n, SDL_Surface* ship);
-        void blit_lives(int n);
     };
 
 }

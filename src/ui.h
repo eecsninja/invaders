@@ -35,9 +35,6 @@
 
 #include "ttf.h"
 #include "sound.h"
-#include <SDL/SDL.h>
-#include <vector>
-#include <string>
 
 namespace Game {
     class Game;
@@ -45,43 +42,12 @@ namespace Game {
 
 namespace Ui {
 
-    typedef struct {
-        std::string name;
-        Uint32 score;
-        int wave;
-        bool just_added;
-    } score_rec;
-    bool compare(const score_rec& x, const score_rec& y);
-
     class Ui {
         Sound::Sound* sound;
         Game::Game* game;
-        int fullscreen_flag;
-        std::vector<score_rec> high_scores;
-        std::string score_file, serif_bold, mono_regular;
-        TTFont TitleFont, MenuFont;
-        SDL_Surface *title, *play, *r_play, *quit, *r_quit, *zap, *r_zap, *help, *r_help, *about, *r_about;
-        SDL_Surface *window, *fullscreen, *toggle, *r_window, *r_fullscreen, *r_toggle;
-        SDL_Color fg_color, bg_color;
-        SDL_Rect src, dst;
-        const static Uint8 score_list_len = 10;
-        int top_menu_y, left_margin_x, menu_w, menu_h;
-        void blit_menu_button(SDL_Surface* menu_button, int pos);
-        void blit_high_scores();
-        void blit_name_input(const std::string& name, TTFont& ttf, int y);
-        void about_screen();
-        void write_scores();
-        void return_msg();
-        void help_screen();
-        void toggle_fullscreen();
-        bool score_file_available;
     public:
         Ui(Sound::Sound* sound, Game::Game* game, int fullscreen_flag);
-        ~Ui() { write_scores(); }
-        bool start_screen();
-        void check_high_scores(Uint32 score, int wave);
-        void screen_msg(const char* msg);
-        void wave_msg(int wave);
+        ~Ui() { }
     };
 
 }

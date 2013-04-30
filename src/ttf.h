@@ -33,27 +33,12 @@
 #ifndef TTF_H
 #define TTF_H
 
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL.h>
-#include <vector>
-
 namespace Ui {
 
     class TTFont {
-        TTF_Font* font;
-        SDL_Surface* txt_surface;
-        SDL_Color fg_color, bg_color;
-        std::vector<SDL_Surface*> surf_vec;
     public:
         TTFont(const char* ttf_name, int size);
         ~TTFont();
-        SDL_Surface* render_solid(const char* txt, Uint8 r, Uint8 g, Uint8 b);
-        SDL_Surface* render_solid(const char* txt, SDL_Color color);
-        SDL_Surface* render_shaded(const char* txt, Uint8 fg_r, Uint8 fg_g, Uint8 fg_b,
-                                                    Uint8 bg_r, Uint8 bg_g, Uint8 bg_b);
-        SDL_Surface* render_shaded(const char* txt, SDL_Color fg_color, SDL_Color bg_color);
-        SDL_Surface* render_blended(const char* txt, Uint8 r, Uint8 g, Uint8 b);
-        SDL_Surface* render_blended(const char* txt, SDL_Color color);
     };
 
 }
