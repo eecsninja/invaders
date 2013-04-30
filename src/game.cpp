@@ -65,6 +65,11 @@ extern std::string datadir;
 
 //#define FRAME_COUNTER
 
+namespace GameEntities {
+   GameEntityTypeProperties ShieldPiece::shield_properties;
+   GameEntityTypeProperties Explosion::explosion_properties;
+}
+
 namespace Game {
 
     void Game::game_control()

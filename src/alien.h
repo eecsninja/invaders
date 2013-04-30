@@ -39,11 +39,11 @@ namespace GameEntities {
 
     class Alien : public GameEntity {
     protected:
+        static GameEntityTypeProperties alien_properties;
+
         static const int num_images = 6;
         SDL_Surface* images[num_images];
         int image_num;
-        int right_limit;
-        static const int bottom_limit = 530;
     public:
         Alien(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : GameEntity(x, y, dx, dy, active, game), image_num(0)
@@ -54,20 +54,25 @@ namespace GameEntities {
             images[3] = game->get_image("alien-1-4.png");
             images[4] = game->get_image("alien-1-3.png");
             images[5] = game->get_image("alien-1-2.png");
-            points = 25;
-            frame_duration = 225;
+
             position = pos;
             fire_chance = chance;
-            right_limit = screen_w - image->w;
-            coll_w = image->w;
-            coll_h = int (image->h * 0.8);
-            coll_x_offset = (image->w - coll_w) / 2;
-            coll_y_offset = (image->h - coll_h) / 2;
+
+            type_properties = &alien_properties;
+            type_properties->points = 25;
+            type_properties->frame_duration = 225;
+            type_properties->right_limit = screen_w - image->w;
+            type_properties->bottom_limit = 530;
+            type_properties->coll_w = image->w;
+            type_properties->coll_h = int (image->h * 0.8);
+            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
+            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
         void movement(Uint32 delta);
     };
 
     class Alien2 : public Alien {
+        static GameEntityTypeProperties alien2_properties;
     public:
         Alien2(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : Alien(x, y, dx, dy, active, game, pos, chance)
@@ -78,11 +83,15 @@ namespace GameEntities {
             images[3] = game->get_image("alien-2-4.png");
             images[4] = game->get_image("alien-2-3.png");
             images[5] = game->get_image("alien-2-2.png");
-            points = 50;
+
+            alien2_properties = alien_properties;
+            type_properties = &alien2_properties;
+            type_properties->points = 50;
         }
     };
 
     class Alien3 : public Alien {
+        static GameEntityTypeProperties alien3_properties;
     public:
         Alien3(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : Alien(x, y, dx, dy, active, game, pos, chance)
@@ -93,9 +102,12 @@ namespace GameEntities {
             images[3] = game->get_image("alien-3-4.png");
             images[4] = game->get_image("alien-3-3.png");
             images[5] = game->get_image("alien-3-2.png");
-            points = 100;
-            coll_w = int (image->w * 0.8);
-            coll_x_offset = (image->w - coll_w) / 2;
+
+            alien3_properties = alien_properties;
+            type_properties = &alien3_properties;
+            type_properties->points = 100;
+            type_properties->coll_w = int (image->w * 0.8);
+            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
         }
     };
 

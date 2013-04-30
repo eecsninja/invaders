@@ -76,10 +76,10 @@ namespace GameEntities {
     }
     bool GameEntity::collides_with(GameEntity* other)
     {
-        if ( (this->y_int() + this->coll_y_offset >= other->y_int() + other->coll_y_offset + other->coll_h) ||
-             (this->x_int() + this->coll_x_offset >= other->x_int() + other->coll_x_offset + other->coll_w) ||
-             (other->y_int() + other->coll_y_offset >= this->y_int() + this->coll_y_offset + this->coll_h) ||
-             (other->x_int() + other->coll_x_offset >= this->x_int() + this->coll_x_offset + this->coll_w) ) {
+        if ( (this->y_int() + this->coll_y_offset() >= other->y_int() + other->coll_y_offset() + other->coll_h()) ||
+             (this->x_int() + this->coll_x_offset() >= other->x_int() + other->coll_x_offset() + other->coll_w()) ||
+             (other->y_int() + other->coll_y_offset() >= this->y_int() + this->coll_y_offset() + this->coll_h()) ||
+             (other->x_int() + other->coll_x_offset() >= this->x_int() + this->coll_x_offset() + this->coll_w()) ) {
                 return false;
         }
         return true;
@@ -105,7 +105,7 @@ namespace GameEntities {
         if (hit) return;
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->active = false;
-        game->msg_alien_killed(other->position, other->points);
+        game->msg_alien_killed(other->position, other->type_properties->points);
         game->remove_entity(other);
         hit = true;
     }
@@ -127,13 +127,13 @@ namespace GameEntities {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         this->active = false;
         other->active = false;
-        game->msg_bonus_ship_destroyed(this->points);
+        game->msg_bonus_ship_destroyed(this->type_properties->points);
     }
     void GameEntity::duration(Uint32 delta)
     {
         // control explosion duration
         frame_time_count += delta;
-        if (frame_time_count > frame_duration) {
+        if (frame_time_count > type_properties->frame_duration) {
             frame_time_count = 0;
             active = false;
         }

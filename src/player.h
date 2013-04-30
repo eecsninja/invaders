@@ -38,17 +38,19 @@
 namespace GameEntities {
 
     class Player : public GameEntity {
-        int right_limit;
+        static GameEntityTypeProperties player_properties;
     public:
         Player(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("ship.png");
-            right_limit = screen_w - image->w;
-            coll_w = int (image->w * 0.9);
-            coll_h = int (image->h * 0.8);
-            coll_x_offset = (image->w - coll_w) / 2;
-            coll_y_offset = (image->h - coll_h) / 2;
+
+            type_properties = &player_properties;
+            type_properties->right_limit = screen_w - image->w;
+            type_properties->coll_w = int (image->w * 0.9);
+            type_properties->coll_h = int (image->h * 0.8);
+            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
+            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
         void movement(Uint32 delta);
     };

@@ -43,6 +43,17 @@
 
 namespace GameEntities {
 
+    // When all instances of a class of GameEntity have the same properties,
+    // use this struct to store the common property values and save memory.
+    struct GameEntityTypeProperties {
+        uint32_t frame_duration;  // How much time before going to next frame.
+        int points; // point value of individual objects
+        // heights, widths, and coords used for reduced bounding box collision detection
+        int coll_w, coll_h, coll_x_offset, coll_y_offset;
+
+        int right_limit, bottom_limit;
+    };
+
     class GameEntity {
         static const int short_explosion = 50;
         static const int long_explosion = 200;
@@ -52,15 +63,14 @@ namespace GameEntities {
         bool active;
         Game::Game* game;
         SDL_Surface* image;
-        Uint32 frame_duration, frame_time_count; // control in place animation speed
+        Uint32 frame_time_count; // control in place animation speed
         int position, fire_chance; // used by Aliens to determine if and when to fire
         bool hit; // used by Shot to avoid hitting more than one object
-        int points; // point value of individual objects
-        // heights, widths, and coords used for reduced bounding box collision detection
-        int coll_w, coll_h, coll_x_offset, coll_y_offset;
+
+        GameEntityTypeProperties* type_properties;
     public:
         GameEntity(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), game(game), frame_duration(0),
+            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), game(game),
             frame_time_count(0), hit(false) { }
         // a virtual destructor is important
         virtual ~GameEntity() { }
@@ -77,11 +87,15 @@ namespace GameEntities {
         int get_y() const { return y_int(); }
         int x_int() const { return FIXED_TO_INT(x); }
         int y_int() const { return FIXED_TO_INT(y); }
+        int coll_w() const { return type_properties->coll_w; }
+        int coll_h() const { return type_properties->coll_h; }
+        int coll_x_offset() const { return type_properties->coll_x_offset; }
+        int coll_y_offset() const { return type_properties->coll_y_offset; }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
-        void set_frame_duration(Uint32 dur) { frame_duration = dur; }
+        void set_frame_duration(Uint32 dur) { type_properties->frame_duration = dur; }
         // Explosion
-        void set_explosion(Uint32 dur) { active = true; frame_duration = dur; }
+        void set_explosion(Uint32 dur) { active = true; type_properties->frame_duration = dur; }
         void duration(Uint32 delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }

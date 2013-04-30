@@ -38,11 +38,13 @@
 namespace GameEntities {
 
     class Explosion : public GameEntity {
+        static GameEntityTypeProperties explosion_properties;
     public:
         Explosion(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("explosion.png");
+            type_properties = &explosion_properties;
         }
     };
 

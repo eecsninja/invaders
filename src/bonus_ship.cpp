@@ -38,7 +38,7 @@ namespace GameEntities {
     {
         // control in place animation
         frame_time_count += delta;
-        if (frame_time_count > frame_duration) {
+        if (frame_time_count > type_properties->frame_duration) {
             frame_time_count = 0;
             if (++image_num >= num_images) {
                 image_num = 0;
@@ -53,4 +53,6 @@ namespace GameEntities {
         }
     }
 
+    GameEntityTypeProperties BonusShip::bonus_ship_properties;
+    GameEntityTypeProperties SmallBonusShip::small_bonus_ship_properties;
 }

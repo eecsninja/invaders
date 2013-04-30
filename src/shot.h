@@ -38,15 +38,18 @@
 namespace GameEntities {
 
     class Shot : public GameEntity {
+        static GameEntityTypeProperties shot_properties;
     public:
         Shot(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("shot.png");
-            coll_w = image->w;
-            coll_h = int (image->h * 0.7);
-            coll_x_offset = (image->w - coll_w) / 2;
-            coll_y_offset = (image->h - coll_h) / 2;
+
+            type_properties = &shot_properties;
+            type_properties->coll_w = image->w;
+            type_properties->coll_h = int (image->h * 0.7);
+            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
+            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
         void movement(Uint32 delta);
     };

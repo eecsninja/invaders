@@ -40,6 +40,7 @@ namespace GameEntities {
     class BonusShip : public GameEntity {
     protected:
         static const int num_images = 2;
+        static GameEntityTypeProperties bonus_ship_properties;
         SDL_Surface* images[num_images];
         int image_num;
     public:
@@ -48,24 +49,30 @@ namespace GameEntities {
         {
             image = images[0] = game->get_image("bonus-1-1.png");
             images[1] = game->get_image("bonus-1-2.png");
-            frame_duration = 55;
-            points = 1000;
-            coll_w = int (image->w * 0.9);
-            coll_h = image->h;
-            coll_x_offset = (image->w - coll_w) / 2;
-            coll_y_offset = (image->h - coll_h) / 2;
+
+            type_properties = &bonus_ship_properties;
+            type_properties->frame_duration = 55;
+            type_properties->points = 1000;
+            type_properties->coll_w = int (image->w * 0.9);
+            type_properties->coll_h = image->h;
+            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
+            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
         void movement(Uint32 delta);
     };
 
     class SmallBonusShip : public BonusShip {
+        static GameEntityTypeProperties small_bonus_ship_properties;
     public:
         SmallBonusShip(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : BonusShip(x, y, dx, dy, active, game)
         {
             image = images[0] = game->get_image("bonus-2-1.png");
             images[1] = game->get_image("bonus-2-2.png");
-            points = 5000;
+
+            small_bonus_ship_properties = bonus_ship_properties;
+            type_properties = &small_bonus_ship_properties;
+            type_properties->points = 5000;
         }
     };
 

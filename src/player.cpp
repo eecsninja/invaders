@@ -41,10 +41,12 @@ namespace GameEntities {
             return;
         }
         // don't move off right hand side of the screen
-        if (dx > 0 && x_int() > right_limit - side_padding) {
+        if (dx > 0 && x_int() > type_properties->right_limit - side_padding) {
             return;
         }
         x += dx * delta;
     }
+
+    GameEntityTypeProperties Player::player_properties;
 
 }

@@ -46,4 +46,5 @@ namespace GameEntities {
         }
     }
 
+    GameEntityTypeProperties Shot::shot_properties;
 }
