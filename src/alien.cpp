@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void Alien::movement(uint16_t delta)
+    void Alien::movement(int16_t delta)
     {
         // control in place animation
         frame_time_count += delta;
@@ -57,7 +57,7 @@ namespace GameEntities {
             game->run_logic();
         }
 
-        x += delta * dx;
+        x += INT_TO_FIXED(delta * dx) / 1000;
     }
 
     GameEntityTypeProperties Alien::alien_properties;

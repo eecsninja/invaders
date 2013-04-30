@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void BonusShip::movement(uint16_t delta)
+    void BonusShip::movement(int16_t delta)
     {
         // control in place animation
         frame_time_count += delta;
@@ -45,7 +45,7 @@ namespace GameEntities {
             }
             image = images[image_num];
         }
-        x += delta * dx;
+        x += INT_TO_FIXED(delta * dx) / 1000;
         if (dx > 0 && x_int() > screen_w) {
             active = false;
         } else if (dx < 0 && x_int() < -image->w) {

@@ -34,9 +34,9 @@
 
 namespace GameEntities {
 
-    void Shot::movement(uint16_t delta)
+    void Shot::movement(int16_t delta)
     {
-        y += delta * dy;
+        y += INT_TO_FIXED(delta * dy) / 1000;
 
         if (y_int() < -100) {
             active = false;

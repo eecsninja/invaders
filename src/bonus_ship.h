@@ -58,7 +58,7 @@ namespace GameEntities {
             type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
             type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
-        void movement(uint16_t delta);
+        void movement(int16_t delta);
     };
 
     class SmallBonusShip : public BonusShip {

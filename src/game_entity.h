@@ -75,7 +75,7 @@ namespace GameEntities {
             frame_time_count(0), hit(false) { }
         // a virtual destructor is important
         virtual ~GameEntity() { }
-        virtual void movement(uint16_t delta) { delta = 0; }
+        virtual void movement(int16_t delta) { delta = 0; }
         void draw();
         void cleanup_draw();
         void erase();
@@ -97,7 +97,7 @@ namespace GameEntities {
         void set_frame_duration(Uint32 dur) { type_properties->frame_duration = dur; }
         // Explosion
         void set_explosion(Uint32 dur) { active = true; type_properties->frame_duration = dur; }
-        void duration(uint16_t delta);
+        void duration(int16_t delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }
         void set_x_velocity(int vel) { dx = vel; }
