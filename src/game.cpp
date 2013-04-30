@@ -71,27 +71,16 @@ namespace Game {
     {
         SDL_WM_SetCaption("Classic Invaders", "");
         SDL_ShowCursor(SDL_DISABLE);
-        while (1) {
-            // display start screen wait for input
-            player_dead = false;
-            if (!player_life) {
-                bool player_choice = ui.start_screen();
-                if (!player_choice) return;
-                // init for new game
-                wave = score = 0;
-                next_free_guy = free_guy_val;
-                aliens_landed = false;
-                alien_speed = 80;
-                player_life = 3;
-            }
-            while (!player_dead) {
-                init_wave();
-                game_loop();
-                if (sdl_quit_event) {
-                    return;
-                }
-            }
-        }
+
+        // init for new game
+        wave = score = 0;
+        next_free_guy = free_guy_val;
+        aliens_landed = false;
+        alien_speed = 80;
+        player_life = 3;
+
+        init_wave();
+        game_loop();
     }
     void Game::init_wave()
     {
