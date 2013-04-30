@@ -40,75 +40,70 @@ namespace GameEntities {
     class Alien : public GameEntity {
     protected:
         static GameEntityTypeProperties alien_properties;
+        static GameEntityTypeProperties alien2_properties;
+        static GameEntityTypeProperties alien3_properties;
 
         static const int num_images = 6;
         SDL_Surface* images[num_images];
         int image_num;
     public:
-        Alien(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
+        Alien(int type, int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : GameEntity(x, y, dx, dy, active, game), image_num(0)
         {
-            image = images[0] = game->get_image("alien-1-1.png");
-            images[1] = game->get_image("alien-1-2.png");
-            images[2] = game->get_image("alien-1-3.png");
-            images[3] = game->get_image("alien-1-4.png");
-            images[4] = game->get_image("alien-1-3.png");
-            images[5] = game->get_image("alien-1-2.png");
+            switch(type) {
+            default:
+            case 1:
+                images[0] = game->get_image("alien-1-1.png");
+                images[1] = game->get_image("alien-1-2.png");
+                images[2] = game->get_image("alien-1-3.png");
+                images[3] = game->get_image("alien-1-4.png");
+                images[4] = game->get_image("alien-1-3.png");
+                images[5] = game->get_image("alien-1-2.png");
+                type_properties = &alien_properties;
+                type_properties->points = 25;
+                break;
+            case 2:
+                images[0] = game->get_image("alien-2-1.png");
+                images[1] = game->get_image("alien-2-2.png");
+                images[2] = game->get_image("alien-2-3.png");
+                images[3] = game->get_image("alien-2-4.png");
+                images[4] = game->get_image("alien-2-3.png");
+                images[5] = game->get_image("alien-2-2.png");
+                type_properties = &alien2_properties;
+                type_properties->points = 50;
+                break;
+            case 3:
+                images[0] = game->get_image("alien-3-1.png");
+                images[1] = game->get_image("alien-3-2.png");
+                images[2] = game->get_image("alien-3-3.png");
+                images[3] = game->get_image("alien-3-4.png");
+                images[4] = game->get_image("alien-3-3.png");
+                images[5] = game->get_image("alien-3-2.png");
+                type_properties = &alien3_properties;
+                type_properties->points = 100;
+                break;
+            }
+            image = images[0];
 
             position = pos;
             fire_chance = chance;
 
-            type_properties = &alien_properties;
-            type_properties->points = 25;
             type_properties->frame_duration = 225;
             type_properties->right_limit = screen_w - image->w;
             type_properties->bottom_limit = 530;
-            type_properties->coll_w = image->w;
+            switch (type) {
+            default:
+                type_properties->coll_w = image->w;
+                break;
+            case 3:
+                type_properties->coll_w = int (image->w * 0.8);
+                break;
+            }
             type_properties->coll_h = int (image->h * 0.8);
             type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
             type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
         void movement(int16_t delta);
-    };
-
-    class Alien2 : public Alien {
-        static GameEntityTypeProperties alien2_properties;
-    public:
-        Alien2(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
-            : Alien(x, y, dx, dy, active, game, pos, chance)
-        {
-            image = images[0] = game->get_image("alien-2-1.png");
-            images[1] = game->get_image("alien-2-2.png");
-            images[2] = game->get_image("alien-2-3.png");
-            images[3] = game->get_image("alien-2-4.png");
-            images[4] = game->get_image("alien-2-3.png");
-            images[5] = game->get_image("alien-2-2.png");
-
-            alien2_properties = alien_properties;
-            type_properties = &alien2_properties;
-            type_properties->points = 50;
-        }
-    };
-
-    class Alien3 : public Alien {
-        static GameEntityTypeProperties alien3_properties;
-    public:
-        Alien3(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
-            : Alien(x, y, dx, dy, active, game, pos, chance)
-        {
-            image = images[0] = game->get_image("alien-3-1.png");
-            images[1] = game->get_image("alien-3-2.png");
-            images[2] = game->get_image("alien-3-3.png");
-            images[3] = game->get_image("alien-3-4.png");
-            images[4] = game->get_image("alien-3-3.png");
-            images[5] = game->get_image("alien-3-2.png");
-
-            alien3_properties = alien_properties;
-            type_properties = &alien3_properties;
-            type_properties->points = 100;
-            type_properties->coll_w = int (image->w * 0.8);
-            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
-        }
     };
 
 }

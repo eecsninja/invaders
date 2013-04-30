@@ -130,14 +130,14 @@ namespace Game {
                     {
                         // initialize the bottom row of aliens to fire
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(alien_x, alien_y, -speed, 0, true, this, alien_count+1, gen());
+                            new GameEntities::Alien(1, alien_x, alien_y, -speed, 0, true, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 3:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien(1, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
@@ -145,14 +145,14 @@ namespace Game {
                     case 1:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien2(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien(2, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }
                     case 0:
                     {
                         GameEntities::GameEntity* alien =
-                            new GameEntities::Alien3(alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
+                            new GameEntities::Alien(3, alien_x, alien_y, -speed, 0, false, this, alien_count+1, gen());
                         aliens.push_back(alien);
                         break;
                     }

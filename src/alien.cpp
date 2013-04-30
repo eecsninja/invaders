@@ -61,6 +61,6 @@ namespace GameEntities {
     }
 
     GameEntityTypeProperties Alien::alien_properties;
-    GameEntityTypeProperties Alien2::alien2_properties;
-    GameEntityTypeProperties Alien3::alien3_properties;
+    GameEntityTypeProperties Alien::alien2_properties;
+    GameEntityTypeProperties Alien::alien3_properties;
 }
