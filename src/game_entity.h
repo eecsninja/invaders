@@ -38,14 +38,18 @@
 #include "screen.h"
 #include <boost/shared_ptr.hpp>
 
+#define FIXED_POINT_FACTOR                            1024
+#define INT_TO_FIXED(x)           (x * FIXED_POINT_FACTOR)
+#define FIXED_TO_INT(x)           (x / FIXED_POINT_FACTOR)
+
 namespace GameEntities {
 
     class GameEntity {
         static const int short_explosion = 50;
         static const int long_explosion = 200;
     protected:
-        double x, y;   // location
-        double dx, dy; // velocity -- speed in pixels/sec and direction
+        fixed x, y;   // location
+        int dx, dy;   // velocity -- speed in pixels/sec and direction
         bool active;
         Game::Game* game;
         SDL_Surface* image;
@@ -56,8 +60,8 @@ namespace GameEntities {
         // heights, widths, and coords used for reduced bounding box collision detection
         int coll_w, coll_h, coll_x_offset, coll_y_offset;
     public:
-        GameEntity(double x, double y, double dx, double dy, bool active, Game::Game* game)
-            : x(x), y(y), dx(dx), dy(dy), active(active), game(game), frame_duration(0),
+        GameEntity(int x, int y, int dx, int dy, bool active, Game::Game* game)
+            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), game(game), frame_duration(0),
             frame_time_count(0), hit(false) { }
         // a virtual destructor is important
         virtual ~GameEntity() { }
@@ -68,10 +72,12 @@ namespace GameEntities {
         bool is_active() const { return active; }
         void deactivate() { active = false; }
         void activate() { active = true; }
-        void init_x(double init) { x = init; }
-        void init_y(double init) { y = init; }
-        double get_x() const { return x; }
-        double get_y() const { return y; }
+        void init_x(int init) { x = INT_TO_FIXED(init); }
+        void init_y(int init) { y = INT_TO_FIXED(init); }
+        int get_x() const { return x_int(); }
+        int get_y() const { return y_int(); }
+        int x_int() const { return FIXED_TO_INT(x); }
+        int y_int() const { return FIXED_TO_INT(y); }
         bool collides_with(const boost::shared_ptr<GameEntity>& other);
         // can be used by classes with in-place animation
         void set_frame_duration(Uint32 dur) { frame_duration = dur; }
@@ -79,9 +85,9 @@ namespace GameEntities {
         void set_explosion(Uint32 dur) { active = true; frame_duration = dur; }
         void duration(Uint32 delta);
         // Alien
-        void increase_x_speed(double increase) { dx *= increase; }
-        void set_x_velocity(double vel) { dx = vel; }
-        void do_alien_logic() {  dx = -dx; y += 10; } // switch direction and move down the screen
+        void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }
+        void set_x_velocity(int vel) { dx = vel; }
+        void do_alien_logic() {  dx = -dx; y += INT_TO_FIXED(10); } // switch direction and move down the screen
         int get_pos() const { return position; }
         int get_fire_chance() const { return fire_chance; }
         // Shot

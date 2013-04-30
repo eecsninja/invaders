@@ -775,21 +775,21 @@ namespace Game {
             if ((*it)->get_pos() == pos - 12) {
                 (*it)->activate();
             }
-            (*it)->increase_x_speed(1.027);
+            (*it)->increase_x_speed(1052);
             switch (alien_count) {
                 case 4:
-                    (*it)->increase_x_speed(1.15);
+                    (*it)->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 case 3:
                     //sound.halt_bg(alien_count);
                     break;
                 case 2:
-                    (*it)->increase_x_speed(1.15);
+                    (*it)->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 case 1:
-                    (*it)->increase_x_speed(1.15);
+                    (*it)->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 default:
@@ -809,7 +809,7 @@ namespace Game {
         }
         return 1;
     }
-    void Game::explode(double x, double y, Uint32 duration)
+    void Game::explode(fixed x, fixed y, Uint32 duration)
     {
         explosions[explosion_counter]->init_x(x);
         explosions[explosion_counter]->init_y(y);

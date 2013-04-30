@@ -39,7 +39,7 @@ namespace GameEntities {
 
     class Explosion : public GameEntity {
     public:
-        Explosion(double x, double y, double dx, double dy, bool active, Game::Game* game)
+        Explosion(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("explosion.png");

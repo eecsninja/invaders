@@ -43,7 +43,7 @@ namespace GameEntities {
         SDL_Surface* images[num_images];
         int image_num;
     public:
-        BonusShip(double x, double y, double dx, double dy, bool active, Game::Game* game)
+        BonusShip(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game), image_num(0)
         {
             image = images[0] = game->get_image("bonus-1-1.png");
@@ -60,7 +60,7 @@ namespace GameEntities {
 
     class SmallBonusShip : public BonusShip {
     public:
-        SmallBonusShip(double x, double y, double dx, double dy, bool active, Game::Game* game)
+        SmallBonusShip(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : BonusShip(x, y, dx, dy, active, game)
         {
             image = images[0] = game->get_image("bonus-2-1.png");

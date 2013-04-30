@@ -39,7 +39,7 @@ namespace GameEntities {
 
     class ShieldPiece : public GameEntity {
     public:
-        ShieldPiece(double x, double y, double dx, double dy, bool active, Game::Game* game)
+        ShieldPiece(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("shield_piece.png");

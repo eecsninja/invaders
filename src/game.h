@@ -46,6 +46,8 @@
 typedef boost::mt19937 base_generator_type;
 typedef boost::variate_generator<base_generator_type&, boost::uniform_int<> > generator_fun;
 
+typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
+
 namespace GameEntities {
     class GameEntity;
 }
@@ -83,7 +85,7 @@ namespace Game {
     public:
         Game();
         ~Game();
-        void explode(double x, double y, Uint32 duration);
+        void explode(fixed x, fixed y, Uint32 duration);
         void game_control();
         SDL_Surface* get_image(const char* image);
         void remove_entity(const boost::shared_ptr<GameEntities::GameEntity>& e) {

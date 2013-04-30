@@ -40,12 +40,12 @@ namespace GameEntities {
         blit* update;
         update = &blits[screen_updates++];
         update->img = wave_background;
-        update->src_rect->x = (Sint16) x;
-        update->src_rect->y = (Sint16) y;
+        update->src_rect->x = (Sint16) x_int();
+        update->src_rect->y = (Sint16) y_int();
         update->src_rect->w = image->w;
         update->src_rect->h = image->h;
-        update->dst_rect->x = (Sint16) x;
-        update->dst_rect->y = (Sint16) y;
+        update->dst_rect->x = (Sint16) x_int();
+        update->dst_rect->y = (Sint16) y_int();
         update->dst_rect->w = image->w;
         update->dst_rect->h = image->h;
     }
@@ -58,8 +58,8 @@ namespace GameEntities {
         update->src_rect->y = 0;
         update->src_rect->w = image->w;
         update->src_rect->h = image->h;
-        update->dst_rect->x = (Sint16) x;
-        update->dst_rect->y = (Sint16) y;
+        update->dst_rect->x = (Sint16) x_int();
+        update->dst_rect->y = (Sint16) y_int();
         update->dst_rect->w = image->w;
         update->dst_rect->h = image->h;
     }
@@ -68,33 +68,33 @@ namespace GameEntities {
         src[0].x = src[0].y = 0;
         src[0].w = image->w;
         src[0].h = image->h;
-        dst[0].x = (Sint16) x;
-        dst[0].y = (Sint16) y;
+        dst[0].x = (Sint16) x_int();
+        dst[0].y = (Sint16) y_int();
         dst[0].w = image->w;
         dst[0].h = image->h;
         SDL_BlitSurface(image, &src[0], screen, &dst[0]);
     }
     bool GameEntity::collides_with(const boost::shared_ptr<GameEntity>& other)
     {
-        if ( (this->y + this->coll_y_offset >= other->y + other->coll_y_offset + other->coll_h) ||
-             (this->x + this->coll_x_offset >= other->x + other->coll_x_offset + other->coll_w) ||
-             (other->y + other->coll_y_offset >= this->y + this->coll_y_offset + this->coll_h) ||
-             (other->x + other->coll_x_offset >= this->x + this->coll_x_offset + this->coll_w) ) {
+        if ( (this->y_int() + this->coll_y_offset >= other->y_int() + other->coll_y_offset + other->coll_h) ||
+             (this->x_int() + this->coll_x_offset >= other->x_int() + other->coll_x_offset + other->coll_w) ||
+             (other->y_int() + other->coll_y_offset >= this->y_int() + this->coll_y_offset + this->coll_h) ||
+             (other->x_int() + other->coll_x_offset >= this->x_int() + this->coll_x_offset + this->coll_w) ) {
                 return false;
         }
         return true;
     }
     void GameEntity::player_alien_collision(const boost::shared_ptr<GameEntity>& other)
     {
-        game->explode(this->x, this->y, long_explosion);
-        game->explode(other->x, other->y, short_explosion);
+        game->explode(this->x_int(), this->y_int(), long_explosion);
+        game->explode(other->x_int(), other->y_int(), short_explosion);
         this->active = false;
         game->remove_entity(other);
         game->msg_alien_player_collide();
     }
     void GameEntity::player_shot_collision(const boost::shared_ptr<GameEntity>& other)
     {
-        game->explode(this->x, this->y, long_explosion);
+        game->explode(this->x_int(), this->y_int(), long_explosion);
         other->active = false;
         this->active = false;
         game->msg_player_dead();
@@ -103,7 +103,7 @@ namespace GameEntities {
     {
         // prevent one bullet from destroying two entities
         if (hit) return;
-        game->explode(other->x, other->y, short_explosion);
+        game->explode(other->x_int(), other->y_int(), short_explosion);
         this->active = false;
         game->msg_alien_killed(other->position, other->points);
         game->remove_entity(other);
@@ -124,7 +124,7 @@ namespace GameEntities {
     }
     void GameEntity::bonus_shot_collision(const boost::shared_ptr<GameEntity>& other)
     {
-        game->explode(this->x, this->y, long_explosion);
+        game->explode(this->x_int(), this->y_int(), long_explosion);
         this->active = false;
         other->active = false;
         game->msg_bonus_ship_destroyed(this->points);

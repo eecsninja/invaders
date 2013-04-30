@@ -40,7 +40,7 @@ namespace GameEntities {
     class Player : public GameEntity {
         int right_limit;
     public:
-        Player(double x, double y, double dx, double dy, bool active, Game::Game* game)
+        Player(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {
             image = game->get_image("ship.png");

@@ -45,7 +45,7 @@ namespace GameEntities {
         int right_limit;
         static const int bottom_limit = 530;
     public:
-        Alien(double x, double y, double dx, double dy, bool active, Game::Game* game, int pos, int chance)
+        Alien(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : GameEntity(x, y, dx, dy, active, game), image_num(0)
         {
             image = images[0] = game->get_image("alien-1-1.png");
@@ -69,7 +69,7 @@ namespace GameEntities {
 
     class Alien2 : public Alien {
     public:
-        Alien2(double x, double y, double dx, double dy, bool active, Game::Game* game, int pos, int chance)
+        Alien2(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : Alien(x, y, dx, dy, active, game, pos, chance)
         {
             image = images[0] = game->get_image("alien-2-1.png");
@@ -84,7 +84,7 @@ namespace GameEntities {
 
     class Alien3 : public Alien {
     public:
-        Alien3(double x, double y, double dx, double dy, bool active, Game::Game* game, int pos, int chance)
+        Alien3(int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : Alien(x, y, dx, dy, active, game, pos, chance)
         {
             image = images[0] = game->get_image("alien-3-1.png");

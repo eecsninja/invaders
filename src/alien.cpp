@@ -46,18 +46,18 @@ namespace GameEntities {
             image = images[image_num];
         }
         // bottom of the screen, game over
-        if (y > bottom_limit) {
+        if (y_int() > bottom_limit) {
             game->msg_alien_landed();
         }
         // change direction and move down
-        if (dx < 0 && x < side_padding) {
+        if (dx < 0 && x_int() < side_padding) {
             game->run_logic();
         }
-        else if (dx > 0 && x > right_limit - side_padding) {
+        else if (dx > 0 && x_int() > right_limit - side_padding) {
             game->run_logic();
         }
 
-        x += delta * dx / 1000;
+        x += delta * dx;
     }
 
 }

@@ -36,12 +36,12 @@ namespace GameEntities {
 
     void Shot::movement(Uint32 delta)
     {
-        y += delta * dy / 1000;
+        y += delta * dy;
 
-        if (y < -100) {
+        if (y_int() < -100) {
             active = false;
         }
-        if (y > 575) {
+        if (y_int() > 575) {
             active = false;
         }
     }

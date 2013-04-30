@@ -45,10 +45,10 @@ namespace GameEntities {
             }
             image = images[image_num];
         }
-        x += delta * dx / 1000;
-        if (dx > 0 && x > screen_w) {
+        x += delta * dx;
+        if (dx > 0 && x_int() > screen_w) {
             active = false;
-        } else if (dx < 0 && x < -image->w) {
+        } else if (dx < 0 && x_int() < -image->w) {
             active = false;
         }
     }
