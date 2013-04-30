@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void BonusShip::movement(Uint32 delta)
+    void BonusShip::movement(uint16_t delta)
     {
         // control in place animation
         frame_time_count += delta;

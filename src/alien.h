@@ -68,7 +68,7 @@ namespace GameEntities {
             type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
             type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
         }
-        void movement(Uint32 delta);
+        void movement(uint16_t delta);
     };
 
     class Alien2 : public Alien {

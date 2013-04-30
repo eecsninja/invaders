@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void Player::movement(Uint32 delta)
+    void Player::movement(uint16_t delta)
     {
         // don't move off left hand side of the screen
         if (dx < 0 && x_int() < side_padding) {

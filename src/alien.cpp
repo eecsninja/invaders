@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void Alien::movement(Uint32 delta)
+    void Alien::movement(uint16_t delta)
     {
         // control in place animation
         frame_time_count += delta;

@@ -34,7 +34,7 @@
 
 namespace GameEntities {
 
-    void Shot::movement(Uint32 delta)
+    void Shot::movement(uint16_t delta)
     {
         y += delta * dy;
 

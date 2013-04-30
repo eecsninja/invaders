@@ -129,7 +129,7 @@ namespace GameEntities {
         other->active = false;
         game->msg_bonus_ship_destroyed(this->type_properties->points);
     }
-    void GameEntity::duration(Uint32 delta)
+    void GameEntity::duration(uint16_t delta)
     {
         // control explosion duration
         frame_time_count += delta;
