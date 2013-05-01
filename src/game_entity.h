@@ -33,8 +33,9 @@
 #ifndef GAME_ENTITY_H
 #define GAME_ENTITY_H
 
-#include "game.h"
 #include <SDL/SDL.h>
+
+#include "game.h"
 #include "screen.h"
 
 #define STATUS_ACTIVE   0

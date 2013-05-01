@@ -31,6 +31,7 @@
 */
 
 #include "game_entity.h"
+
 #include "screen.h"
 
 namespace GameEntities {

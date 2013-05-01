@@ -30,10 +30,12 @@
 
 */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <SDL/SDL.h>
+
 #include "game.h"
 #include "screen.h"
-#include <SDL/SDL.h>
-#include <stdio.h>
 
 SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
 SDL_Rect clip;
