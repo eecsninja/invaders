@@ -41,7 +41,7 @@ void set_video_mode(bool fullscreen) {
         flags |= SDL_FULLSCREEN;
     screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
     if (screen == NULL) {
-        fprintf(stderr, "Unable to set video mode: %d\n", SDL_GetError());
+        fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
         exit(1);
     }
 }
