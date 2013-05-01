@@ -660,8 +660,10 @@ namespace Game {
             screen_updates = 0;
 
 #ifdef EVENT_COUNTER
-            if (event_counter.num_loops == EVENT_COUNTER_LOOP_LIMIT)
+            if (event_counter.num_loops > 0 &&
+                event_counter.num_loops % EVENT_COUNTER_LOOP_LIMIT == 0) {
                 event_counter.report();
+            }
 #endif
         }
     }
