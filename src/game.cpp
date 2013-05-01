@@ -956,7 +956,7 @@ namespace Game {
         }
         if (screen == NULL) {
             fprintf(stderr, "Unable to set video mode: %d\n", SDL_GetError());
-            throw "SDL: Error setting video mode.";
+            exit(1);
         }
     }
     Game::~Game()
