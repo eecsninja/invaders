@@ -92,6 +92,10 @@ static Shot player_shot_array[num_player_shots];
 static Shot alien_shot_array[MAX_NUM_ALIEN_SHOTS];
 static Explosion explosion_array[num_explosions];
 
+static int direction_array[random_list_len];
+static int bonus_select_array[random_list_len];
+static int launch_delay_array[random_list_len];
+
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
 
@@ -111,10 +115,6 @@ namespace Game {
     }
     void Game::init_wave()
     {
-        // clear all lists and vectors and free all memory
-        direction.clear();
-        bonus_select.clear();
-        launch_delay.clear();
         // create conditions for next wave
         logic_this_loop = wave_over = false;
         screen_updates = last_shot = 0;
@@ -215,9 +215,9 @@ namespace Game {
         switch (wave) {
         case 0:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_5());
-                launch_delay.push_back(gen1_4());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_5());
+                launch_delay[i] = (gen1_4());
             }
             alien_shot_delay = 400;
             num_alien_shots = 16;
@@ -226,9 +226,9 @@ namespace Game {
             break;
         case 1:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_5());
-                launch_delay.push_back(gen1_4());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_5());
+                launch_delay[i] = (gen1_4());
             }
             alien_shot_delay = 375;
             alien_speed += 5;
@@ -238,9 +238,9 @@ namespace Game {
             break;
         case 2:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_4());
-                launch_delay.push_back(gen1_3());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_4());
+                launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 350;
             alien_speed += 5;
@@ -250,9 +250,9 @@ namespace Game {
             break;
         case 3:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_4());
-                launch_delay.push_back(gen1_3());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_4());
+                launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 325;
             alien_speed += 5;
@@ -262,9 +262,9 @@ namespace Game {
             break;
         case 4:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_3());
-                launch_delay.push_back(gen1_3());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_3());
+                launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
             alien_speed += 5;
@@ -274,9 +274,9 @@ namespace Game {
             break;
         case 5:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_2());
-                launch_delay.push_back(gen1_3());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_2());
+                launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
             alien_speed += 5;
@@ -286,9 +286,9 @@ namespace Game {
             break;
         default:
             for (int i = 0; i < random_list_len; ++i) {
-                direction.push_back(gen1_2());
-                bonus_select.push_back(gen1_2());
-                launch_delay.push_back(gen1_2());
+                direction[i] = (gen1_2());
+                bonus_select[i] = (gen1_2());
+                launch_delay[i] = (gen1_2());
             }
             if (alien_shot_delay > 200) {
                 alien_shot_delay -= 20;
@@ -866,6 +866,10 @@ namespace Game {
         player_shots = player_shot_array;
         alien_shots = alien_shot_array;
         explosions = explosion_array;
+
+        direction = direction_array;
+        bonus_select = bonus_select_array;
+        launch_delay = launch_delay_array;
     }
     void Game::set_video_mode(int fullscreen)
     {

@@ -37,7 +37,6 @@
 #include "status.h"
 #include "sound.h"
 #include <map>
-#include <vector>
 #include <SDL/SDL.h>
 
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
@@ -72,7 +71,9 @@ namespace Game {
         GameEntities::ShieldPiece* shields;
         GameEntities::Shot* player_shots, *alien_shots;
         GameEntities::Explosion* explosions;
-        std::vector<int> direction, bonus_select, launch_delay;
+        int* direction;
+        int* bonus_select;
+        int* launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
         Uint32 last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
