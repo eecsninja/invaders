@@ -63,7 +63,9 @@ extern const char* datadir;
 //#define FRAME_COUNTER
 
 using GameEntities::GameEntity;
+using GameEntities::Player;
 using GameEntities::Alien;
+using GameEntities::BonusShip;
 using GameEntities::Explosion;
 using GameEntities::ShieldPiece;
 using GameEntities::Shot;
@@ -143,6 +145,15 @@ namespace Game {
 
         shield_groups = shield_group_array;
 
+        // Instantiate these here, instead of allocating from heap.
+        Player player_obj;
+        BonusShip bonus_obj = GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
+        BonusShip small_bonus_obj = GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
+
+        player = &player_obj;
+        rbonus = bonus = &bonus_obj;
+        sbonus = &small_bonus_obj;
+
         // init for new game
         wave = score = 0;
         next_free_guy = free_guy_val;
@@ -214,11 +225,12 @@ namespace Game {
     void Game::factory()
     {
         // create the player ship and place it in the center of the screen
-        player = new GameEntities::Player(player_center, player_top, 0, 0, true, this);
+        *player = GameEntities::Player(player_center, player_top, 0, 0, true, this);
 
         // create bonus ship and small bonus ship
-        rbonus = bonus = new GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
-        sbonus = new GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
+        *bonus = GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
+        *sbonus = GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
+
         // create the shields
         int num_shields = 0;
 

@@ -39,6 +39,7 @@ namespace GameEntities {
 
     class Player : public GameEntity {
     public:
+        Player() {}
         Player(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(GAME_ENTITY_PLAYER, x, y, dx, dy, active, game)
         {

@@ -44,6 +44,7 @@ namespace GameEntities {
         SDL_Surface* images[NUM_BONUS_SHIP_IMAGES];
         int image_num;
     public:
+        BonusShip() {}
         BonusShip(bool is_small, int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP,
                          x, y, dx, dy, active, game), image_num(0)
