@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = invaders_private.res
-OBJ  = src/alien.o src/bonus_ship.o src/game.o src/game_entity.o src/main.o src/player.o src/shot.o src/sound.o src/status.o src/ttf.o src/ui.o $(RES)
-LINKOBJ  = src/alien.o src/bonus_ship.o src/game.o src/game_entity.o src/main.o src/player.o src/shot.o src/sound.o src/status.o src/ttf.o src/ui.o $(RES)
+OBJ  = src/alien.o src/bonus_ship.o src/game.o src/game_entity.o src/main.o src/player.o src/shot.o src/sound.o src/status.o src/ttf.o src/ui.o src/images.o $(RES)
+LINKOBJ  = src/alien.o src/bonus_ship.o src/game.o src/game_entity.o src/main.o src/player.o src/shot.o src/sound.o src/status.o src/ttf.o src/ui.o src/images.o $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -mwindows -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf  
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
@@ -58,6 +58,9 @@ src/ttf.o: src/ttf.cpp
 
 src/ui.o: src/ui.cpp
 	$(CPP) -c src/ui.cpp -o src/ui.o $(CXXFLAGS)
+
+src/images.o: src/images.cpp
+	$(CPP) -c src/images.cpp -o src/images.o $(CXXFLAGS)
 
 invaders_private.res: invaders_private.rc 
 	$(WINDRES) -i invaders_private.rc --input-format=rc -o invaders_private.res -O coff 

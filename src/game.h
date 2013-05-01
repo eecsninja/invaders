@@ -37,8 +37,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SDL/SDL.h>
 
+#include "images.h"
 #include "sound.h"
 #include "status.h"
 #include "ui.h"
@@ -61,6 +61,8 @@ namespace GameEntities {
     typedef GameEntity ShieldPiece;
     typedef GameEntity Shot;
 }
+
+struct SDL_Surface;
 
 #define EVENT_COUNTER
 
@@ -115,8 +117,8 @@ namespace Game {
         Sound::Sound sound;
         Ui::Ui ui;
         Ui::Status status;
+        Graphics::Images images;
         GameEntityPtr player, rbonus, sbonus, bonus;
-        SDL_Surface* image_cache[MAX_NUM_IMAGES];
         GameEntities::Alien* aliens;
         GameEntities::ShieldPiece* shields;
         GameEntities::Shot* player_shots, *alien_shots;
@@ -130,8 +132,8 @@ namespace Game {
         int* launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
-        Uint32 last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
-        Uint32 player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;
+        uint32_t last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
+        uint32_t player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;
         bool logic_this_loop, player_dead, wave_over, aliens_landed, sdl_quit_event;
         void free_guy_check();
         void init_aliens(generator_fun& gen, int speed);
@@ -142,8 +144,6 @@ namespace Game {
         bool no_explosions_active();
         void launch_bonus_ship();
         void alien_fire();
-        void load_images();
-        void free_images();
         void fire_shot();
         void init_wave();
         void factory();
@@ -154,9 +154,9 @@ namespace Game {
     public:
         Game();
         ~Game();
-        void explode(fixed x, fixed y, Uint32 duration);
+        void explode(fixed x, fixed y, uint32_t duration);
         void game_control();
-        SDL_Surface* get_image(const char* image);
+        SDL_Surface* get_image(const char* filename);
         void msg_player_dead();
         void msg_alien_landed();
         void msg_alien_killed(int pos, int points);

@@ -32,7 +32,6 @@
 
 #include "game.h"
 
-#include <SDL/SDL_image.h>
 #include <SDL/SDL.h>
 
 #include "alien.h"
@@ -109,14 +108,6 @@ static const char* image_list[] = { "ship.png", "shot.png",
 };
 
 namespace Game {
-
-    // Returns the index of |filename| in the |image_list| array.
-    int get_image_index(const char* filename) {
-        for (int i = 0; image_list[i]; ++i)
-            if(strcmp(filename, image_list[i]) == 0)
-                return i;
-        return -1;
-    }
 
     void Game::game_control()
     {
@@ -932,7 +923,7 @@ namespace Game {
         }
         return true;
     }
-    void Game::explode(fixed x, fixed y, Uint32 duration)
+    void Game::explode(fixed x, fixed y, uint32_t duration)
     {
         explosions[explosion_counter].init_x(x);
         explosions[explosion_counter].init_y(y);
@@ -950,7 +941,7 @@ namespace Game {
                    rbonus(NULL)
     {
         set_video_mode(0);
-        load_images();
+        images.load_images(image_list);
         wave_background = get_image("wave_background.png");
         background = get_image("background.png");
         ui_header = get_image("ui_header.png");
@@ -970,7 +961,6 @@ namespace Game {
     }
     Game::~Game()
     {
-        free_images();
         free_entities();
     }
     void Game::free_entities()
@@ -989,35 +979,8 @@ namespace Game {
       }
       bonus = NULL;
     }
-    SDL_Surface* Game::get_image(const char *filename)
-    {
-        int index = get_image_index(filename);
-        if (index < 0)
-            return NULL;
-        return image_cache[index];
-    }
-    void Game::free_images()
-    {
-        for (int i = 0; i < MAX_NUM_IMAGES; ++i) {
-            if (image_cache[i])
-                SDL_FreeSurface(image_cache[i]);
-        }
-    }
-    void Game::load_images()
-    {
-        for (int index = 0; image_list[index]; ++index) {
-            char path[1024];
-            sprintf(path, "%s%s", datadir, image_list[index]);
-            SDL_Surface* temp = IMG_Load(path);
-            if (temp == NULL) {
-                free_images();
-                fprintf(stderr, "Unable to load image file: %s\n", image_list[index]);
-                exit(1);
-            }
-            SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
-            image_cache[index] = image;
-            SDL_FreeSurface(temp);
-        }
-    }
 
+    SDL_Surface* Game::get_image(const char* filename) {
+        return images.get_image(filename);
+    }
 }
