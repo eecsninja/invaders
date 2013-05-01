@@ -76,6 +76,9 @@ namespace GameEntities {
     }
     bool GameEntity::collides_with(GameEntity* other)
     {
+#ifdef EVENT_COUNTER
+        event_counter.do_collision_check();
+#endif
         if ( (this->y_int() + this->coll_y_offset() >= other->y_int() + other->coll_y_offset() + other->coll_h()) ||
              (this->x_int() + this->coll_x_offset() >= other->x_int() + other->coll_x_offset() + other->coll_w()) ||
              (other->y_int() + other->coll_y_offset() >= this->y_int() + this->coll_y_offset() + this->coll_h()) ||
@@ -139,6 +142,9 @@ namespace GameEntities {
             frame_time_count = 0;
             deactivate();
         }
+#ifdef EVENT_COUNTER
+        event_counter.do_duration_call();
+#endif
     }
 
 }

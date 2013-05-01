@@ -51,6 +51,9 @@ namespace GameEntities {
         } else if (dx < 0 && x_int() < -image->w) {
             deactivate();
         }
+#ifdef EVENT_COUNTER
+        event_counter.do_movement_call();
+#endif
     }
 
     GameEntityTypeProperties BonusShip::bonus_ship_properties;

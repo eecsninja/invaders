@@ -58,6 +58,10 @@ namespace GameEntities {
         }
 
         x += INT_TO_FIXED(delta * dx) / 1000;
+
+#ifdef EVENT_COUNTER
+        event_counter.do_movement_call();
+#endif
     }
 
     GameEntityTypeProperties Alien::alien_properties;

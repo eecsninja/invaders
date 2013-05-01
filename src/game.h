@@ -58,6 +58,48 @@ namespace GameEntities {
     class Shot;
 }
 
+#define EVENT_COUNTER
+
+#ifdef EVENT_COUNTER
+// To improve performance, count the number of various calls per game cycle.
+// This should reveal the bottlenecks where optimization could help.
+struct EventCounter {
+    int num_collision_checks;
+    int num_duration_calls;
+    int num_movement_calls;
+    int num_loops;
+
+    void reset() {
+        memset(this, 0, sizeof(*this));
+    }
+
+    void do_collision_check() {
+        ++num_collision_checks;
+    }
+
+    void do_duration_call() {
+        ++num_duration_calls;
+    }
+
+    void do_movement_call() {
+        ++num_movement_calls;
+    }
+
+    void new_loop() {
+        ++num_loops;
+    }
+
+    void report() {
+        if (num_loops == 0)
+            return;
+        printf("Per-loop stats, averaged over %d loops:\n", num_loops);
+        printf("collision checks: %.2f\n", (float)num_collision_checks / num_loops);
+        printf("duration calls: %.2f\n", (float)num_duration_calls / num_loops);
+        printf("movement calls: %.2f\n", (float)num_movement_calls / num_loops);
+    }
+};
+#endif
+
 namespace Game {
 
     class Game {

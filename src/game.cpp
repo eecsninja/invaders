@@ -88,6 +88,11 @@ using GameEntities::Shot;
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
 
+#ifdef EVENT_COUNTER
+#define EVENT_COUNTER_LOOP_LIMIT        1000
+EventCounter event_counter;
+#endif
+
 namespace Game {
 
     void Game::game_control()
@@ -325,7 +330,14 @@ namespace Game {
         Uint8* keys;
         int reloading = 0;
         last_bonus_launch = last_alien_shot = last_loop_time = SDL_GetTicks();
+
+#ifdef EVENT_COUNTER
+        event_counter.reset();
+#endif
         while (1) {
+#ifdef EVENT_COUNTER
+            event_counter.new_loop();
+#endif
             // used to calculate how far the entities should move this loop
             // delta is the number of milliseconds the last loop iteration took
             // movement is a function of delta
@@ -616,6 +628,11 @@ namespace Game {
             }
             SDL_UpdateRects(screen, screen_updates, dst);
             screen_updates = 0;
+
+#ifdef EVENT_COUNTER
+            if (event_counter.num_loops == EVENT_COUNTER_LOOP_LIMIT)
+                event_counter.report();
+#endif
         }
     }
     void Game::player_rebirth()

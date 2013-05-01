@@ -45,6 +45,8 @@
 #define CLR_BIT(var, bit)  var &= ~(1<<(bit))
 #define TEST_BIT(var, bit)  ((var) & (1<<(bit)))
 
+extern EventCounter event_counter;
+
 namespace GameEntities {
 
     // When all instances of a class of GameEntity have the same properties,

@@ -44,6 +44,9 @@ namespace GameEntities {
         if (y_int() > 575) {
             deactivate();
         }
+#ifdef EVENT_COUNTER
+        event_counter.do_movement_call();
+#endif
     }
 
     GameEntityTypeProperties Shot::shot_properties;
