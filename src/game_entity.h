@@ -101,6 +101,10 @@ namespace GameEntities {
         // a virtual destructor is important
         virtual ~GameEntity() { }
         virtual void movement(int16_t delta) { delta = 0; }
+        static void set_type_property(int type,
+                                      const GameEntityTypeProperties& prop) {
+            type_properties[type] = prop;
+        }
         void draw();
         void cleanup_draw();
         void erase();

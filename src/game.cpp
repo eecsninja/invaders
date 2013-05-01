@@ -223,6 +223,13 @@ namespace Game {
                 GameEntity(GAME_ENTITY_SHIELD_GROUP, j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
                            SHIELD_Y_OFFSET, 0, 0, true, this);
         }
+        GameEntities::GameEntityTypeProperties prop;
+        prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
+        prop.coll_h = SHIELD_GROUP_HEIGHT * SHIELD_PIECE_SIZE;
+        prop.coll_x_offset = 0;
+        prop.coll_y_offset = 0;
+        GameEntity::set_type_property(GAME_ENTITY_SHIELD_GROUP, prop);
+
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
             explosions[i] = GameEntities::Explosion(0, 0, 0, 0, false, this);
