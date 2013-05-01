@@ -37,10 +37,6 @@
 #include <SDL/SDL.h>
 #include "screen.h"
 
-#define FIXED_POINT_FACTOR                            1024
-#define INT_TO_FIXED(x)           (x * FIXED_POINT_FACTOR)
-#define FIXED_TO_INT(x)           (x / FIXED_POINT_FACTOR)
-
 namespace GameEntities {
 
     // When all instances of a class of GameEntity have the same properties,

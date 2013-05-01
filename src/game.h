@@ -46,6 +46,9 @@
 typedef int (*generator_fun)(void);   // Used for generating random values.
 
 typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
+#define FIXED_POINT_FACTOR                            1024
+#define INT_TO_FIXED(x)           (x * FIXED_POINT_FACTOR)
+#define FIXED_TO_INT(x)           (x / FIXED_POINT_FACTOR)
 
 namespace GameEntities {
     class GameEntity;
