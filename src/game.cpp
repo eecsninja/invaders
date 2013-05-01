@@ -471,52 +471,52 @@ namespace Game {
             // alien shots with player and shields
             for (int i = 0; i < num_alien_shots; ++i) {
                 Shot* shot = &alien_shots[i];
-                if (shot->is_active()) {
-                    if (player->collides_with(shot)) {
-                        player->player_shot_collision(shot);
-                    }
-                    for (int i = 0; i < NUM_SHIELDS; ++i) {
-                        ShieldPiece* shield = &shields[i];
-                        if (shield->is_alive() && shield->collides_with(shot)) {
-                            shot->shot_shield_collision(shield);
-                        }
+                if (!shot->is_active())
+                    continue;
+
+                if (player->collides_with(shot)) {
+                    player->player_shot_collision(shot);
+                }
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                    ShieldPiece* shield = &shields[i];
+                    if (shield->is_alive() && shield->collides_with(shot)) {
+                        shot->shot_shield_collision(shield);
                     }
                 }
             }
             // shots with shots
             for (int j = 0; j < num_player_shots; ++j) {
                 Shot* shot = &player_shots[j];
-                if (shot->is_active()) {
-                    for (int i = 0; i < num_alien_shots; ++i) {
-                        Shot* alien_shot = &alien_shots[i];
-                        if (alien_shot->is_active()) {
-                            if (shot->collides_with(alien_shot)) {
-                                //sound.play_shot_collision();
-                                shot->shot_shot_collision(alien_shot);
-                            }
-                        }
-                    }
-                }
+                if (!shot->is_active())
+                    continue;
+
+                  for (int i = 0; i < num_alien_shots; ++i) {
+                      Shot* alien_shot = &alien_shots[i];
+                      if (!alien_shot->is_active())
+                          continue;
+                      if (shot->collides_with(alien_shot)) {
+                          //sound.play_shot_collision();
+                          shot->shot_shot_collision(alien_shot);
+                      }
+                  }
             }
             // player shots with aliens, bonus, and shields
             for (int j = 0; j < num_player_shots; ++j) {
                 Shot* shot = &player_shots[j];
-                if (shot->is_active()) {
-                    if (bonus->is_active()) {
-                        if (shot->collides_with(bonus)) {
-                            bonus->bonus_shot_collision(shot);
-                        }
+                if (!shot->is_active())
+                    continue;
+                if (!bonus->is_active() && shot->collides_with(bonus)) {
+                    bonus->bonus_shot_collision(shot);
+                }
+                for (int i = 0; i < NUM_ALIENS; ++i) {
+                    if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
+                      shot->shot_alien_collision(&aliens[i]);
                     }
-                    for (int i = 0; i < NUM_ALIENS; ++i) {
-                      if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
-                        shot->shot_alien_collision(&aliens[i]);
-                      }
-                    }
-                    for (int i = 0; i < NUM_SHIELDS; ++i) {
-                        ShieldPiece* shield = &shields[i];
-                        if (shield->is_alive() && shield->collides_with(shot)) {
-                            shot->shot_shield_collision(shield);
-                        }
+                }
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                    ShieldPiece* shield = &shields[i];
+                    if (shield->is_alive() && shield->collides_with(shot)) {
+                        shot->shot_shield_collision(shield);
                     }
                 }
             }
