@@ -40,6 +40,7 @@ namespace GameEntities {
     class ShieldPiece : public GameEntity {
         static GameEntityTypeProperties shield_properties;
     public:
+        ShieldPiece() {}
         ShieldPiece(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {

@@ -70,6 +70,7 @@ namespace GameEntities {
 }
 
 using GameEntities::Alien;
+using GameEntities::ShieldPiece;
 
 #define ALIEN_ARRAY_WIDTH    12
 #define ALIEN_ARRAY_HEIGHT    5
@@ -79,7 +80,10 @@ using GameEntities::Alien;
 #define ALIEN_STEP_X         50
 #define ALIEN_STEP_Y         35
 
+#define NUM_SHIELDS          72
+
 static Alien alien_array[NUM_ALIENS];
+static ShieldPiece shield_array[NUM_SHIELDS];
 
 namespace Game {
 
@@ -101,11 +105,9 @@ namespace Game {
         direction.clear();
         bonus_select.clear();
         launch_delay.clear();
-        dead_entities.clear();
         player_shots.clear();
         alien_shots.clear();
         explosions.clear();
-        shields.clear();
         // create conditions for next wave
         logic_this_loop = wave_over = false;
         screen_updates = last_shot = 0;
@@ -174,26 +176,23 @@ namespace Game {
         // create the shields
         int dim = 20; // shield height and width
         int space = 230;
+        int num_shields = 0;
         for (int j = 0; j < 3; ++j) {
             for (int i = 0; i < 6; ++i) {
-                GameEntities::GameEntity* shield_piece =
-                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475, 0, 0, true, this);
-                shields.push_back(shield_piece);
+                shields[num_shields++] =
+                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475, 0, 0, true, this);
             }
             for (int i = 0; i < 6; ++i) {
-                GameEntities::GameEntity* shield_piece =
-                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-dim, 0, 0, true, this);
-                shields.push_back(shield_piece);
+                shields[num_shields++] =
+                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-dim, 0, 0, true, this);
             }
             for (int i = 0; i < 6; ++i) {
-                GameEntities::GameEntity* shield_piece =
-                    new GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-(dim*2), 0, 0, true, this);
-                shields.push_back(shield_piece);
+                shields[num_shields++] =
+                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-(dim*2), 0, 0, true, this);
             }
             for (int i = 0; i < 4; ++i) {
-                GameEntities::GameEntity* shield_piece =
-                    new GameEntities::ShieldPiece((j*space)+130+(i*dim), 475-(dim*3), 0, 0, true, this);
-                shields.push_back(shield_piece);
+                shields[num_shields++] =
+                    GameEntities::ShieldPiece((j*space)+130+(i*dim), 475-(dim*3), 0, 0, true, this);
             }
         }
         // create explosions and player shots
@@ -355,7 +354,6 @@ namespace Game {
                 bonus->erase();
             for (int i = 0; i < NUM_ALIENS; ++i)
               aliens[i].erase();
-            typedef std::list<GameEntityPtr>::iterator Iter;
             typedef std::vector<GameEntityPtr>::iterator vIter;
             for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
                 if ((*it)->is_active()) {
@@ -372,8 +370,9 @@ namespace Game {
                     (*it)->erase();
                 }
             }
-            for (Iter it = shields.begin(); it != shields.end(); ++it) {
-                (*it)->erase();
+            for (int i = 0; i < NUM_SHIELDS; ++i) {
+                if(shields[i].is_alive())
+                    shields[i].erase();
             }
 
             // player attempt to fire
@@ -434,9 +433,10 @@ namespace Game {
                     if (player->collides_with(*shot)) {
                         player->player_shot_collision(*shot);
                     }
-                    for (Iter shield = shields.begin(); shield != shields.end(); ++shield) {
-                        if ((*shield)->collides_with(*shot)) {
-                            (*shot)->shot_shield_collision(*shield);
+                    for (int i = 0; i < NUM_SHIELDS; ++i) {
+                        ShieldPiece* shield = &shields[i];
+                        if (shield->is_alive() && shield->collides_with(*shot)) {
+                            (*shot)->shot_shield_collision(shield);
                         }
                     }
                 }
@@ -467,9 +467,10 @@ namespace Game {
                         (*shot)->shot_alien_collision(&aliens[i]);
                       }
                     }
-                    for (Iter shield = shields.begin(); shield != shields.end(); ++shield) {
-                        if ((*shield)->collides_with(*shot)) {
-                            (*shot)->shot_shield_collision(*shield);
+                    for (int i = 0; i < NUM_SHIELDS; ++i) {
+                        ShieldPiece* shield = &shields[i];
+                        if (shield->is_alive() && shield->collides_with(*shot)) {
+                            (*shot)->shot_shield_collision(shield);
                         }
                     }
                 }
@@ -479,22 +480,14 @@ namespace Game {
                 Alien* alien = &aliens[i];
                 if (!alien->is_alive())
                     continue;
-                for (Iter shield = shields.begin(); shield != shields.end(); ++shield) {
-                    if ((*shield)->collides_with(alien)) {
-                        alien->alien_shield_collision(*shield);
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                    ShieldPiece* shield = &shields[i];
+                    if (shield->is_alive() && shield->collides_with(alien)) {
+                        alien->alien_shield_collision(shield);
                     }
                 }
                 if (player->is_active() && player->collides_with(alien)) {
                     player->player_alien_collision(alien);
-                }
-            }
-
-            // remove dead entities from aliens and shields
-            {
-                int i = 0;
-                for (Iter it = dead_entities.begin(); i < num_entities_removed; ++it, ++i) {
-                    shields.remove(*it);
-                    delete *it;
                 }
             }
 
@@ -590,8 +583,9 @@ namespace Game {
                     (*it)->draw();
                 }
             }
-            for (Iter it = shields.begin(); it != shields.end(); ++it) {
-                (*it)->draw();
+            for (int i = 0; i < NUM_SHIELDS; ++i) {
+                if (shields[i].is_alive())
+                    shields[i].draw();
             }
             // update screen
             for (int i = 0; i < screen_updates; ++i) {
@@ -614,9 +608,9 @@ namespace Game {
         if (bonus->is_active()) {
             bonus->cleanup_draw();
         }
-        typedef std::list<GameEntityPtr>::iterator Iter;
-        for (Iter it = shields.begin(); it != shields.end(); ++it) {
-                (*it)->cleanup_draw();
+        for (int i = 0; i < NUM_SHIELDS; ++i) {
+            if (shields[i].is_alive())
+                shields[i].cleanup_draw();
         }
         for (int i = 0; i < NUM_ALIENS; ++i) {
             aliens[i].cleanup_draw();
@@ -632,9 +626,8 @@ namespace Game {
         // redraw all that should remain
         if (player->is_active())
             player->cleanup_draw();
-        typedef std::list<GameEntityPtr>::iterator Iter;
-        for (Iter it = shields.begin(); it != shields.end(); ++it) {
-                (*it)->cleanup_draw();
+        for (int i = 0; i < NUM_SHIELDS; ++i) {
+            shields[i].cleanup_draw();
         }
         // update screen
         SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
@@ -848,6 +841,7 @@ namespace Game {
         ui_points = image_cache["ui_points.png"];
 
         aliens = alien_array;
+        shields = shield_array;
     }
     void Game::set_video_mode(int fullscreen)
     {
@@ -881,11 +875,6 @@ namespace Game {
         sbonus = NULL;
       }
       bonus = NULL;
-
-      std::list<GameEntityPtr>::iterator list_iter;
-      for (list_iter = shields.begin(); list_iter != shields.end(); ++list_iter)
-        delete *list_iter;
-      shields.clear();
 
       std::vector<GameEntityPtr>::iterator vec_iter;
       for (vec_iter = player_shots.begin(); vec_iter != player_shots.end(); ++vec_iter)

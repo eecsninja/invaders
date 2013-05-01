@@ -36,7 +36,6 @@
 #include "ui.h"
 #include "status.h"
 #include "sound.h"
-#include <list>
 #include <map>
 #include <vector>
 #include <SDL/SDL.h>
@@ -51,6 +50,7 @@ typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
 namespace GameEntities {
     class GameEntity;
     class Alien;
+    class ShieldPiece;
 }
 
 namespace Game {
@@ -63,7 +63,7 @@ namespace Game {
         GameEntityPtr player, rbonus, sbonus, bonus;
         std::map<const char*, SDL_Surface*> image_cache;
         GameEntities::Alien* aliens;
-        std::list<GameEntityPtr> dead_entities, shields;
+        GameEntities::ShieldPiece* shields;
         std::vector<GameEntityPtr> player_shots, alien_shots, explosions;
         std::vector<int> direction, bonus_select, launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
@@ -92,10 +92,6 @@ namespace Game {
         void explode(fixed x, fixed y, Uint32 duration);
         void game_control();
         SDL_Surface* get_image(const char* image);
-        void remove_entity(GameEntityPtr e) {
-            dead_entities.push_front(e);
-            ++num_entities_removed;
-        }
         void msg_player_dead();
         void msg_alien_landed();
         void msg_alien_killed(int pos, int points);

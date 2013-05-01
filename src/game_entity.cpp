@@ -113,7 +113,7 @@ namespace GameEntities {
     {
         if (hit) return;
         this->active = false;
-        game->remove_entity(other);
+        other->kill();
         hit = true;
     }
     void GameEntity::shot_shot_collision(GameEntity* other)

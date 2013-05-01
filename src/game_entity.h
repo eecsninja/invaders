@@ -111,7 +111,7 @@ namespace GameEntities {
         // Shot
         void set_hit(bool h) { hit = h; }
         // collision handling
-        void alien_shield_collision(GameEntity* other) { game->remove_entity(other); }
+        void alien_shield_collision(GameEntity* other) { other->kill(); }
         void player_alien_collision(GameEntity* other);
         void player_shot_collision(GameEntity* other);
         void shot_alien_collision(GameEntity* other);
