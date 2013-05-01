@@ -476,11 +476,15 @@ namespace Game {
 
                 if (player->collides_with(shot)) {
                     player->player_shot_collision(shot);
+                    if (!shot->is_active())
+                        continue;
                 }
                 for (int i = 0; i < NUM_SHIELDS; ++i) {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(shot)) {
                         shot->shot_shield_collision(shield);
+                        if (!shot->is_active())
+                            continue;
                     }
                 }
             }
@@ -497,6 +501,8 @@ namespace Game {
                       if (shot->collides_with(alien_shot)) {
                           //sound.play_shot_collision();
                           shot->shot_shot_collision(alien_shot);
+                          if (!shot->is_active())
+                              continue;
                       }
                   }
             }
@@ -507,16 +513,22 @@ namespace Game {
                     continue;
                 if (!bonus->is_active() && shot->collides_with(bonus)) {
                     bonus->bonus_shot_collision(shot);
+                    if (!shot->is_active())
+                        continue;
                 }
                 for (int i = 0; i < NUM_ALIENS; ++i) {
                     if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
-                      shot->shot_alien_collision(&aliens[i]);
+                        shot->shot_alien_collision(&aliens[i]);
+                        if (!shot->is_active())
+                            continue;
                     }
                 }
                 for (int i = 0; i < NUM_SHIELDS; ++i) {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(shot)) {
                         shot->shot_shield_collision(shield);
+                        if (!shot->is_active())
+                            continue;
                     }
                 }
             }
@@ -529,10 +541,14 @@ namespace Game {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(alien)) {
                         alien->alien_shield_collision(shield);
+                        if (!alien->is_alive())
+                            continue;
                     }
                 }
                 if (player->is_active() && player->collides_with(alien)) {
                     player->player_alien_collision(alien);
+                    if (!alien->is_alive())
+                        continue;
                 }
             }
 
