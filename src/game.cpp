@@ -941,23 +941,6 @@ namespace Game {
     }
     Game::~Game()
     {
-        free_entities();
-    }
-    void Game::free_entities()
-    {
-      if (player) {
-        delete player;
-        player = NULL;
-      }
-      if (rbonus) {
-        delete rbonus;
-        rbonus = NULL;
-      }
-      if (sbonus) {
-        delete sbonus;
-        sbonus = NULL;
-      }
-      bonus = NULL;
     }
 
     SDL_Surface* Game::get_image(const char* filename) {

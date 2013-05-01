@@ -148,7 +148,6 @@ namespace Game {
         void game_loop();
         void wave_cleanup();
         void player_rebirth();
-        void free_entities();
     public:
         Game();
         ~Game();
