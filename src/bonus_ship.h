@@ -41,31 +41,28 @@ namespace GameEntities {
 
     class BonusShip : public GameEntity {
     protected:
-        static GameEntityTypeProperties bonus_ship_properties;
-        static GameEntityTypeProperties small_bonus_ship_properties;
         SDL_Surface* images[NUM_BONUS_SHIP_IMAGES];
         int image_num;
     public:
         BonusShip(bool is_small, int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : GameEntity(x, y, dx, dy, active, game), image_num(0)
+            : GameEntity(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP,
+                         x, y, dx, dy, active, game), image_num(0)
         {
             if (!is_small) {
                 image = images[0] = game->get_image("bonus-1-1.png");
                 images[1] = game->get_image("bonus-1-2.png");
 
-                type_properties = &bonus_ship_properties;
-                type_properties->points = 1000;
+                properties->points = 1000;
             } else {
                 image = images[0] = game->get_image("bonus-2-1.png");
                 images[1] = game->get_image("bonus-2-2.png");
-              type_properties = &small_bonus_ship_properties;
-              type_properties->points = 5000;
+              properties->points = 5000;
             }
-            type_properties->frame_duration = 55;
-            type_properties->coll_w = int (image->w * 0.9);
-            type_properties->coll_h = image->h;
-            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
-            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
+            properties->frame_duration = 55;
+            properties->coll_w = int (image->w * 0.9);
+            properties->coll_h = image->h;
+            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
+            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
         }
         void movement(int16_t delta);
     };

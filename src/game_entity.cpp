@@ -109,7 +109,7 @@ namespace GameEntities {
             return;
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->deactivate();
-        game->msg_alien_killed(other->position, other->type_properties->points);
+        game->msg_alien_killed(other->position, other->properties->points);
         other->kill();
         set_hit(true);
     }
@@ -132,13 +132,13 @@ namespace GameEntities {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         this->deactivate();
         other->deactivate();
-        game->msg_bonus_ship_destroyed(this->type_properties->points);
+        game->msg_bonus_ship_destroyed(this->properties->points);
     }
     void GameEntity::duration(int16_t delta)
     {
         // control explosion duration
         frame_time_count += delta;
-        if (frame_time_count > type_properties->frame_duration) {
+        if (frame_time_count > properties->frame_duration) {
             frame_time_count = 0;
             deactivate();
         }
@@ -147,4 +147,5 @@ namespace GameEntities {
 #endif
     }
 
+    GameEntityTypeProperties GameEntity::type_properties[NUM_GAME_ENTITY_TYPES];
 }

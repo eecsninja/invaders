@@ -65,11 +65,6 @@ extern std::string datadir;
 
 //#define FRAME_COUNTER
 
-namespace GameEntities {
-   GameEntityTypeProperties ShieldPiece::shield_properties;
-   GameEntityTypeProperties Explosion::explosion_properties;
-}
-
 using GameEntities::GameEntity;
 using GameEntities::Alien;
 using GameEntities::Explosion;
@@ -174,21 +169,21 @@ namespace Game {
                 case 4:
                     // initialize the bottom row of aliens to fire
                     active = true;
-                    type = 1;
+                    type = GAME_ENTITY_ALIEN;
                     break;
                 case 3:
                     active = false;
-                    type = 1;
+                    type = GAME_ENTITY_ALIEN;
                     break;
                 case 2:
                 case 1:
                     active = false;
-                    type = 2;
+                    type = GAME_ENTITY_ALIEN2;
                     break;
                 case 0:
                 default:
                     active = false;
-                    type = 3;
+                    type = GAME_ENTITY_ALIEN3;
                     break;
                 }
                 aliens[alien_count] =
@@ -225,7 +220,7 @@ namespace Game {
             }
 
             shield_groups[j] =
-                GameEntity(j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
+                GameEntity(GAME_ENTITY_SHIELD_GROUP, j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
                            SHIELD_Y_OFFSET, 0, 0, true, this);
         }
         // create explosions and player shots

@@ -38,7 +38,7 @@ namespace GameEntities {
     {
         // control in place animation
         frame_time_count += delta;
-        if (frame_time_count > type_properties->frame_duration) {
+        if (frame_time_count > properties->frame_duration) {
             frame_time_count = 0;
             if (++image_num >= NUM_ALIEN_IMAGES) {
                 image_num = 0;
@@ -46,14 +46,14 @@ namespace GameEntities {
             image = images[image_num];
         }
         // bottom of the screen, game over
-        if (y_int() > type_properties->bottom_limit) {
+        if (y_int() > properties->bottom_limit) {
             game->msg_alien_landed();
         }
         // change direction and move down
         if (dx < 0 && x_int() < side_padding) {
             game->run_logic();
         }
-        else if (dx > 0 && x_int() > type_properties->right_limit - side_padding) {
+        else if (dx > 0 && x_int() > properties->right_limit - side_padding) {
             game->run_logic();
         }
 
@@ -63,8 +63,4 @@ namespace GameEntities {
         event_counter.do_movement_call();
 #endif
     }
-
-    GameEntityTypeProperties Alien::alien_properties;
-    GameEntityTypeProperties Alien::alien2_properties;
-    GameEntityTypeProperties Alien::alien3_properties;
 }

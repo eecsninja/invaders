@@ -47,6 +47,21 @@
 
 extern EventCounter event_counter;
 
+enum GameEntityTypes {
+    GAME_ENTITY_UNKNOWN,
+    GAME_ENTITY_PLAYER,
+    GAME_ENTITY_ALIEN,
+    GAME_ENTITY_ALIEN2,
+    GAME_ENTITY_ALIEN3,
+    GAME_ENTITY_BONUS_SHIP,
+    GAME_ENTITY_SMALL_BONUS_SHIP,
+    GAME_ENTITY_SHOT,
+    GAME_ENTITY_SHIELD_PIECE,
+    GAME_ENTITY_EXPLOSION,
+    GAME_ENTITY_SHIELD_GROUP,
+    NUM_GAME_ENTITY_TYPES,
+};
+
 namespace GameEntities {
 
     // When all instances of a class of GameEntity have the same properties,
@@ -63,6 +78,7 @@ namespace GameEntities {
     class GameEntity {
         static const int short_explosion = 50;
         static const int long_explosion = 200;
+        static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
     protected:
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
@@ -73,13 +89,15 @@ namespace GameEntities {
         uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
 
-        GameEntityTypeProperties* type_properties;
+        GameEntityTypeProperties* properties;
     public:
-        GameEntity() : status_bits(0) {}
-        GameEntity(int x, int y, int dx, int dy, bool active, Game::Game* game)
+        GameEntity() : status_bits(0),
+                       properties(&type_properties[GAME_ENTITY_UNKNOWN]) {}
+        GameEntity(int type, int x, int y, int dx, int dy, bool active, Game::Game* game)
             : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy),
               status_bits((active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE)),
-              game(game), frame_time_count(0) { }
+              game(game), frame_time_count(0),
+              properties(&type_properties[type]) {}
         // a virtual destructor is important
         virtual ~GameEntity() { }
         virtual void movement(int16_t delta) { delta = 0; }
@@ -99,15 +117,15 @@ namespace GameEntities {
         int get_y() const { return y_int(); }
         int x_int() const { return FIXED_TO_INT(x); }
         int y_int() const { return FIXED_TO_INT(y); }
-        int coll_w() const { return type_properties->coll_w; }
-        int coll_h() const { return type_properties->coll_h; }
-        int coll_x_offset() const { return type_properties->coll_x_offset; }
-        int coll_y_offset() const { return type_properties->coll_y_offset; }
+        int coll_w() const { return properties->coll_w; }
+        int coll_h() const { return properties->coll_h; }
+        int coll_x_offset() const { return properties->coll_x_offset; }
+        int coll_y_offset() const { return properties->coll_y_offset; }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
-        void set_frame_duration(Uint32 dur) { type_properties->frame_duration = dur; }
+        void set_frame_duration(Uint32 dur) { properties->frame_duration = dur; }
         // Explosion
-        void set_explosion(Uint32 dur) { activate(); type_properties->frame_duration = dur; }
+        void set_explosion(Uint32 dur) { activate(); properties->frame_duration = dur; }
         void duration(int16_t delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }

@@ -38,19 +38,17 @@
 namespace GameEntities {
 
     class ShieldPiece : public GameEntity {
-        static GameEntityTypeProperties shield_properties;
     public:
         ShieldPiece() {}
         ShieldPiece(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : GameEntity(x, y, dx, dy, active, game)
+            : GameEntity(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active, game)
         {
             image = game->get_image("shield_piece.png");
 
-            type_properties = &shield_properties;
-            type_properties->coll_w = image->w;
-            type_properties->coll_h = int (image->h * 0.9);
-            type_properties->coll_x_offset = (image->w - type_properties->coll_w) / 2;
-            type_properties->coll_y_offset = (image->h - type_properties->coll_h) / 2;
+            properties->coll_w = image->w;
+            properties->coll_h = int (image->h * 0.9);
+            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
+            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
         }
     };
 

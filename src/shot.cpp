@@ -48,6 +48,4 @@ namespace GameEntities {
         event_counter.do_movement_call();
 #endif
     }
-
-    GameEntityTypeProperties Shot::shot_properties;
 }
