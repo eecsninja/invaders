@@ -68,7 +68,7 @@ namespace GameEntities {
         Game::Game* game;
         SDL_Surface* image;
         uint16_t frame_time_count; // control in place animation speed
-        uint16_t position;   // used by Aliens to determine if and when to fire
+        uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
 
         GameEntityTypeProperties* type_properties;
