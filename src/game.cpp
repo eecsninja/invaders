@@ -83,10 +83,18 @@ using GameEntities::Shot;
 #define ALIEN_STEP_X         50
 #define ALIEN_STEP_Y         35
 
-#define NUM_SHIELDS          72
-
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
+
+// For generating shield pieces.
+#define NUM_SHIELD_GROUPS            3
+#define SHIELD_GROUP_WIDTH           6
+#define SHIELD_GROUP_HEIGHT          4
+#define SHIELD_X_OFFSET            110
+#define SHIELD_Y_OFFSET            415
+#define SHIELD_GROUP_X_SPACING     230
+#define SHIELD_PIECE_SIZE           20  // shield height and width
+#define NUM_SHIELDS   (NUM_SHIELD_GROUPS * SHIELD_GROUP_WIDTH * SHIELD_GROUP_HEIGHT)
 
 #ifdef EVENT_COUNTER
 #define EVENT_COUNTER_LOOP_LIMIT        1000
@@ -197,25 +205,18 @@ namespace Game {
         rbonus = bonus = new GameEntities::BonusShip(0, 0, 0, 0, false, this);
         sbonus = new GameEntities::SmallBonusShip(0, 0, 0, 0, false, this);
         // create the shields
-        int dim = 20; // shield height and width
-        int space = 230;
         int num_shields = 0;
-        for (int j = 0; j < 3; ++j) {
-            for (int i = 0; i < 6; ++i) {
-                shields[num_shields++] =
-                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475, 0, 0, true, this);
-            }
-            for (int i = 0; i < 6; ++i) {
-                shields[num_shields++] =
-                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-dim, 0, 0, true, this);
-            }
-            for (int i = 0; i < 6; ++i) {
-                shields[num_shields++] =
-                    GameEntities::ShieldPiece((j*space)+110+(i*dim), 475-(dim*2), 0, 0, true, this);
-            }
-            for (int i = 0; i < 4; ++i) {
-                shields[num_shields++] =
-                    GameEntities::ShieldPiece((j*space)+130+(i*dim), 475-(dim*3), 0, 0, true, this);
+
+        for (int j = 0; j < NUM_SHIELD_GROUPS; ++j) {
+            for (int k = 0; k < SHIELD_GROUP_HEIGHT; ++k) {
+                for (int i = 0; i < SHIELD_GROUP_WIDTH - ((k == 0) ? 2 : 0); ++i) {
+                    int x = (j * SHIELD_GROUP_X_SPACING) +
+                            SHIELD_X_OFFSET + ((k == 0) ? 20 : 0) +
+                            (i * SHIELD_PIECE_SIZE);
+                    int y = SHIELD_Y_OFFSET + SHIELD_PIECE_SIZE * k;
+                    shields[num_shields++] =
+                        GameEntities::ShieldPiece(x, y, 0, 0, true, this);
+                }
             }
         }
         // create explosions and player shots
