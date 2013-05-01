@@ -940,24 +940,12 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
-        set_video_mode(0);
+        set_video_mode(false);
         images.load_images(image_list);
         wave_background = get_image("wave_background.png");
         background = get_image("background.png");
         ui_header = get_image("ui_header.png");
         ui_points = get_image("ui_points.png");
-    }
-    void Game::set_video_mode(int fullscreen)
-    {
-        if (fullscreen) {
-            screen = SDL_SetVideoMode(screen_w, screen_h, 16, SDL_SWSURFACE|SDL_FULLSCREEN);
-        } else {
-            screen = SDL_SetVideoMode(screen_w, screen_h, 16, SDL_SWSURFACE);
-        }
-        if (screen == NULL) {
-            fprintf(stderr, "Unable to set video mode: %d\n", SDL_GetError());
-            exit(1);
-        }
     }
     Game::~Game()
     {

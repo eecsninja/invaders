@@ -163,7 +163,6 @@ namespace Game {
         void msg_alien_player_collide();
         void msg_bonus_ship_destroyed(int bonus);
         void run_logic() { logic_this_loop = true; }
-        void set_video_mode(int fullscreen);
     };
 
 }

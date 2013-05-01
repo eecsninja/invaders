@@ -1,8 +1,8 @@
 /*
- screen.h
+ screen.cpp
  Classic Invaders
 
- Copyright (c) 2010, Todd Steinackle
+ Copyright (c) 2013, Simon Que
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -30,31 +30,18 @@
 
 */
 
-#ifndef SCREEN_H
-#define SCREEN_H
+#include "screen.h"
 
 #include <SDL/SDL.h>
+#include <stdlib.h>
 
-#define screen_w      800
-#define screen_h      600
-#define side_padding    5
-extern SDL_Surface* screen;
-extern SDL_Surface* background;
-extern SDL_Surface* wave_background;
-extern SDL_Surface* ui_header;
-extern SDL_Surface* ui_points;
-extern SDL_Rect clip;
-extern int screen_updates;
-#define max_updates   360
-extern SDL_Rect dst[max_updates];
-extern SDL_Rect src[max_updates];
-typedef struct {
-    SDL_Surface* img;
-    SDL_Rect* src_rect;
-    SDL_Rect* dst_rect;
-} blit;
-extern blit blits[max_updates];
-
-void set_video_mode(bool fullscreen);
-
-#endif  //SCREEN_H
+void set_video_mode(bool fullscreen) {
+    int flags = SDL_SWSURFACE;
+    if (fullscreen)
+        flags |= SDL_FULLSCREEN;
+    screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
+    if (screen == NULL) {
+        fprintf(stderr, "Unable to set video mode: %d\n", SDL_GetError());
+        exit(1);
+    }
+}
