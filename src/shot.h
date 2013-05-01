@@ -40,6 +40,7 @@ namespace GameEntities {
     class Shot : public GameEntity {
         static GameEntityTypeProperties shot_properties;
     public:
+        Shot() {}
         Shot(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {

@@ -40,6 +40,7 @@ namespace GameEntities {
     class Explosion : public GameEntity {
         static GameEntityTypeProperties explosion_properties;
     public:
+        Explosion() {}
         Explosion(int x, int y, int dx, int dy, bool active, Game::Game* game)
             : GameEntity(x, y, dx, dy, active, game)
         {

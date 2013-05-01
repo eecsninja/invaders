@@ -54,7 +54,9 @@ typedef int16_t fixed;    // Used for fixed point math on embedded systems.
 namespace GameEntities {
     class GameEntity;
     class Alien;
+    class Explosion;
     class ShieldPiece;
+    class Shot;
 }
 
 namespace Game {
@@ -68,7 +70,8 @@ namespace Game {
         std::map<const char*, SDL_Surface*> image_cache;
         GameEntities::Alien* aliens;
         GameEntities::ShieldPiece* shields;
-        std::vector<GameEntityPtr> player_shots, alien_shots, explosions;
+        GameEntities::Shot* player_shots, *alien_shots;
+        GameEntities::Explosion* explosions;
         std::vector<int> direction, bonus_select, launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
@@ -78,7 +81,9 @@ namespace Game {
         void free_guy_check();
         void init_aliens(generator_fun& gen, int speed);
         void pause();
-        int none_active(const std::vector<GameEntityPtr>& vec);
+        bool no_player_shots_active();
+        bool no_alien_shots_active();
+        bool no_explosions_active();
         void launch_bonus_ship();
         void alien_fire();
         void load_images();

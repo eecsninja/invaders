@@ -60,6 +60,7 @@
 #define player_init_y_shot_pos                         16
 #define alien_init_x_shot_pos             ((45 - 5)  / 2)
 #define alien_init_y_shot_pos                          25
+#define MAX_NUM_ALIEN_SHOTS                            32
 extern std::string datadir;
 
 //#define FRAME_COUNTER
@@ -70,7 +71,9 @@ namespace GameEntities {
 }
 
 using GameEntities::Alien;
+using GameEntities::Explosion;
 using GameEntities::ShieldPiece;
+using GameEntities::Shot;
 
 #define ALIEN_ARRAY_WIDTH    12
 #define ALIEN_ARRAY_HEIGHT    5
@@ -84,6 +87,10 @@ using GameEntities::ShieldPiece;
 
 static Alien alien_array[NUM_ALIENS];
 static ShieldPiece shield_array[NUM_SHIELDS];
+
+static Shot player_shot_array[num_player_shots];
+static Shot alien_shot_array[MAX_NUM_ALIEN_SHOTS];
+static Explosion explosion_array[num_explosions];
 
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
@@ -108,9 +115,6 @@ namespace Game {
         direction.clear();
         bonus_select.clear();
         launch_delay.clear();
-        player_shots.clear();
-        alien_shots.clear();
-        explosions.clear();
         // create conditions for next wave
         logic_this_loop = wave_over = false;
         screen_updates = last_shot = 0;
@@ -164,8 +168,7 @@ namespace Game {
         }
         // create alien shots
         for (int i= 0; i < num_alien_shots; ++i) {
-            GameEntityPtr shot = new GameEntities::Shot(0, 0, 0, alien_shot_speed, false, this);
-            alien_shots.push_back(shot);
+            alien_shots[i] = GameEntities::Shot(0, 0, 0, alien_shot_speed, false, this);
         }
     }
     void Game::factory()
@@ -200,10 +203,10 @@ namespace Game {
         }
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
-            explosions.push_back(new GameEntities::Explosion(0, 0, 0, 0, false, this));
+            explosions[i] = GameEntities::Explosion(0, 0, 0, 0, false, this);
         }
         for (int i= 0; i < num_player_shots; ++i) {
-            player_shots.push_back(new GameEntities::Shot(0, 0, 0, shot_speed, false, this));
+            player_shots[i] = GameEntities::Shot(0, 0, 0, shot_speed, false, this);
         }
 
         player_shot_delay = 225;
@@ -290,6 +293,8 @@ namespace Game {
             if (alien_shot_delay > 200) {
                 alien_shot_delay -= 20;
                 num_alien_shots += 3;
+                if (num_alien_shots > MAX_NUM_ALIEN_SHOTS)
+                    num_alien_shots = MAX_NUM_ALIEN_SHOTS;
             }
             alien_speed += 3;
             alien_odd_range = 6;
@@ -357,20 +362,19 @@ namespace Game {
                 bonus->erase();
             for (int i = 0; i < NUM_ALIENS; ++i)
               aliens[i].erase();
-            typedef std::vector<GameEntityPtr>::iterator vIter;
-            for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->erase();
+            for (int i = 0; i < num_player_shots; ++i) {
+                if (player_shots[i].is_active()) {
+                    player_shots[i].erase();
                 }
             }
-            for (vIter it = alien_shots.begin(); it != alien_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->erase();
+            for (int i = 0; i < num_alien_shots; ++i) {
+                if (alien_shots[i].is_active()) {
+                    alien_shots[i].erase();
                 }
             }
-            for (vIter it = explosions.begin(); it != explosions.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->erase();
+            for (int i = 0; i < num_explosions; ++i) {
+                if (explosions[i].is_active()) {
+                    explosions[i].erase();
                 }
             }
             for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -411,76 +415,80 @@ namespace Game {
             }
             for (int i = 0; i < NUM_ALIENS; ++i)
               aliens[i].movement(delta);
-            for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->movement(delta);
+            for (int i = 0; i < num_player_shots; ++i) {
+                if (player_shots[i].is_active()) {
+                    player_shots[i].movement(delta);
                 }
             }
-            for (vIter it = alien_shots.begin(); it != alien_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->movement(delta);
+            for (int i = 0; i < num_alien_shots; ++i) {
+                if (alien_shots[i].is_active()) {
+                    alien_shots[i].movement(delta);
                 }
             }
             // explosion duration
-            for (vIter it = explosions.begin(); it != explosions.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->duration(delta);
+            for (int i = 0; i < num_explosions; ++i) {
+                if (explosions[i].is_active()) {
+                    explosions[i].duration(delta);
                 }
             }
 
             // collision handling
             num_entities_removed = 0;
             // alien shots with player and shields
-            for (vIter shot = alien_shots.begin(); shot != alien_shots.end(); ++shot) {
-                if ((*shot)->is_active()) {
-                    if (player->collides_with(*shot)) {
-                        player->player_shot_collision(*shot);
+            for (int i = 0; i < num_alien_shots; ++i) {
+                Shot* shot = &alien_shots[i];
+                if (shot->is_active()) {
+                    if (player->collides_with(shot)) {
+                        player->player_shot_collision(shot);
                     }
                     for (int i = 0; i < NUM_SHIELDS; ++i) {
                         ShieldPiece* shield = &shields[i];
-                        if (shield->is_alive() && shield->collides_with(*shot)) {
-                            (*shot)->shot_shield_collision(shield);
+                        if (shield->is_alive() && shield->collides_with(shot)) {
+                            shot->shot_shield_collision(shield);
                         }
                     }
                 }
             }
             // shots with shots
-            for (vIter ps = player_shots.begin(); ps != player_shots.end(); ++ps) {
-                if ((*ps)->is_active()) {
-                    for (vIter as = alien_shots.begin(); as != alien_shots.end(); ++as) {
-                        if ((*as)->is_active()) {
-                            if ((*ps)->collides_with(*as)) {
+            for (int j = 0; j < num_player_shots; ++j) {
+                Shot* shot = &player_shots[j];
+                if (shot->is_active()) {
+                    for (int i = 0; i < num_alien_shots; ++i) {
+                        Shot* alien_shot = &alien_shots[i];
+                        if (alien_shot->is_active()) {
+                            if (shot->collides_with(alien_shot)) {
                                 //sound.play_shot_collision();
-                                (*ps)->shot_shot_collision(*as);
+                                shot->shot_shot_collision(alien_shot);
                             }
                         }
                     }
                 }
             }
             // player shots with aliens, bonus, and shields
-            for (vIter shot = player_shots.begin(); shot != player_shots.end(); ++shot) {
-                if ((*shot)->is_active()) {
+            for (int j = 0; j < num_player_shots; ++j) {
+                Shot* shot = &player_shots[j];
+                if (shot->is_active()) {
                     if (bonus->is_active()) {
-                        if ((*shot)->collides_with(bonus)) {
-                            bonus->bonus_shot_collision(*shot);
+                        if (shot->collides_with(bonus)) {
+                            bonus->bonus_shot_collision(shot);
                         }
                     }
                     for (int i = 0; i < NUM_ALIENS; ++i) {
-                      if (aliens[i].is_alive() && (*shot)->collides_with(&aliens[i])) {
-                        (*shot)->shot_alien_collision(&aliens[i]);
+                      if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
+                        shot->shot_alien_collision(&aliens[i]);
                       }
                     }
                     for (int i = 0; i < NUM_SHIELDS; ++i) {
                         ShieldPiece* shield = &shields[i];
-                        if (shield->is_alive() && shield->collides_with(*shot)) {
-                            (*shot)->shot_shield_collision(shield);
+                        if (shield->is_alive() && shield->collides_with(shot)) {
+                            shot->shot_shield_collision(shield);
                         }
                     }
                 }
             }
             // aliens with shields and player
-            for (int i = 0; i < NUM_ALIENS; ++i) {
-                Alien* alien = &aliens[i];
+            for (int j = 0; j < NUM_ALIENS; ++j) {
+                Alien* alien = &aliens[j];
                 if (!alien->is_alive())
                     continue;
                 for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -507,7 +515,7 @@ namespace Game {
                 return;
             }
             // conditions for player death by alien shot or collision
-            if (player_dead && none_active(explosions)) {
+            if (player_dead && no_explosions_active()) {
                 --player_life;
                 //status.blit_lives(player_life);
                 //sound.halt_bonus();
@@ -530,11 +538,11 @@ namespace Game {
                 last_loop_time += SDL_GetTicks() - dead_pause;
                 last_bonus_launch = last_alien_shot = SDL_GetTicks();
                 // erase player and alien shots to give player a chance to continue
-                for (vIter it = alien_shots.begin(); it != alien_shots.end(); ++it) {
-                    (*it)->deactivate();
+                for (int i = 0; i < num_alien_shots; ++i) {
+                    alien_shots[i].deactivate();
                 }
-                for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
-                    (*it)->deactivate();
+                for (int i = 0; i < num_player_shots; ++i) {
+                    player_shots[i].deactivate();
                 }
                 player_dead = false;
             }
@@ -545,7 +553,7 @@ namespace Game {
                 bonus_launch_delay = 100000;
                 player_shot_delay = 100000;
                 // wait for explosions and shots to finish
-                if (none_active(explosions) && none_active(player_shots) && none_active(alien_shots)) {
+                if (no_explosions_active() && no_player_shots_active() && no_alien_shots_active()) {
                     wave_cleanup();
                     //sound.wait_for_all_to_finish();
                     //sound.play_end_wave();
@@ -571,19 +579,19 @@ namespace Game {
                 if (aliens[i].is_alive())
                   aliens[i].draw();
             }
-            for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->draw();
+            for (int i = 0; i < num_player_shots; ++i) {
+                if (player_shots[i].is_active()) {
+                    player_shots[i].draw();
                 }
             }
-            for (vIter it = alien_shots.begin(); it != alien_shots.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->draw();
+            for (int i = 0; i < num_alien_shots; ++i) {
+                if (alien_shots[i].is_active()) {
+                    alien_shots[i].draw();
                 }
             }
-            for (vIter it = explosions.begin(); it != explosions.end(); ++it) {
-                if ((*it)->is_active()) {
-                    (*it)->draw();
+            for (int i = 0; i < num_explosions; ++i) {
+                if (explosions[i].is_active()) {
+                    explosions[i].draw();
                 }
             }
             for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -663,10 +671,10 @@ namespace Game {
         }
         // record time and fire
         last_shot = SDL_GetTicks();
-        player_shots[player_shot_counter]->init_x(player->get_x()+player_init_x_shot_pos);
-        player_shots[player_shot_counter]->init_y(player->get_y()-player_init_y_shot_pos);
-        player_shots[player_shot_counter]->set_hit(false);
-        player_shots[player_shot_counter]->activate();
+        player_shots[player_shot_counter].init_x(player->get_x()+player_init_x_shot_pos);
+        player_shots[player_shot_counter].init_y(player->get_y()-player_init_y_shot_pos);
+        player_shots[player_shot_counter].set_hit(false);
+        player_shots[player_shot_counter].activate();
         if (++player_shot_counter == num_player_shots) {
             player_shot_counter = 0;
         }
@@ -716,10 +724,10 @@ namespace Game {
         for (int i = 0; i < NUM_ALIENS; ++i) {
             Alien* alien = &aliens[i];
             if (alien->is_active() && alien->get_fire_chance() == alien_to_fire) {
-                alien_shots[alien_shot_counter]->init_x(alien->get_x()+alien_init_x_shot_pos);
-                alien_shots[alien_shot_counter]->init_y(alien->get_y()+alien_init_y_shot_pos);
-                alien_shots[alien_shot_counter]->set_hit(false);
-                alien_shots[alien_shot_counter]->activate();
+                alien_shots[alien_shot_counter].init_x(alien->get_x()+alien_init_x_shot_pos);
+                alien_shots[alien_shot_counter].init_y(alien->get_y()+alien_init_y_shot_pos);
+                alien_shots[alien_shot_counter].set_hit(false);
+                alien_shots[alien_shot_counter].activate();
                 if (++alien_shot_counter == num_alien_shots) {
                     alien_shot_counter = 0;
                 }
@@ -807,23 +815,32 @@ namespace Game {
             }
         }
     }
-    int Game::none_active(const std::vector<GameEntityPtr>& vec)
-    {
-        typedef std::vector<GameEntityPtr>::const_iterator vIter;
-        vIter it = vec.begin();
-        while (it != vec.end()) {
-            if ((*it)->is_active()) {
-                return 0;
-            }
-            ++it;
+    bool Game::no_player_shots_active() {
+        for (int i = 0; i < num_player_shots; ++i) {
+            if (player_shots[i].is_active())
+                return false;
         }
-        return 1;
+        return true;
+    }
+    bool Game::no_alien_shots_active() {
+        for (int i = 0; i < num_alien_shots; ++i) {
+            if (alien_shots[i].is_active())
+                return false;
+        }
+        return true;
+    }
+    bool Game::no_explosions_active() {
+        for (int i = 0; i < num_explosions; ++i) {
+            if (explosions[i].is_active())
+                return false;
+        }
+        return true;
     }
     void Game::explode(fixed x, fixed y, Uint32 duration)
     {
-        explosions[explosion_counter]->init_x(x);
-        explosions[explosion_counter]->init_y(y);
-        explosions[explosion_counter]->set_explosion(duration);
+        explosions[explosion_counter].init_x(x);
+        explosions[explosion_counter].init_y(y);
+        explosions[explosion_counter].set_explosion(duration);
         if (++explosion_counter == num_explosions) {
             explosion_counter = 0;
         }
@@ -845,6 +862,10 @@ namespace Game {
 
         aliens = alien_array;
         shields = shield_array;
+
+        player_shots = player_shot_array;
+        alien_shots = alien_shot_array;
+        explosions = explosion_array;
     }
     void Game::set_video_mode(int fullscreen)
     {
@@ -878,17 +899,6 @@ namespace Game {
         sbonus = NULL;
       }
       bonus = NULL;
-
-      std::vector<GameEntityPtr>::iterator vec_iter;
-      for (vec_iter = player_shots.begin(); vec_iter != player_shots.end(); ++vec_iter)
-        delete *vec_iter;
-      for (vec_iter = alien_shots.begin(); vec_iter != alien_shots.end(); ++vec_iter)
-        delete *vec_iter;
-      for (vec_iter = explosions.begin(); vec_iter != explosions.end(); ++vec_iter)
-        delete *vec_iter;
-      player_shots.clear();
-      alien_shots.clear();
-      explosions.clear();
     }
     SDL_Surface* Game::get_image(const char* image)
     {
