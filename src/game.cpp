@@ -479,7 +479,7 @@ namespace Game {
                     if (!shot->is_active())
                         continue;
                 }
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(shot); ++i) {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(shot)) {
                         shot->shot_shield_collision(shield);
@@ -523,7 +523,7 @@ namespace Game {
                             continue;
                     }
                 }
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(shot); ++i) {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(shot)) {
                         shot->shot_shield_collision(shield);
@@ -537,7 +537,7 @@ namespace Game {
                 Alien* alien = &aliens[j];
                 if (!alien->is_alive())
                     continue;
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(alien); ++i) {
                     ShieldPiece* shield = &shields[i];
                     if (shield->is_alive() && shield->collides_with(alien)) {
                         alien->alien_shield_collision(shield);
@@ -869,6 +869,14 @@ namespace Game {
                     break;
             }
         }
+    }
+    bool Game::collides_with_shield_group(GameEntity* object) {
+        for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
+            GameEntity* shield_group = &shield_groups[i];
+            if (shield_group->collides_with(object))
+                return true;
+        }
+        return false;
     }
     bool Game::no_player_shots_active() {
         for (int i = 0; i < num_player_shots; ++i) {

@@ -128,6 +128,7 @@ namespace Game {
         void free_guy_check();
         void init_aliens(generator_fun& gen, int speed);
         void pause();
+        bool collides_with_shield_group(GameEntities::GameEntity* object);
         bool no_player_shots_active();
         bool no_alien_shots_active();
         bool no_explosions_active();
