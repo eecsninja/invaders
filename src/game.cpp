@@ -449,8 +449,10 @@ namespace Game {
             } else {
                 //sound.halt_bonus();
             }
-            for (int i = 0; i < NUM_ALIENS; ++i)
-              aliens[i].movement(delta);
+            for (int i = 0; i < NUM_ALIENS; ++i) {
+                if (aliens[i].is_alive())
+                    aliens[i].movement(delta);
+            }
             for (int i = 0; i < num_player_shots; ++i) {
                 if (player_shots[i].is_active()) {
                     player_shots[i].movement(delta);
