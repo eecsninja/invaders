@@ -113,6 +113,10 @@ namespace Game {
         GameEntities::ShieldPiece* shields;
         GameEntities::Shot* player_shots, *alien_shots;
         GameEntities::Explosion* explosions;
+        // For coarse collision detection with multiple shield pieces.
+        // Greatly reduces the number of shield collision checks when there's
+        // no collision.
+        GameEntities::GameEntity* shield_groups;
         int* direction;
         int* bonus_select;
         int* launch_delay;

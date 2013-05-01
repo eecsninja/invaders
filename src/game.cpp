@@ -70,6 +70,7 @@ namespace GameEntities {
    GameEntityTypeProperties Explosion::explosion_properties;
 }
 
+using GameEntities::GameEntity;
 using GameEntities::Alien;
 using GameEntities::Explosion;
 using GameEntities::ShieldPiece;
@@ -117,6 +118,8 @@ namespace Game {
         int bonus_select_array[random_list_len];
         int launch_delay_array[random_list_len];
 
+        GameEntity shield_group_array[NUM_SHIELD_GROUPS];
+
         aliens = alien_array;
         shields = shield_array;
 
@@ -127,6 +130,8 @@ namespace Game {
         direction = direction_array;
         bonus_select = bonus_select_array;
         launch_delay = launch_delay_array;
+
+        shield_groups = shield_group_array;
 
         // init for new game
         wave = score = 0;
@@ -218,6 +223,10 @@ namespace Game {
                         GameEntities::ShieldPiece(x, y, 0, 0, true, this);
                 }
             }
+
+            shield_groups[j] =
+                GameEntity(j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
+                           SHIELD_Y_OFFSET, 0, 0, true, this);
         }
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
