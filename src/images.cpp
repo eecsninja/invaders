@@ -77,10 +77,21 @@ namespace Graphics {
 
     SDL_Surface *Images::get_image(const char* filename)
     {
-        for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i)
-            if(strcmp(filename, filenames[i]) == 0)
-                return images[i];
-        return NULL;
+        return get_image(get_image_index(filename));
     }
 
+    SDL_Surface *Images::get_image(int index)
+    {
+        if (index < 0 || index >= MAX_NUM_IMAGES)
+            return NULL;
+        return images[index];
+    }
+
+    // Get index of image with file name.  Returns -1 if not found.
+    int Images::get_image_index(const char* filename) {
+        for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i)
+            if(strcmp(filename, filenames[i]) == 0)
+                return i;
+        return -1;
+    }
 }

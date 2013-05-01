@@ -56,6 +56,12 @@ namespace Graphics {
 
           // Image lookup by filename.
           SDL_Surface *get_image(const char* filename);
+
+          // Image lookup by index.
+          SDL_Surface *get_image(int index);
+
+          // Get index of image with file name.  Returns -1 if not found.
+          int get_image_index(const char* filename);
       };
 
 }  // namespace Graphics
