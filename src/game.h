@@ -33,6 +33,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "ui.h"
 #include "status.h"
 #include "sound.h"
