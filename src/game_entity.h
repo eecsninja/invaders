@@ -61,6 +61,7 @@ namespace GameEntities {
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
         uint8_t active;
+        uint8_t alive;
         Game::Game* game;
         SDL_Surface* image;
         uint16_t frame_time_count; // control in place animation speed
@@ -70,8 +71,9 @@ namespace GameEntities {
 
         GameEntityTypeProperties* type_properties;
     public:
+        GameEntity() : alive(false) {}
         GameEntity(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), game(game),
+            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), alive(true), game(game),
             frame_time_count(0), hit(false) { }
         // a virtual destructor is important
         virtual ~GameEntity() { }
@@ -79,9 +81,11 @@ namespace GameEntities {
         void draw();
         void cleanup_draw();
         void erase();
-        bool is_active() const { return active; }
+        bool is_active() const { return active && is_alive(); }
         void deactivate() { active = false; }
         void activate() { active = true; }
+        bool is_alive() const { return alive; }
+        void kill() { alive = false; }
         void init_x(int init) { x = INT_TO_FIXED(init); }
         void init_y(int init) { y = INT_TO_FIXED(init); }
         int get_x() const { return x_int(); }

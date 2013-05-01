@@ -47,6 +47,7 @@ namespace GameEntities {
         SDL_Surface* images[num_images];
         int image_num;
     public:
+        Alien() {}
         Alien(int type, int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
             : GameEntity(x, y, dx, dy, active, game), image_num(0)
         {

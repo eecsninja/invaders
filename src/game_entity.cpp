@@ -89,7 +89,7 @@ namespace GameEntities {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->active = false;
-        game->remove_entity(other);
+        other->kill();
         game->msg_alien_player_collide();
     }
     void GameEntity::player_shot_collision(GameEntity* other)
@@ -106,7 +106,7 @@ namespace GameEntities {
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->active = false;
         game->msg_alien_killed(other->position, other->type_properties->points);
-        game->remove_entity(other);
+        other->kill();
         hit = true;
     }
     void GameEntity::shot_shield_collision(GameEntity* other)

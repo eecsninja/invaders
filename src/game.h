@@ -50,6 +50,7 @@ typedef Sint32 fixed;    // Used for fixed point math on embedded systems.
 
 namespace GameEntities {
     class GameEntity;
+    class Alien;
 }
 
 namespace Game {
@@ -61,7 +62,8 @@ namespace Game {
         Ui::Status status;
         GameEntityPtr player, rbonus, sbonus, bonus;
         std::map<const char*, SDL_Surface*> image_cache;
-        std::list<GameEntityPtr> dead_entities, aliens, shields;
+        GameEntities::Alien* aliens;
+        std::list<GameEntityPtr> dead_entities, shields;
         std::vector<GameEntityPtr> player_shots, alien_shots, explosions;
         std::vector<int> direction, bonus_select, launch_delay;
         int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;

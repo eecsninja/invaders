@@ -69,12 +69,17 @@ namespace GameEntities {
    GameEntityTypeProperties Explosion::explosion_properties;
 }
 
+using GameEntities::Alien;
+
 #define ALIEN_ARRAY_WIDTH    12
 #define ALIEN_ARRAY_HEIGHT    5
+#define NUM_ALIENS      (ALIEN_ARRAY_WIDTH * ALIEN_ARRAY_HEIGHT)
 #define ALIEN_BASE_X        100
 #define ALIEN_BASE_Y         90
 #define ALIEN_STEP_X         50
 #define ALIEN_STEP_Y         35
+
+static Alien alien_array[NUM_ALIENS];
 
 namespace Game {
 
@@ -97,7 +102,6 @@ namespace Game {
         bonus_select.clear();
         launch_delay.clear();
         dead_entities.clear();
-        aliens.clear();
         player_shots.clear();
         alien_shots.clear();
         explosions.clear();
@@ -148,9 +152,8 @@ namespace Game {
                     type = 3;
                     break;
                 }
-                GameEntities::GameEntity* alien =
-                    new GameEntities::Alien(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
-                aliens.push_back(alien);
+                aliens[alien_count] =
+                    Alien(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
                 ++alien_count;
             }
         }
@@ -350,10 +353,9 @@ namespace Game {
                 player->erase();
             if (bonus->is_active())
                 bonus->erase();
+            for (int i = 0; i < NUM_ALIENS; ++i)
+              aliens[i].erase();
             typedef std::list<GameEntityPtr>::iterator Iter;
-            for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-                (*it)->erase();
-            }
             typedef std::vector<GameEntityPtr>::iterator vIter;
             for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
                 if ((*it)->is_active()) {
@@ -405,9 +407,8 @@ namespace Game {
             } else {
                 //sound.halt_bonus();
             }
-            for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-                (*it)->movement(delta);
-            }
+            for (int i = 0; i < NUM_ALIENS; ++i)
+              aliens[i].movement(delta);
             for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
                 if ((*it)->is_active()) {
                     (*it)->movement(delta);
@@ -461,10 +462,10 @@ namespace Game {
                             bonus->bonus_shot_collision(*shot);
                         }
                     }
-                    for (Iter alien = aliens.begin(); alien != aliens.end(); ++alien) {
-                        if ((*shot)->collides_with(*alien)) {
-                            (*shot)->shot_alien_collision(*alien);
-                        }
+                    for (int i = 0; i < NUM_ALIENS; ++i) {
+                      if (aliens[i].is_alive() && (*shot)->collides_with(&aliens[i])) {
+                        (*shot)->shot_alien_collision(&aliens[i]);
+                      }
                     }
                     for (Iter shield = shields.begin(); shield != shields.end(); ++shield) {
                         if ((*shield)->collides_with(*shot)) {
@@ -474,14 +475,17 @@ namespace Game {
                 }
             }
             // aliens with shields and player
-            for (Iter alien = aliens.begin(); alien != aliens.end(); ++alien) {
+            for (int i = 0; i < NUM_ALIENS; ++i) {
+                Alien* alien = &aliens[i];
+                if (!alien->is_alive())
+                    continue;
                 for (Iter shield = shields.begin(); shield != shields.end(); ++shield) {
-                    if ((*shield)->collides_with(*alien)) {
-                        (*alien)->alien_shield_collision(*shield);
+                    if ((*shield)->collides_with(alien)) {
+                        alien->alien_shield_collision(*shield);
                     }
                 }
-                if (player->is_active() && player->collides_with(*alien)) {
-                    player->player_alien_collision(*alien);
+                if (player->is_active() && player->collides_with(alien)) {
+                    player->player_alien_collision(alien);
                 }
             }
 
@@ -489,7 +493,6 @@ namespace Game {
             {
                 int i = 0;
                 for (Iter it = dead_entities.begin(); i < num_entities_removed; ++it, ++i) {
-                    aliens.remove(*it);
                     shields.remove(*it);
                     delete *it;
                 }
@@ -556,8 +559,8 @@ namespace Game {
 
             // run alien logic if neccessary
             if (logic_this_loop) {
-                for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-                    (*it)->do_alien_logic();
+                for (int i = 0; i < NUM_ALIENS; ++i) {
+                    aliens[i].do_alien_logic();
                 }
                 logic_this_loop = false;
             }
@@ -567,8 +570,10 @@ namespace Game {
                 player->draw();
             if (bonus->is_active())
                 bonus->draw();
-            for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-                    (*it)->draw();
+
+            for (int i = 0; i < NUM_ALIENS; ++i) {
+                if (aliens[i].is_alive())
+                  aliens[i].draw();
             }
             for (vIter it = player_shots.begin(); it != player_shots.end(); ++it) {
                 if ((*it)->is_active()) {
@@ -613,8 +618,8 @@ namespace Game {
         for (Iter it = shields.begin(); it != shields.end(); ++it) {
                 (*it)->cleanup_draw();
         }
-        for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-                (*it)->cleanup_draw();
+        for (int i = 0; i < NUM_ALIENS; ++i) {
+            aliens[i].cleanup_draw();
         }
         // update screen
         SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
@@ -711,11 +716,11 @@ namespace Game {
         last_alien_shot = SDL_GetTicks();
         static int alien_to_fire = 0;
         ++alien_to_fire;
-        typedef std::list<GameEntityPtr>::iterator Iter;
-        for (Iter alien = aliens.begin(); alien != aliens.end(); ++alien) {
-            if ((*alien)->is_active() && (*alien)->get_fire_chance() == alien_to_fire) {
-                alien_shots[alien_shot_counter]->init_x((*alien)->get_x()+alien_init_x_shot_pos);
-                alien_shots[alien_shot_counter]->init_y((*alien)->get_y()+alien_init_y_shot_pos);
+        for (int i = 0; i < NUM_ALIENS; ++i) {
+            Alien* alien = &aliens[i];
+            if (alien->is_active() && alien->get_fire_chance() == alien_to_fire) {
+                alien_shots[alien_shot_counter]->init_x(alien->get_x()+alien_init_x_shot_pos);
+                alien_shots[alien_shot_counter]->init_y(alien->get_y()+alien_init_y_shot_pos);
                 alien_shots[alien_shot_counter]->set_hit(false);
                 alien_shots[alien_shot_counter]->activate();
                 if (++alien_shot_counter == num_alien_shots) {
@@ -778,26 +783,26 @@ namespace Game {
         }
         // set the alien above the one just killed to active
         // speed up all the existing aliens, whenever one is destroyed
-        typedef std::list<GameEntityPtr>::iterator Iter;
-        for (Iter it = aliens.begin(); it != aliens.end(); ++it) {
-            if ((*it)->get_pos() == pos - 12) {
-                (*it)->activate();
+        for (int i = 0; i < NUM_ALIENS; ++i) {
+            Alien* alien = &aliens[i];
+            if (alien->get_pos() == pos - 12) {
+                alien->activate();
             }
-            (*it)->increase_x_speed(1052);
+            alien->increase_x_speed(1052);
             switch (alien_count) {
                 case 4:
-                    (*it)->increase_x_speed(1178);
+                    alien->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 case 3:
                     //sound.halt_bg(alien_count);
                     break;
                 case 2:
-                    (*it)->increase_x_speed(1178);
+                    alien->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 case 1:
-                    (*it)->increase_x_speed(1178);
+                    alien->increase_x_speed(1178);
                     //sound.halt_bg(alien_count);
                     break;
                 default:
@@ -840,6 +845,8 @@ namespace Game {
         background = image_cache["background.png"];
         ui_header = image_cache["ui_header.png"];
         ui_points = image_cache["ui_points.png"];
+
+        aliens = alien_array;
     }
     void Game::set_video_mode(int fullscreen)
     {
@@ -875,11 +882,8 @@ namespace Game {
       bonus = NULL;
 
       std::list<GameEntityPtr>::iterator list_iter;
-      for (list_iter = aliens.begin(); list_iter != aliens.end(); ++list_iter)
-        delete *list_iter;
       for (list_iter = shields.begin(); list_iter != shields.end(); ++list_iter)
         delete *list_iter;
-      aliens.clear();
       shields.clear();
 
       std::vector<GameEntityPtr>::iterator vec_iter;
