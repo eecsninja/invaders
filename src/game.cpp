@@ -207,8 +207,8 @@ namespace Game {
         player = new GameEntities::Player(player_center, player_top, 0, 0, true, this);
 
         // create bonus ship and small bonus ship
-        rbonus = bonus = new GameEntities::BonusShip(0, 0, 0, 0, false, this);
-        sbonus = new GameEntities::SmallBonusShip(0, 0, 0, 0, false, this);
+        rbonus = bonus = new GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
+        sbonus = new GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
         // create the shields
         int num_shields = 0;
 

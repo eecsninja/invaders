@@ -57,5 +57,5 @@ namespace GameEntities {
     }
 
     GameEntityTypeProperties BonusShip::bonus_ship_properties;
-    GameEntityTypeProperties SmallBonusShip::small_bonus_ship_properties;
+    GameEntityTypeProperties BonusShip::small_bonus_ship_properties;
 }
