@@ -41,7 +41,6 @@
 #include "ui.h"
 #include "status.h"
 #include "sound.h"
-#include <map>
 #include <SDL/SDL.h>
 
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
@@ -105,7 +104,11 @@ struct EventCounter {
 };
 #endif
 
+#define MAX_NUM_IMAGES    32
+
 namespace Game {
+
+    int get_image_index(const char* filename);
 
     class Game {
         typedef GameEntities::GameEntity* GameEntityPtr;
@@ -113,7 +116,7 @@ namespace Game {
         Ui::Ui ui;
         Ui::Status status;
         GameEntityPtr player, rbonus, sbonus, bonus;
-        std::map<const char*, SDL_Surface*> image_cache;
+        SDL_Surface* image_cache[MAX_NUM_IMAGES];
         GameEntities::Alien* aliens;
         GameEntities::ShieldPiece* shields;
         GameEntities::Shot* player_shots, *alien_shots;

@@ -97,7 +97,25 @@ using GameEntities::Shot;
 EventCounter event_counter;
 #endif
 
+// a list of image files are loaded into a map and keyed by filename
+static const char* image_list[] = { "ship.png", "shot.png",
+    "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
+    "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
+    "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
+    "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
+    "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
+    "ui_header.png", "ui_points.png", NULL
+};
+
 namespace Game {
+
+    // Returns the index of |filename| in the |image_list| array.
+    int get_image_index(const char* filename) {
+        for (int i = 0; image_list[i]; ++i)
+            if(strcmp(filename, image_list[i]) == 0)
+                return i;
+        return -1;
+    }
 
     void Game::game_control()
     {
@@ -924,10 +942,10 @@ namespace Game {
     {
         set_video_mode(0);
         load_images();
-        wave_background = image_cache["wave_background.png"];
-        background = image_cache["background.png"];
-        ui_header = image_cache["ui_header.png"];
-        ui_points = image_cache["ui_points.png"];
+        wave_background = get_image("wave_background.png");
+        background = get_image("background.png");
+        ui_header = get_image("ui_header.png");
+        ui_points = get_image("ui_points.png");
     }
     void Game::set_video_mode(int fullscreen)
     {
@@ -962,29 +980,22 @@ namespace Game {
       }
       bonus = NULL;
     }
-    SDL_Surface* Game::get_image(const char* image)
+    SDL_Surface* Game::get_image(const char *filename)
     {
-        return image_cache[image];
+        int index = get_image_index(filename);
+        if (index < 0)
+            return NULL;
+        return image_cache[index];
     }
     void Game::free_images()
     {
-        typedef std::map<const char*, SDL_Surface*>::iterator mIter;
-        for (mIter it = image_cache.begin(); it != image_cache.end(); ++it) {
-            SDL_FreeSurface(it->second);
+        for (int i = 0; i < MAX_NUM_IMAGES; ++i) {
+            if (image_cache[i])
+                SDL_FreeSurface(image_cache[i]);
         }
     }
     void Game::load_images()
     {
-        // a list of image files are loaded into a map and keyed by filename
-        const char* image_list[] = { "ship.png", "shot.png",
-            "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
-            "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
-            "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
-            "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
-            "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
-            "ui_header.png", "ui_points.png", NULL
-        };
-
         for (int index = 0; image_list[index]; ++index) {
             std::string path = datadir + image_list[index];
             SDL_Surface* temp = IMG_Load(path.c_str());
@@ -995,7 +1006,7 @@ namespace Game {
                 throw s.str();
             }
             SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
-            image_cache[image_list[index]] = image;
+            image_cache[index] = image;
             SDL_FreeSurface(temp);
         }
     }
