@@ -85,17 +85,6 @@ using GameEntities::Shot;
 
 #define NUM_SHIELDS          72
 
-static Alien alien_array[NUM_ALIENS];
-static ShieldPiece shield_array[NUM_SHIELDS];
-
-static Shot player_shot_array[num_player_shots];
-static Shot alien_shot_array[MAX_NUM_ALIEN_SHOTS];
-static Explosion explosion_array[num_explosions];
-
-static int direction_array[random_list_len];
-static int bonus_select_array[random_list_len];
-static int launch_delay_array[random_list_len];
-
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
 
@@ -103,6 +92,29 @@ namespace Game {
 
     void Game::game_control()
     {
+        // Define arrays locally, so they can be freed when the game loop exits.
+        Alien alien_array[NUM_ALIENS];
+        ShieldPiece shield_array[NUM_SHIELDS];
+
+        Shot player_shot_array[num_player_shots];
+        Shot alien_shot_array[MAX_NUM_ALIEN_SHOTS];
+        Explosion explosion_array[num_explosions];
+
+        int direction_array[random_list_len];
+        int bonus_select_array[random_list_len];
+        int launch_delay_array[random_list_len];
+
+        aliens = alien_array;
+        shields = shield_array;
+
+        player_shots = player_shot_array;
+        alien_shots = alien_shot_array;
+        explosions = explosion_array;
+
+        direction = direction_array;
+        bonus_select = bonus_select_array;
+        launch_delay = launch_delay_array;
+
         // init for new game
         wave = score = 0;
         next_free_guy = free_guy_val;
@@ -859,17 +871,6 @@ namespace Game {
         background = image_cache["background.png"];
         ui_header = image_cache["ui_header.png"];
         ui_points = image_cache["ui_points.png"];
-
-        aliens = alien_array;
-        shields = shield_array;
-
-        player_shots = player_shot_array;
-        alien_shots = alien_shot_array;
-        explosions = explosion_array;
-
-        direction = direction_array;
-        bonus_select = bonus_select_array;
-        launch_delay = launch_delay_array;
     }
     void Game::set_video_mode(int fullscreen)
     {
