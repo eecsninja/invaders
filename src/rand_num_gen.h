@@ -35,18 +35,18 @@
 
 #include <stdlib.h>
 
-#define CREATE_RAND_GENERATOR(name, min, max) \
-  int name ## _func() { return rand() % (max - min + 1) + min; } \
-  generator_fun name = name ## _func;
+#define RAND(max) (rand() % (max + 1))
 
-CREATE_RAND_GENERATOR(gen1_2, 1, 2);
-CREATE_RAND_GENERATOR(gen1_3, 1, 3);
-CREATE_RAND_GENERATOR(gen1_4, 1, 4);
-CREATE_RAND_GENERATOR(gen1_5, 1, 5);
-CREATE_RAND_GENERATOR(gen1_6, 1, 6);
-CREATE_RAND_GENERATOR(gen1_7, 1, 7);
-CREATE_RAND_GENERATOR(gen1_8, 1, 8);
-CREATE_RAND_GENERATOR(gen1_9, 1, 9);
-CREATE_RAND_GENERATOR(gen1_10, 1, 10);
+#define CREATE_RAND_GENERATOR(name, max) static int name() { return RAND(max); }
+
+CREATE_RAND_GENERATOR(gen1_2, 2);
+CREATE_RAND_GENERATOR(gen1_3, 3);
+CREATE_RAND_GENERATOR(gen1_4, 4);
+CREATE_RAND_GENERATOR(gen1_5, 5);
+CREATE_RAND_GENERATOR(gen1_6, 6);
+CREATE_RAND_GENERATOR(gen1_7, 7);
+CREATE_RAND_GENERATOR(gen1_8, 8);
+CREATE_RAND_GENERATOR(gen1_9, 9);
+CREATE_RAND_GENERATOR(gen1_10, 10);
 
 #endif  //RAN_NUM_GEN_H

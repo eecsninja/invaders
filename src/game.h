@@ -46,8 +46,6 @@
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
 #define dumphex(x) printf("%s %u: %s = 0x%x\n", __func__, __LINE__, #x, (int)(x))
 
-typedef int (*generator_fun)(void);   // Used for generating random values.
-
 typedef int16_t fixed;    // Used for fixed point math on embedded systems.
 #define FIXED_POINT_FACTOR                              16
 // Convert to 32-bit int for multiplication, to avoid losing precision.
@@ -136,7 +134,7 @@ namespace Game {
         uint32_t player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;
         bool logic_this_loop, player_dead, wave_over, aliens_landed;
         void free_guy_check();
-        void init_aliens(generator_fun& gen, int speed);
+        void init_aliens(int rand_max, int speed);
         void pause();
         bool collides_with_shield_group(GameEntities::GameEntity* object);
         bool no_player_shots_active();

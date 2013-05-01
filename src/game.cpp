@@ -175,7 +175,7 @@ namespace Game {
         //status.blit_lives(player_life);
         //status.blit_player_ships(player_life, get_image("ship.png"));
     }
-    void Game::init_aliens(generator_fun& gen, int speed)
+    void Game::init_aliens(int rand_max, int speed)
     {
         alien_count = 0;
         // create a block of aliens (5 rows, by 12 columns), 800x600 res
@@ -206,7 +206,9 @@ namespace Game {
                     type = GAME_ENTITY_ALIEN3;
                     break;
                 }
-                aliens[alien_count].Alien_init(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
+                aliens[alien_count].Alien_init(type, alien_x, alien_y, -speed,
+                                               0, active, this, alien_count+1,
+                                               RAND(rand_max));
                 ++alien_count;
             }
         }
@@ -270,7 +272,6 @@ namespace Game {
             alien_shot_delay = 400;
             num_alien_shots = 16;
             alien_odd_range = 10;
-            init_aliens(gen1_10, alien_speed);
             break;
         case 1:
             for (int i = 0; i < random_list_len; ++i) {
@@ -282,7 +283,6 @@ namespace Game {
             alien_speed += 5;
             num_alien_shots = 17;
             alien_odd_range = 9;
-            init_aliens(gen1_9, alien_speed);
             break;
         case 2:
             for (int i = 0; i < random_list_len; ++i) {
@@ -294,7 +294,6 @@ namespace Game {
             alien_speed += 5;
             num_alien_shots = 20;
             alien_odd_range = 8;
-            init_aliens(gen1_8, alien_speed);
             break;
         case 3:
             for (int i = 0; i < random_list_len; ++i) {
@@ -306,7 +305,6 @@ namespace Game {
             alien_speed += 5;
             num_alien_shots = 20;
             alien_odd_range = 8;
-            init_aliens(gen1_8, alien_speed);
             break;
         case 4:
             for (int i = 0; i < random_list_len; ++i) {
@@ -318,7 +316,6 @@ namespace Game {
             alien_speed += 5;
             num_alien_shots = 21;
             alien_odd_range = 7;
-            init_aliens(gen1_7, alien_speed);
             break;
         case 5:
             for (int i = 0; i < random_list_len; ++i) {
@@ -330,7 +327,6 @@ namespace Game {
             alien_speed += 5;
             num_alien_shots = 22;
             alien_odd_range = 6;
-            init_aliens(gen1_6, alien_speed);
             break;
         default:
             for (int i = 0; i < random_list_len; ++i) {
@@ -346,9 +342,9 @@ namespace Game {
             }
             alien_speed += 3;
             alien_odd_range = 6;
-            init_aliens(gen1_6, alien_speed);
             break;
         }
+        init_aliens(alien_odd_range, alien_speed);
 #ifdef FRAME_COUNTER
         printf("wave %d\n", wave + 1);
 #endif
