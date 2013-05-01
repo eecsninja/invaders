@@ -85,6 +85,9 @@ using GameEntities::ShieldPiece;
 static Alien alien_array[NUM_ALIENS];
 static ShieldPiece shield_array[NUM_SHIELDS];
 
+#define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
+#define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
+
 namespace Game {
 
     void Game::game_control()
@@ -782,21 +785,21 @@ namespace Game {
             if (alien->get_pos() == pos - 12) {
                 alien->activate();
             }
-            alien->increase_x_speed(1052);
+            alien->increase_x_speed(ALIEN_SPEED_BOOST);
             switch (alien_count) {
                 case 4:
-                    alien->increase_x_speed(1178);
+                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 case 3:
                     //sound.halt_bg(alien_count);
                     break;
                 case 2:
-                    alien->increase_x_speed(1178);
+                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 case 1:
-                    alien->increase_x_speed(1178);
+                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 default:
