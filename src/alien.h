@@ -35,6 +35,8 @@
 
 #include "game_entity.h"
 
+#define NUM_ALIEN_IMAGES     6
+
 namespace GameEntities {
 
     class Alien : public GameEntity {
@@ -43,8 +45,7 @@ namespace GameEntities {
         static GameEntityTypeProperties alien2_properties;
         static GameEntityTypeProperties alien3_properties;
 
-        static const int num_images = 6;
-        SDL_Surface* images[num_images];
+        SDL_Surface* images[NUM_ALIEN_IMAGES];
         int image_num;
     public:
         Alien() {}
@@ -108,4 +109,5 @@ namespace GameEntities {
     };
 
 }
+
 #endif  //ALIEN_H

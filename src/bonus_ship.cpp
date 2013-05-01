@@ -40,7 +40,7 @@ namespace GameEntities {
         frame_time_count += delta;
         if (frame_time_count > type_properties->frame_duration) {
             frame_time_count = 0;
-            if (++image_num >= num_images) {
+            if (++image_num >= NUM_BONUS_SHIP_IMAGES) {
                 image_num = 0;
             }
             image = images[image_num];

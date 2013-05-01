@@ -45,21 +45,21 @@
 #include <ctime>
 #include <sstream>
 
-static const int player_center = (screen_w - 43) / 2;
-static const int player_top = screen_h - (25 + 35);
-static const int player_speed = 300;
-static const int bonus_speed = 200;
-static const int shot_speed = -300;
-static const int alien_shot_speed = 200;
-static const int base_launch_delay = 6000;
-static const int random_list_len = 30;
-static const Uint32 free_guy_val = 50000;
-static const int num_player_shots = 9;
-static const int num_explosions = 5;
-static const int player_init_x_shot_pos = (43 - 5)  / 2;
-static const int player_init_y_shot_pos = 16;
-static const int alien_init_x_shot_pos = (45 - 5)  / 2;
-static const int alien_init_y_shot_pos = 25;
+#define player_center               ((screen_w - 43) / 2)
+#define player_top                 (screen_h - (25 + 35))
+#define player_speed                                  300
+#define bonus_speed                                   200
+#define shot_speed                                   -300
+#define alien_shot_speed                              200
+#define base_launch_delay                            6000
+#define random_list_len                                30
+#define free_guy_val                                50000
+#define num_player_shots                                9
+#define num_explosions                                  5
+#define player_init_x_shot_pos            ((43 - 5)  / 2)
+#define player_init_y_shot_pos                         16
+#define alien_init_x_shot_pos             ((45 - 5)  / 2)
+#define alien_init_y_shot_pos                          25
 extern std::string datadir;
 
 //#define FRAME_COUNTER
@@ -678,7 +678,7 @@ namespace Game {
     }
     void Game::launch_bonus_ship()
     {
-        static const int top = 60;
+#define top 60
         if (SDL_GetTicks() - last_bonus_launch < bonus_launch_delay) {
             return;
         }
@@ -705,6 +705,7 @@ namespace Game {
         if (++rand_list_count == random_list_len) {
             rand_list_count = 0;
         }
+#undef top
     }
     void Game::alien_fire()
     {

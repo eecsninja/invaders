@@ -35,9 +35,9 @@
 
 #include <SDL/SDL.h>
 
-const int screen_w = 800;
-const int screen_h = 600;
-const int side_padding = 5;
+#define screen_w      800
+#define screen_h      600
+#define side_padding    5
 extern SDL_Surface* screen;
 extern SDL_Surface* background;
 extern SDL_Surface* wave_background;
@@ -45,7 +45,7 @@ extern SDL_Surface* ui_header;
 extern SDL_Surface* ui_points;
 extern SDL_Rect clip;
 extern int screen_updates;
-const int max_updates = 360;
+#define max_updates   360
 extern SDL_Rect dst[max_updates];
 extern SDL_Rect src[max_updates];
 typedef struct {

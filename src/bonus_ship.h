@@ -35,13 +35,14 @@
 
 #include "game_entity.h"
 
+#define NUM_BONUS_SHIP_IMAGES     2
+
 namespace GameEntities {
 
     class BonusShip : public GameEntity {
     protected:
-        static const int num_images = 2;
         static GameEntityTypeProperties bonus_ship_properties;
-        SDL_Surface* images[num_images];
+        SDL_Surface* images[NUM_BONUS_SHIP_IMAGES];
         int image_num;
     public:
         BonusShip(int x, int y, int dx, int dy, bool active, Game::Game* game)
@@ -77,4 +78,5 @@ namespace GameEntities {
     };
 
 }
+
 #endif  //BONUSSHIP_H

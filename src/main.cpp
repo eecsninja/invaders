@@ -32,20 +32,17 @@
 
 #include "game.h"
 #include <iostream>
+#include "screen.h"
 #include <SDL/SDL.h>
 #include <sstream>
 
 SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
 SDL_Rect clip;
 int screen_updates;
-const int max_updates = 360;
+
 SDL_Rect dst[max_updates];
 SDL_Rect src[max_updates];
-struct blit {
-    SDL_Surface* img;
-    SDL_Rect* src_rect;
-    SDL_Rect* dst_rect;
-} blits[max_updates];
+blit blits[max_updates];
 std::string datadir;
 
 int main(int argc, char* argv[])
