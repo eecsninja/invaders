@@ -669,9 +669,9 @@ namespace Game {
             }
             // update screen
             for (int i = 0; i < screen_updates; ++i) {
-                SDL_BlitSurface(blits[i].img, blits[i].src_rect, screen, blits[i].dst_rect);
+                SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
             }
-            SDL_UpdateRects(screen, screen_updates, dst);
+            SDL_UpdateRect(screen, 0, 0, 0, 0);
             screen_updates = 0;
 
 #ifdef EVENT_COUNTER

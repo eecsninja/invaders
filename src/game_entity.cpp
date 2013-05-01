@@ -54,39 +54,41 @@ namespace GameEntities {
         blit* update;
         update = &blits[screen_updates++];
         update->img = wave_background;
-        update->src_rect->x = (Sint16) x_int();
-        update->src_rect->y = (Sint16) y_int();
-        update->src_rect->w = image->w;
-        update->src_rect->h = image->h;
-        update->dst_rect->x = (Sint16) x_int();
-        update->dst_rect->y = (Sint16) y_int();
-        update->dst_rect->w = image->w;
-        update->dst_rect->h = image->h;
+        update->src.x = (Sint16) x_int();
+        update->src.y = (Sint16) y_int();
+        update->src.w = image->w;
+        update->src.h = image->h;
+        update->dst.x = (Sint16) x_int();
+        update->dst.y = (Sint16) y_int();
+        update->dst.w = image->w;
+        update->dst.h = image->h;
     }
     void GameEntity::draw()
     {
         blit* update;
         update = &blits[screen_updates++];
         update->img = image;
-        update->src_rect->x = 0;
-        update->src_rect->y = 0;
-        update->src_rect->w = image->w;
-        update->src_rect->h = image->h;
-        update->dst_rect->x = (Sint16) x_int();
-        update->dst_rect->y = (Sint16) y_int();
-        update->dst_rect->w = image->w;
-        update->dst_rect->h = image->h;
+        update->src.x = 0;
+        update->src.y = 0;
+        update->src.w = image->w;
+        update->src.h = image->h;
+        update->dst.x = (Sint16) x_int();
+        update->dst.y = (Sint16) y_int();
+        update->dst.w = image->w;
+        update->dst.h = image->h;
     }
     void GameEntity::cleanup_draw()
     {
-        src[0].x = src[0].y = 0;
-        src[0].w = image->w;
-        src[0].h = image->h;
-        dst[0].x = (Sint16) x_int();
-        dst[0].y = (Sint16) y_int();
-        dst[0].w = image->w;
-        dst[0].h = image->h;
-        SDL_BlitSurface(image, &src[0], screen, &dst[0]);
+        SDL_Rect* src = &blits[0].src;
+        SDL_Rect* dst = &blits[0].dst;
+        src->x = src->y = 0;
+        src->w = image->w;
+        src->h = image->h;
+        dst->x = (Sint16) x_int();
+        dst->y = (Sint16) y_int();
+        dst->w = image->w;
+        dst->h = image->h;
+        SDL_BlitSurface(image, src, screen, dst);
     }
     bool GameEntity::collides_with(GameEntity* other)
     {

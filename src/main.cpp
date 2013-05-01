@@ -41,8 +41,6 @@ SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
 SDL_Rect clip;
 int screen_updates;
 
-SDL_Rect dst[max_updates];
-SDL_Rect src[max_updates];
 blit blits[max_updates];
 const char* datadir;
 
@@ -52,11 +50,6 @@ int main(int argc, char* argv[])
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Unable to initialize SDL: %d\n", SDL_GetError());
         return -1;
-    }
-    // set up blits
-    for (int i = 0; i < max_updates; ++i) {
-        blits[i].src_rect = &src[i];
-        blits[i].dst_rect = &dst[i];
     }
     datadir = "data/";
     Game::Game game;

@@ -46,12 +46,10 @@ extern SDL_Surface* ui_points;
 extern SDL_Rect clip;
 extern int screen_updates;
 #define max_updates   360
-extern SDL_Rect dst[max_updates];
-extern SDL_Rect src[max_updates];
 typedef struct {
     SDL_Surface* img;
-    SDL_Rect* src_rect;
-    SDL_Rect* dst_rect;
+    SDL_Rect src;
+    SDL_Rect dst;
 } blit;
 extern blit blits[max_updates];
 
