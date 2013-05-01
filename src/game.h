@@ -37,11 +37,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "ui.h"
-#include "status.h"
-#include "sound.h"
 #include <SDL/SDL.h>
+
+#include "sound.h"
+#include "status.h"
+#include "ui.h"
 
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
 #define dumphex(x) printf("%s %u: %s = 0x%x\n", __func__, __LINE__, #x, (int)(x))
