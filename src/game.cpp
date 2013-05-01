@@ -404,10 +404,6 @@ namespace Game {
                 if (keys[SDLK_p]) {
                     pause();
                 }
-                if (event.type == SDL_QUIT) {
-                    sdl_quit_event = true;
-                    return;
-                }
             }
 
             // erase everything
@@ -935,7 +931,6 @@ namespace Game {
     }
     Game::Game() : ui(&sound, this, 0),
                    player_life(0),
-                   sdl_quit_event(false),
                    player(NULL),
                    bonus(NULL),
                    sbonus(NULL),

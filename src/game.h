@@ -134,7 +134,7 @@ namespace Game {
         int player_shot_counter, alien_shot_counter, explosion_counter;
         uint32_t last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
         uint32_t player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;
-        bool logic_this_loop, player_dead, wave_over, aliens_landed, sdl_quit_event;
+        bool logic_this_loop, player_dead, wave_over, aliens_landed;
         void free_guy_check();
         void init_aliens(generator_fun& gen, int speed);
         void pause();
