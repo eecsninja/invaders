@@ -35,6 +35,19 @@
 
 namespace GameEntities {
 
+    void GameEntity::init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game)
+    {
+        this->type = type;
+        this->x = INT_TO_FIXED(x);
+        this->y = INT_TO_FIXED(y);
+        this->dx = dx;
+        this->dy = dy;
+        this->status_bits = (active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE);
+        this->game = game;
+        this->frame_time_count = 0;
+        this->properties = &type_properties[type];
+    }
+
     void GameEntity::erase()
     {
         blit* update;
@@ -144,6 +157,35 @@ namespace GameEntities {
         }
 #ifdef EVENT_COUNTER
         event_counter.do_duration_call();
+#endif
+    }
+    void GameEntity::movement(int16_t delta)
+    {
+        switch(type) {
+        case GAME_ENTITY_PLAYER:
+            Player_movement(delta);
+            break;
+        case GAME_ENTITY_ALIEN:
+        case GAME_ENTITY_ALIEN2:
+        case GAME_ENTITY_ALIEN3:
+            Alien_movement(delta);
+            break;
+        case GAME_ENTITY_BONUS_SHIP:
+        case GAME_ENTITY_SMALL_BONUS_SHIP:
+            BonusShip_movement(delta);
+            break;
+        case GAME_ENTITY_SHOT:
+            Shot_movement(delta);
+            break;
+        case GAME_ENTITY_UNKNOWN:
+        case GAME_ENTITY_SHIELD_PIECE:
+        case GAME_ENTITY_EXPLOSION:
+        case GAME_ENTITY_SHIELD_GROUP:
+        default:
+            break;
+        }
+#ifdef EVENT_COUNTER
+        event_counter.do_movement_call();
 #endif
     }
 

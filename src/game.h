@@ -56,10 +56,10 @@ typedef int16_t fixed;    // Used for fixed point math on embedded systems.
 
 namespace GameEntities {
     class GameEntity;
-    class Alien;
-    class Explosion;
-    class ShieldPiece;
-    class Shot;
+    typedef GameEntity Alien;
+    typedef GameEntity Explosion;
+    typedef GameEntity ShieldPiece;
+    typedef GameEntity Shot;
 }
 
 #define EVENT_COUNTER

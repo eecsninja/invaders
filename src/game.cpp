@@ -147,8 +147,8 @@ namespace Game {
 
         // Instantiate these here, instead of allocating from heap.
         Player player_obj;
-        BonusShip bonus_obj = GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
-        BonusShip small_bonus_obj = GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
+        BonusShip bonus_obj;
+        BonusShip small_bonus_obj;
 
         player = &player_obj;
         rbonus = bonus = &bonus_obj;
@@ -212,24 +212,23 @@ namespace Game {
                     type = GAME_ENTITY_ALIEN3;
                     break;
                 }
-                aliens[alien_count] =
-                    Alien(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
+                aliens[alien_count].Alien_init(type, alien_x, alien_y, -speed, 0, active, this, alien_count+1, gen());
                 ++alien_count;
             }
         }
         // create alien shots
         for (int i= 0; i < num_alien_shots; ++i) {
-            alien_shots[i] = GameEntities::Shot(0, 0, 0, alien_shot_speed, false, this);
+            alien_shots[i].Shot_init(0, 0, 0, alien_shot_speed, false, this);
         }
     }
     void Game::factory()
     {
         // create the player ship and place it in the center of the screen
-        *player = GameEntities::Player(player_center, player_top, 0, 0, true, this);
+        player->Player_init(player_center, player_top, 0, 0, true, this);
 
         // create bonus ship and small bonus ship
-        *bonus = GameEntities::BonusShip(false, 0, 0, 0, 0, false, this);
-        *sbonus = GameEntities::BonusShip(true, 0, 0, 0, 0, false, this);
+        bonus->BonusShip_init(false, 0, 0, 0, 0, false, this);
+        sbonus->BonusShip_init(true, 0, 0, 0, 0, false, this);
 
         // create the shields
         int num_shields = 0;
@@ -241,14 +240,13 @@ namespace Game {
                             SHIELD_X_OFFSET + ((k == 0) ? 20 : 0) +
                             (i * SHIELD_PIECE_SIZE);
                     int y = SHIELD_Y_OFFSET + SHIELD_PIECE_SIZE * k;
-                    shields[num_shields++] =
-                        GameEntities::ShieldPiece(x, y, 0, 0, true, this);
+                    shields[num_shields++].ShieldPiece_init(x, y, 0, 0, true, this);
                 }
             }
 
-            shield_groups[j] =
-                GameEntity(GAME_ENTITY_SHIELD_GROUP, j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
-                           SHIELD_Y_OFFSET, 0, 0, true, this);
+            shield_groups[j].init(GAME_ENTITY_SHIELD_GROUP,
+                                  j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
+                                  SHIELD_Y_OFFSET, 0, 0, true, this);
         }
         GameEntities::GameEntityTypeProperties prop;
         prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
@@ -259,10 +257,10 @@ namespace Game {
 
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
-            explosions[i] = GameEntities::Explosion(0, 0, 0, 0, false, this);
+            explosions[i].Explosion_init(0, 0, 0, 0, false, this);
         }
         for (int i= 0; i < num_player_shots; ++i) {
-            player_shots[i] = GameEntities::Shot(0, 0, 0, shot_speed, false, this);
+            player_shots[i].Shot_init(0, 0, 0, shot_speed, false, this);
         }
 
         player_shot_delay = 225;

@@ -35,17 +35,4 @@
 
 #include "game_entity.h"
 
-namespace GameEntities {
-
-    class Explosion : public GameEntity {
-    public:
-        Explosion() {}
-        Explosion(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : GameEntity(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active, game)
-        {
-            image = game->get_image("explosion.png");
-        }
-    };
-
-}
 #endif  //EXPLOSION_H

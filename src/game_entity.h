@@ -62,6 +62,8 @@ enum GameEntityTypes {
     NUM_GAME_ENTITY_TYPES,
 };
 
+#define NUM_GAME_ENTITY_IMAGES     8
+
 namespace GameEntities {
 
     // When all instances of a class of GameEntity have the same properties,
@@ -76,10 +78,11 @@ namespace GameEntities {
     };
 
     class GameEntity {
+    private:
         static const int short_explosion = 50;
         static const int long_explosion = 200;
         static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
-    protected:
+
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
         uint8_t status_bits;
@@ -89,18 +92,17 @@ namespace GameEntities {
         uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
 
+        SDL_Surface* images[NUM_GAME_ENTITY_IMAGES];
+        int image_num;
+        int type;
+
         GameEntityTypeProperties* properties;
     public:
-        GameEntity() : status_bits(0),
+        GameEntity() : type(GAME_ENTITY_UNKNOWN),
+                       status_bits(0),
                        properties(&type_properties[GAME_ENTITY_UNKNOWN]) {}
-        GameEntity(int type, int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy),
-              status_bits((active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE)),
-              game(game), frame_time_count(0),
-              properties(&type_properties[type]) {}
-        // a virtual destructor is important
-        virtual ~GameEntity() { }
-        virtual void movement(int16_t delta) { delta = 0; }
+        void init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void movement(int16_t delta);
         static void set_type_property(int type,
                                       const GameEntityTypeProperties& prop) {
             type_properties[type] = prop;
@@ -153,7 +155,45 @@ namespace GameEntities {
         void shot_shield_collision(GameEntity* other);
         void shot_shot_collision(GameEntity* other);
         void bonus_shot_collision(GameEntity* other);
+
+        // Per-type functions.
+        void Player_init(int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void Player_movement(int16_t delta);
+
+        void Alien_init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance);
+        void Alien_movement(int16_t delta);
+
+        void BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void BonusShip_movement(int16_t delta);
+
+        void Shot_init(int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void Shot_movement(int16_t delta);
+
+        void Explosion_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+        {
+            init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active, game);
+            image = game->get_image("explosion.png");
+        }
+
+        void ShieldPiece_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+        {
+            init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active, game);
+            image = game->get_image("shield_piece.png");
+
+            properties->coll_w = image->w;
+            properties->coll_h = int (image->h * 0.9);
+            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
+            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
+        }
     };
 
+    // Retain these GameEntity subclass names so dependent code doesn't have to
+    // be changed.
+    typedef GameEntity Player;
+    typedef GameEntity Alien;
+    typedef GameEntity BonusShip;
+    typedef GameEntity Shot;
+    typedef GameEntity Explosion;
+    typedef GameEntity ShieldPiece;
 }
 #endif  //GAME_ENTITY_H

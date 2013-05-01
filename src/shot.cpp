@@ -34,7 +34,19 @@
 
 namespace GameEntities {
 
-    void Shot::movement(int16_t delta)
+    void GameEntity::Shot_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+    {
+        init(GAME_ENTITY_SHOT, x, y, dx, dy, active, game);
+
+        image = game->get_image("shot.png");
+
+        properties->coll_w = image->w;
+        properties->coll_h = int (image->h * 0.7);
+        properties->coll_x_offset = (image->w - properties->coll_w) / 2;
+        properties->coll_y_offset = (image->h - properties->coll_h) / 2;
+    }
+
+    void GameEntity::Shot_movement(int16_t delta)
     {
         y += INT_TO_FIXED(delta * dy) / 1000;
 
@@ -44,8 +56,5 @@ namespace GameEntities {
         if (y_int() > 575) {
             deactivate();
         }
-#ifdef EVENT_COUNTER
-        event_counter.do_movement_call();
-#endif
     }
 }

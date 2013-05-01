@@ -35,24 +35,4 @@
 
 #include "game_entity.h"
 
-namespace GameEntities {
-
-    class Player : public GameEntity {
-    public:
-        Player() {}
-        Player(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : GameEntity(GAME_ENTITY_PLAYER, x, y, dx, dy, active, game)
-        {
-            image = game->get_image("ship.png");
-
-            properties->right_limit = screen_w - image->w;
-            properties->coll_w = int (image->w * 0.9);
-            properties->coll_h = int (image->h * 0.8);
-            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
-            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
-        }
-        void movement(int16_t delta);
-    };
-
-}
 #endif  //PLAYER_H

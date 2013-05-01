@@ -35,22 +35,4 @@
 
 #include "game_entity.h"
 
-namespace GameEntities {
-
-    class ShieldPiece : public GameEntity {
-    public:
-        ShieldPiece() {}
-        ShieldPiece(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : GameEntity(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active, game)
-        {
-            image = game->get_image("shield_piece.png");
-
-            properties->coll_w = image->w;
-            properties->coll_h = int (image->h * 0.9);
-            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
-            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
-        }
-    };
-
-}
 #endif  //SHIELDPIECE_H

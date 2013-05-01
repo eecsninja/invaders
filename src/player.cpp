@@ -34,7 +34,19 @@
 
 namespace GameEntities {
 
-    void Player::movement(int16_t delta)
+    void GameEntity::Player_init (int x, int y, int dx, int dy, bool active, Game::Game* game)
+    {
+        init(GAME_ENTITY_PLAYER, x, y, dx, dy, active, game);
+        image = game->get_image("ship.png");
+
+        properties->right_limit = screen_w - image->w;
+        properties->coll_w = int (image->w * 0.9);
+        properties->coll_h = int (image->h * 0.8);
+        properties->coll_x_offset = (image->w - properties->coll_w) / 2;
+        properties->coll_y_offset = (image->h - properties->coll_h) / 2;
+    }
+
+    void GameEntity::Player_movement(int16_t delta)
     {
         // don't move off left hand side of the screen
         if (dx < 0 && x_int() < side_padding) {
