@@ -31,8 +31,6 @@
 */
 
 #include "sound.h"
-#include <iostream>
-#include <sstream>
 
 namespace Sound {
 

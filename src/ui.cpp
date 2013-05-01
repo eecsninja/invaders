@@ -33,15 +33,8 @@
 #include "ui.h"
 #include "screen.h"
 #include "game.h"
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <iomanip>
-#include <algorithm>
-#include <iostream>
-#include <cstdlib>
 
-extern std::string datadir;
+extern const char* datadir;
 
 namespace Ui {
 

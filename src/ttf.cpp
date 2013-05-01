@@ -31,7 +31,6 @@
 */
 
 #include "ttf.h"
-#include <iostream>
 
 #define NDEBUG
 

@@ -32,7 +32,6 @@
 
 #include "status.h"
 #include "screen.h"
-#include <sstream>
 
 namespace Ui {
 

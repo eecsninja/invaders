@@ -41,9 +41,6 @@
 #include "rand_num_gen.h"
 #include <SDL/SDL_image.h>
 #include <SDL/SDL.h>
-#include <iostream>
-#include <ctime>
-#include <sstream>
 
 #define player_center               ((screen_w - 43) / 2)
 #define player_top                 (screen_h - (25 + 35))
@@ -61,7 +58,7 @@
 #define alien_init_x_shot_pos             ((45 - 5)  / 2)
 #define alien_init_y_shot_pos                          25
 #define MAX_NUM_ALIEN_SHOTS                            32
-extern std::string datadir;
+extern const char* datadir;
 
 //#define FRAME_COUNTER
 
@@ -349,7 +346,7 @@ namespace Game {
             break;
         }
 #ifdef FRAME_COUNTER
-        std::cout << "wave " << wave + 1 << '\n';
+        printf("wave %d\n", wave + 1);
 #endif
     }
     void Game::game_loop()
@@ -385,7 +382,7 @@ namespace Game {
             ++fps;
             // update fps counter
             if (last_fps_time >= 1000) {
-                std::cout << fps << '\n';
+                printf("FPS: %d\n", fps);
                 last_fps_time = 0;
                 fps = 0;
             }
@@ -955,7 +952,7 @@ namespace Game {
             screen = SDL_SetVideoMode(screen_w, screen_h, 16, SDL_SWSURFACE);
         }
         if (screen == NULL) {
-            std::cerr << "Unable to set video mode: " << SDL_GetError() << '\n';
+            fprintf(stderr, "Unable to set video mode: %d\n", SDL_GetError());
             throw "SDL: Error setting video mode.";
         }
     }
@@ -997,13 +994,13 @@ namespace Game {
     void Game::load_images()
     {
         for (int index = 0; image_list[index]; ++index) {
-            std::string path = datadir + image_list[index];
-            SDL_Surface* temp = IMG_Load(path.c_str());
+            char path[1024];
+            sprintf(path, "%s%s", datadir, image_list[index]);
+            SDL_Surface* temp = IMG_Load(path);
             if (temp == NULL) {
                 free_images();
-                std::ostringstream s;
-                s << "Unable to load image file: " << image_list[index] << '\n';
-                throw s.str();
+                fprintf(stderr, "Unable to load image file: %s\n", image_list[index]);
+                exit(1);
             }
             SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
             image_cache[index] = image;
