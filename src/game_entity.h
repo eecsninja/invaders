@@ -37,6 +37,14 @@
 #include <SDL/SDL.h>
 #include "screen.h"
 
+#define STATUS_ACTIVE   0
+#define STATUS_ALIVE    1
+#define STATUS_HIT      2  // used by Shot to avoid hitting more than one object
+
+#define SET_BIT(var, bit)  var |= (1<<(bit))
+#define CLR_BIT(var, bit)  var &= ~(1<<(bit))
+#define TEST_BIT(var, bit)  ((var) & (1<<(bit)))
+
 namespace GameEntities {
 
     // When all instances of a class of GameEntity have the same properties,
@@ -56,32 +64,33 @@ namespace GameEntities {
     protected:
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
-        uint8_t active;
-        uint8_t alive;
+        uint8_t status_bits;
         Game::Game* game;
         SDL_Surface* image;
         uint16_t frame_time_count; // control in place animation speed
         uint16_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
-        uint8_t hit; // used by Shot to avoid hitting more than one object
 
         GameEntityTypeProperties* type_properties;
     public:
-        GameEntity() : alive(false) {}
+        GameEntity() : status_bits(0) {}
         GameEntity(int x, int y, int dx, int dy, bool active, Game::Game* game)
-            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy), active(active), alive(true), game(game),
-            frame_time_count(0), hit(false) { }
+            : x(INT_TO_FIXED(x)), y(INT_TO_FIXED(y)), dx(dx), dy(dy),
+              status_bits((active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE)),
+              game(game), frame_time_count(0) { }
         // a virtual destructor is important
         virtual ~GameEntity() { }
         virtual void movement(int16_t delta) { delta = 0; }
         void draw();
         void cleanup_draw();
         void erase();
-        bool is_active() const { return active && is_alive(); }
-        void deactivate() { active = false; }
-        void activate() { active = true; }
-        bool is_alive() const { return alive; }
-        void kill() { alive = false; }
+        bool is_active() const {
+            return TEST_BIT(status_bits, STATUS_ACTIVE) && is_alive();
+        }
+        void deactivate() { CLR_BIT(status_bits, STATUS_ACTIVE); }
+        void activate() { SET_BIT(status_bits, STATUS_ACTIVE); }
+        bool is_alive() const { return TEST_BIT(status_bits, STATUS_ALIVE); }
+        void kill() { CLR_BIT(status_bits, STATUS_ALIVE); }
         void init_x(int init) { x = INT_TO_FIXED(init); }
         void init_y(int init) { y = INT_TO_FIXED(init); }
         int get_x() const { return x_int(); }
@@ -96,7 +105,7 @@ namespace GameEntities {
         // can be used by classes with in-place animation
         void set_frame_duration(Uint32 dur) { type_properties->frame_duration = dur; }
         // Explosion
-        void set_explosion(Uint32 dur) { active = true; type_properties->frame_duration = dur; }
+        void set_explosion(Uint32 dur) { activate(); type_properties->frame_duration = dur; }
         void duration(int16_t delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }
@@ -105,7 +114,13 @@ namespace GameEntities {
         int get_pos() const { return position; }
         int get_fire_chance() const { return fire_chance; }
         // Shot
-        void set_hit(bool h) { hit = h; }
+        void set_hit(bool hit) {
+            if (hit)
+                SET_BIT(status_bits, STATUS_HIT);
+            else
+                CLR_BIT(status_bits, STATUS_HIT);
+        }
+        bool is_hit() const { return TEST_BIT(status_bits, STATUS_HIT); }
         // collision handling
         void alien_shield_collision(GameEntity* other) { other->kill(); }
         void player_alien_collision(GameEntity* other);

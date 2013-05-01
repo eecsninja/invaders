@@ -88,45 +88,47 @@ namespace GameEntities {
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         game->explode(other->x_int(), other->y_int(), short_explosion);
-        this->active = false;
+        this->deactivate();
         other->kill();
         game->msg_alien_player_collide();
     }
     void GameEntity::player_shot_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
-        other->active = false;
-        this->active = false;
+        other->deactivate();
+        this->deactivate();
         game->msg_player_dead();
     }
     void GameEntity::shot_alien_collision(GameEntity* other)
     {
         // prevent one bullet from destroying two entities
-        if (hit) return;
+        if (is_hit())
+            return;
         game->explode(other->x_int(), other->y_int(), short_explosion);
-        this->active = false;
+        this->deactivate();
         game->msg_alien_killed(other->position, other->type_properties->points);
         other->kill();
-        hit = true;
+        set_hit(true);
     }
     void GameEntity::shot_shield_collision(GameEntity* other)
     {
-        if (hit) return;
-        this->active = false;
+        if (is_hit())
+            return;
+        this->deactivate();
         other->kill();
-        hit = true;
+        set_hit(true);
     }
     void GameEntity::shot_shot_collision(GameEntity* other)
     {
         // remove both shots
-        this->active = false;
-        other->active = false;
+        this->deactivate();
+        other->deactivate();
     }
     void GameEntity::bonus_shot_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);
-        this->active = false;
-        other->active = false;
+        this->deactivate();
+        other->deactivate();
         game->msg_bonus_ship_destroyed(this->type_properties->points);
     }
     void GameEntity::duration(int16_t delta)
@@ -135,7 +137,7 @@ namespace GameEntities {
         frame_time_count += delta;
         if (frame_time_count > type_properties->frame_duration) {
             frame_time_count = 0;
-            active = false;
+            deactivate();
         }
     }
 

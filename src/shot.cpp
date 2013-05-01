@@ -39,10 +39,10 @@ namespace GameEntities {
         y += INT_TO_FIXED(delta * dy) / 1000;
 
         if (y_int() < -100) {
-            active = false;
+            deactivate();
         }
         if (y_int() > 575) {
-            active = false;
+            deactivate();
         }
     }
 

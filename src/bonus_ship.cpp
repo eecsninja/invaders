@@ -47,9 +47,9 @@ namespace GameEntities {
         }
         x += INT_TO_FIXED(delta * dx) / 1000;
         if (dx > 0 && x_int() > screen_w) {
-            active = false;
+            deactivate();
         } else if (dx < 0 && x_int() < -image->w) {
-            active = false;
+            deactivate();
         }
     }
 
