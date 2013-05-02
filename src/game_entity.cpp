@@ -79,16 +79,7 @@ namespace GameEntities {
     }
     void GameEntity::cleanup_draw()
     {
-        SDL_Rect* src = &blits[0].src;
-        SDL_Rect* dst = &blits[0].dst;
-        src->x = src->y = 0;
-        src->w = image->w;
-        src->h = image->h;
-        dst->x = (Sint16) x_int();
-        dst->y = (Sint16) y_int();
-        dst->w = image->w;
-        dst->h = image->h;
-        SDL_BlitSurface(image, src, screen, dst);
+        draw();
     }
     bool GameEntity::collides_with(GameEntity* other)
     {

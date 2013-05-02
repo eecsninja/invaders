@@ -699,6 +699,9 @@ namespace Game {
             aliens[i].cleanup_draw();
         }
         // update screen
+        for (int i = 0; i < screen_updates; ++i)
+            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
+        screen_updates = 0;
         SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
         //sound.play_player_rebirth();
     }
@@ -713,6 +716,9 @@ namespace Game {
             shields[i].cleanup_draw();
         }
         // update screen
+        for (int i = 0; i < screen_updates; ++i)
+            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
+        screen_updates = 0;
         SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
     }
     void Game::pause()
