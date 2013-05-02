@@ -35,6 +35,22 @@
 
 #include <stdint.h>
 
+namespace System {
+
+    // Bitfield struct containing state of all the relevant keys.  Each key bit
+    // is set if the key is pressed.
+    struct KeyState {
+        int fire   :1;
+        int pause  :1;
+        int quit   :1;
+        int left   :1;
+        int right  :1;
+    };
+
+    // Returns the current key state.
+    KeyState get_key_state();
+}
+
 uint32_t system_get_ticks();
 
 #endif  // _SYSTEM_H_

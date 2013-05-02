@@ -32,8 +32,6 @@
 
 #include "game.h"
 
-#include <SDL/SDL.h>
-
 #include "alien.h"
 #include "bonus_ship.h"
 #include "explosion.h"
@@ -350,8 +348,7 @@ namespace Game {
     }
     void Game::game_loop()
     {
-        SDL_Event event;
-        Uint8* keys;
+        System::KeyState keys;
         int reloading = 0;
         last_bonus_launch = last_alien_shot = last_loop_time = system_get_ticks();
 
@@ -386,17 +383,15 @@ namespace Game {
 #endif
 
             // poll input queue
-            keys = SDL_GetKeyState(NULL);
-            while (SDL_PollEvent(&event)) {
-                if (keys[SDLK_ESCAPE]) {
-                    //sound.halt_all_sounds();
-                    player_dead = true;
-                    player_life = 0;
-                    return;
-                }
-                if (keys[SDLK_p]) {
-                    pause();
-                }
+            keys = System::get_key_state();
+            if (keys.quit) {
+                //sound.halt_all_sounds();
+                player_dead = true;
+                player_life = 0;
+                return;
+            }
+            if (keys.pause) {
+                pause();
             }
 
             // erase everything
@@ -428,19 +423,19 @@ namespace Game {
 
             // player attempt to fire
             if (!reloading) {
-                if (keys[SDLK_SPACE] == SDL_PRESSED) {
+                if (keys.fire) {
                     fire_shot();
                 }
             }
-            reloading = (keys[SDLK_SPACE] == SDL_PRESSED);
+            reloading = keys.fire;
 
 
             // set player direction based on key input
             player->set_x_velocity(0);
-            if (keys[SDLK_LEFT] && !keys[SDLK_RIGHT]) {
+            if (keys.left && !keys.right) {
                 player->set_x_velocity(-player_speed);
             }
-            if (keys[SDLK_RIGHT] && !keys[SDLK_LEFT]) {
+            if (keys.right && !keys.left) {
                 player->set_x_velocity(player_speed);
             }
 
@@ -704,20 +699,16 @@ namespace Game {
     void Game::pause()
     {
         Uint32 begin_pause;
-        Uint8* keys;
-        SDL_Event event;
         //sound.halt_bonus();
         //sound.halt_bg(alien_count);
         begin_pause = system_get_ticks();
         while (1) {
-            keys = SDL_GetKeyState(NULL);
-            while (SDL_PollEvent(&event)) {
-                if (keys[SDLK_p]) {
-                    last_loop_time +=  system_get_ticks() - begin_pause;
-                    last_bonus_launch = last_alien_shot = system_get_ticks();
-                    //sound.play_bonus();
-                    return;
-                }
+            System::KeyState keys = System::get_key_state();
+            if (keys.pause) {
+                last_loop_time +=  system_get_ticks() - begin_pause;
+                last_bonus_launch = last_alien_shot = system_get_ticks();
+                //sound.play_bonus();
+                return;
             }
         }
     }

@@ -32,7 +32,36 @@
 
 #include "system.h"
 
+#include <string.h>
+
 #include <SDL/SDL.h>
+
+namespace System {
+
+    KeyState get_key_state() {
+        KeyState key_state;
+        memset(&key_state, 0, sizeof(key_state));
+
+        // Get the current keys from SDL.  Call SDL_PollEvent() to update the
+        // key array with the latest values.
+        Uint8* keys = SDL_GetKeyState(NULL);
+        SDL_Event event;
+        while(SDL_PollEvent(&event));
+
+        if (keys[SDLK_ESCAPE])
+            key_state.quit = 1;
+        if (keys[SDLK_p])
+            key_state.pause = 1;
+        if (keys[SDLK_LEFT])
+            key_state.left = 1;
+        if (keys[SDLK_RIGHT])
+            key_state.right = 1;
+        if (keys[SDLK_SPACE])
+            key_state.fire = 1;
+
+        return key_state;
+    }
+}
 
 // This is just a wrapper around SDL_GetTicks.  As part of the embedded port,
 // its contents will eventually be replaced with something else.
