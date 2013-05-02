@@ -162,13 +162,13 @@ namespace Game {
     {
         // create conditions for next wave
         logic_this_loop = wave_over = false;
-        screen_updates = last_shot = 0;
+        last_shot = 0;
         player_shot_counter = alien_shot_counter = explosion_counter = 0;
         factory();
         // output wave message and status display
         //ui.wave_msg(++wave);
         //sound.play_start_wave();
-        Graphics::update_screen();
+        video.update_screen();
         //status.blit_wave(wave);
         //status.blit_score(score);
         //status.blit_lives(player_life);
@@ -350,8 +350,6 @@ namespace Game {
     }
     void Game::game_loop()
     {
-        clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
-        SDL_SetClipRect(screen, &clip);
         SDL_Event event;
         Uint8* keys;
         int reloading = 0;
@@ -662,7 +660,7 @@ namespace Game {
                 if (shields[i].is_alive())
                     shields[i].draw();
             }
-            Graphics::update_screen();
+            video.update_screen();
 
 #ifdef EVENT_COUNTER
             if (event_counter.num_loops > 0 &&
@@ -690,7 +688,7 @@ namespace Game {
         for (int i = 0; i < NUM_ALIENS; ++i) {
             aliens[i].cleanup_draw();
         }
-        Graphics::update_screen();
+        video.update_screen();
         //sound.play_player_rebirth();
     }
     void Game::wave_cleanup()
@@ -701,7 +699,7 @@ namespace Game {
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             shields[i].cleanup_draw();
         }
-        Graphics::update_screen();
+        video.update_screen();
     }
     void Game::pause()
     {
@@ -920,7 +918,7 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
-        Graphics::set_video_mode(false);
+        video.set_video_mode(false);
         images.load_images(image_list);
         wave_background = get_image("wave_background.png");
         background = get_image("background.png");
@@ -928,6 +926,7 @@ namespace Game {
         ui_points = get_image("ui_points.png");
 
         GameEntity::set_game(this);
+        GameEntity::set_video(&video);
     }
     Game::~Game()
     {

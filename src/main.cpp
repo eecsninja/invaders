@@ -39,9 +39,7 @@
 
 SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
 SDL_Rect clip;
-int screen_updates;
 
-blit blits[max_updates];
 const char* datadir;
 
 int main(int argc, char* argv[])

@@ -86,7 +86,8 @@ namespace GameEntities {
     private:
         static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
 
-        static Game::Game* game;      // Common pointer to the current game.
+        static Game::Game* game;        // Common pointer to the current game.
+        static Graphics::Video* video;  // Common pointer to video system.
 
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
@@ -159,11 +160,16 @@ namespace GameEntities {
         void bonus_shot_collision(GameEntity* other);
 
         // Static member mutator.  Make sure to check that there is no existing
-        // Game pointer being overwritten.
+        // static pointer being overwritten.
         static void set_game(Game::Game *game) {
             if (game)
                 assert(GameEntity::game == NULL);
             GameEntity::game = game;
+        }
+        static void set_video(Graphics::Video* video) {
+            if (video)
+                assert(GameEntity::video == NULL);
+            GameEntity::video = video;
         }
 
         // Per-type functions.

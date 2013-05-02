@@ -39,6 +39,7 @@
 #include <string.h>
 
 #include "images.h"
+#include "screen.h"
 #include "sound.h"
 #include "status.h"
 #include "ui.h"
@@ -115,6 +116,7 @@ namespace Game {
         Sound::Sound sound;
         Ui::Ui ui;
         Ui::Status status;
+        Graphics::Video video;
         Graphics::Images images;
         GameEntityPtr player, rbonus, sbonus, bonus;
         GameEntities::Alien* aliens;

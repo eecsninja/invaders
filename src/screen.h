@@ -44,27 +44,36 @@ extern SDL_Surface* wave_background;
 extern SDL_Surface* ui_header;
 extern SDL_Surface* ui_points;
 extern SDL_Rect clip;
-extern int screen_updates;
 #define max_updates   360
-typedef struct {
-    SDL_Surface* img;
-    SDL_Rect src;
-    SDL_Rect dst;
-} blit;
-extern blit blits[max_updates];
 
 namespace Graphics {
-    // Set the operating video mode.
-    void set_video_mode(bool fullscreen);
 
-    // Add a blit task to the blit queue.
-    void schedule_blit(SDL_Surface* image, int x, int y);
+    class Video {
+    private:
+        // A list of scheduled blits.
+        struct blit {
+            SDL_Surface* img;
+            SDL_Rect src;
+            SDL_Rect dst;
+        } blits[max_updates];
+        int num_blits;
 
-    // Perform all queued blits and reset the blit counter.
-    void flush_blits();
+    public:
+        Video() : num_blits(0) {}
 
-    // Redraw the entire screen, including all the scheduled blits.
-    void update_screen();
-};
+        // Set the operating video mode.
+        void set_video_mode(bool fullscreen);
+
+        // Add a blit task to the blit queue.
+        void schedule_blit(SDL_Surface* image, int x, int y);
+
+        // Perform all queued blits and reset the blit counter.
+        void flush_blits();
+
+        // Redraw the entire screen, including all the scheduled blits.
+        void update_screen();
+    };
+
+}  // namespace Graphics
 
 #endif  //SCREEN_H

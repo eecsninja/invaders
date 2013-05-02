@@ -37,7 +37,7 @@
 
 namespace Graphics {
 
-    void set_video_mode(bool fullscreen) {
+    void Video::set_video_mode(bool fullscreen) {
         int flags = SDL_SWSURFACE;
         if (fullscreen)
             flags |= SDL_FULLSCREEN;
@@ -46,15 +46,18 @@ namespace Graphics {
             fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
             exit(1);
         }
+
+        clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
+        SDL_SetClipRect(screen, &clip);
     }
 
-    void schedule_blit(SDL_Surface* image, int x, int y) {
-        if (screen_updates >= max_updates) {
+    void Video::schedule_blit(SDL_Surface* image, int x, int y) {
+        if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;
         }
 
-        blit* update = &blits[screen_updates++];
+        blit* update = &blits[num_blits++];
         update->img = image;
 
         update->src.x = 0;
@@ -68,14 +71,14 @@ namespace Graphics {
         update->dst.h = image->h;
     }
 
-    void flush_blits() {
-        for (int i = 0; i < screen_updates; ++i)
+    void Video::flush_blits() {
+        for (int i = 0; i < num_blits; ++i)
             SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
-        screen_updates = 0;
+        num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
     }
 
-    void update_screen() {
+    void Video::update_screen() {
         SDL_BlitSurface(wave_background, NULL, screen, NULL);
         flush_blits();
     }
