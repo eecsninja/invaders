@@ -32,8 +32,8 @@
 
 #include "images.h"
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+// #include <SDL/SDL.h>
+// #include <SDL/SDL_image.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -49,8 +49,8 @@ namespace Graphics {
     Images::~Images()
     {
         for (int i = 0; i < MAX_NUM_IMAGES; ++i) {
-            if (images[i])
-                SDL_FreeSurface(images[i]);
+            // if (images[i])
+                // SDL_FreeSurface(images[i]);
         }
     }
 
@@ -63,6 +63,7 @@ namespace Graphics {
             char path[1024];
             sprintf(path, "%s%s", datadir, filename);
 
+/*
             SDL_Surface* temp = IMG_Load(path);
             if (temp == NULL) {
                 fprintf(stderr, "Unable to load image file: %s\n", filename);
@@ -71,6 +72,7 @@ namespace Graphics {
             SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
             images[i] = image;
             SDL_FreeSurface(temp);
+*/
         }
         return true;
     }

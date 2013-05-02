@@ -33,20 +33,22 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include <SDL/SDL.h>
+//#include <SDL/SDL.h>
 
 #define screen_w      800
 #define screen_h      600
 #define side_padding    5
-extern SDL_Surface* screen;
-extern SDL_Surface* background;
-extern SDL_Surface* wave_background;
-extern SDL_Surface* ui_header;
-extern SDL_Surface* ui_points;
-extern SDL_Rect clip;
 #define max_updates   360
 
 namespace Graphics {
+
+    struct SDL_Surface {
+        int w, h;
+    };
+    struct SDL_Rect {
+        int x, y;
+        int w, h;
+    };
 
     class Images;
 

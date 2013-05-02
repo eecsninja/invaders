@@ -42,11 +42,13 @@ namespace Graphics {
                      image_lib(NULL) {}
 
     bool Video::init() {
+/*
         atexit(SDL_Quit);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
             return false;
         }
+*/
     }
 
     void Video::set_image_lib(Images* images) {
@@ -59,6 +61,7 @@ namespace Graphics {
     }
 
     void Video::set_video_mode(bool fullscreen) {
+/*
         int flags = SDL_SWSURFACE;
         if (fullscreen)
             flags |= SDL_FULLSCREEN;
@@ -70,6 +73,7 @@ namespace Graphics {
 
         clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
         SDL_SetClipRect(screen, &clip);
+*/
     }
 
     void Video::schedule_blit(int image_index, int x, int y) {
@@ -91,15 +95,15 @@ namespace Graphics {
                 SDL_Rect dst;
                 dst.x = blits[i].x;
                 dst.y = blits[i].y;
-                SDL_BlitSurface(image, NULL, screen, &dst);
+                //SDL_BlitSurface(image, NULL, screen, &dst);
             }
         }
         num_blits = 0;
-        SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
+        //SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
     }
 
     void Video::update_screen() {
-        SDL_BlitSurface(wave_background, NULL, screen, NULL);
+        //SDL_BlitSurface(wave_background, NULL, screen, NULL);
         flush_blits();
     }
 }
