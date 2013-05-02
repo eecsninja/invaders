@@ -370,7 +370,7 @@ namespace Game {
 
 #ifdef FRAME_COUNTER
             // frame counter
-            Uint32 last_fps_time;
+            uint32_t last_fps_time;
             int fps;
             last_fps_time += delta;
             ++fps;
@@ -698,7 +698,7 @@ namespace Game {
     }
     void Game::pause()
     {
-        Uint32 begin_pause;
+        uint32_t begin_pause;
         //sound.halt_bonus();
         //sound.halt_bg(alien_count);
         begin_pause = System::get_ticks();
