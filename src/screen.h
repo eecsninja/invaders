@@ -68,8 +68,7 @@ namespace Graphics {
         SDL_Rect clip;   // Clipping rectangle.
 
     public:
-        Video() : num_blits(0),
-                  image_lib(NULL) {}
+        Video();
 
         // Initialize video.  Returns true on success.
         bool init();

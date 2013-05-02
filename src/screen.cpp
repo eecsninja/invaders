@@ -32,11 +32,14 @@
 
 #include "screen.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "images.h"
 
 namespace Graphics {
+    Video::Video() : num_blits(0),
+                     image_lib(NULL) {}
 
     bool Video::init() {
         atexit(SDL_Quit);
