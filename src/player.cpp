@@ -41,13 +41,13 @@ namespace GameEntities {
     void GameEntity::Player_init (int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_PLAYER, x, y, dx, dy, active);
-        properties->images[0] = game->get_image("ship.png");
+        properties()->images[0] = game->get_image("ship.png");
 
-        properties->right_limit = screen_w - PLAYER_WIDTH;
-        properties->coll_w = int (PLAYER_WIDTH * 0.9);
-        properties->coll_h = int (PLAYER_HEIGHT * 0.8);
-        properties->coll_x_offset = (PLAYER_WIDTH - properties->coll_w) / 2;
-        properties->coll_y_offset = (PLAYER_HEIGHT - properties->coll_h) / 2;
+        properties()->right_limit = screen_w - PLAYER_WIDTH;
+        properties()->coll_w = int (PLAYER_WIDTH * 0.9);
+        properties()->coll_h = int (PLAYER_HEIGHT * 0.8);
+        properties()->coll_x_offset = (PLAYER_WIDTH - properties()->coll_w) / 2;
+        properties()->coll_y_offset = (PLAYER_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Player_movement(int16_t delta)
@@ -57,7 +57,7 @@ namespace GameEntities {
             return;
         }
         // don't move off right hand side of the screen
-        if (dx > 0 && x_int() > properties->right_limit - side_padding) {
+        if (dx > 0 && x_int() > properties()->right_limit - side_padding) {
             return;
         }
         x += INT_TO_FIXED(delta * dx) / 1000;

@@ -46,7 +46,7 @@ namespace GameEntities {
     {
         init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP, x, y, dx, dy, active);
 
-        int* images = properties->images;
+        int* images = properties()->images;
         int width, height;
         if (!is_small) {
             images[0] = game->get_image("bonus-1-1.png");
@@ -54,27 +54,27 @@ namespace GameEntities {
             width = BONUS_SHIP_WIDTH;
             height = BONUS_SHIP_HEIGHT;
 
-            properties->points = 1000;
+            properties()->points = 1000;
         } else {
             images[0] = game->get_image("bonus-2-1.png");
             images[1] = game->get_image("bonus-2-2.png");
             width = SMALL_BONUS_SHIP_WIDTH;
             height = SMALL_BONUS_SHIP_HEIGHT;
 
-            properties->points = 5000;
+            properties()->points = 5000;
         }
-        properties->frame_duration = 55;
-        properties->coll_w = int (width * 0.9);
-        properties->coll_h = height;
-        properties->coll_x_offset = (width - properties->coll_w) / 2;
-        properties->coll_y_offset = (height - properties->coll_h) / 2;
+        properties()->frame_duration = 55;
+        properties()->coll_w = int (width * 0.9);
+        properties()->coll_h = height;
+        properties()->coll_x_offset = (width - properties()->coll_w) / 2;
+        properties()->coll_y_offset = (height - properties()->coll_h) / 2;
     };
 
     void GameEntity::BonusShip_movement(int16_t delta)
     {
         // control in place animation
         frame_time_count += delta;
-        if (frame_time_count > properties->frame_duration) {
+        if (frame_time_count > properties()->frame_duration) {
             frame_time_count = 0;
             if (++image_num >= NUM_BONUS_SHIP_IMAGES) {
                 image_num = 0;

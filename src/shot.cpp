@@ -42,12 +42,12 @@ namespace GameEntities {
     {
         init(GAME_ENTITY_SHOT, x, y, dx, dy, active);
 
-        properties->images[0] = game->get_image("shot.png");
+        properties()->images[0] = game->get_image("shot.png");
 
-        properties->coll_w = SHOT_WIDTH;
-        properties->coll_h = int (SHOT_HEIGHT * 0.7);
-        properties->coll_x_offset = (SHOT_WIDTH - properties->coll_w) / 2;
-        properties->coll_y_offset = (SHOT_HEIGHT - properties->coll_h) / 2;
+        properties()->coll_w = SHOT_WIDTH;
+        properties()->coll_h = int (SHOT_HEIGHT * 0.7);
+        properties()->coll_x_offset = (SHOT_WIDTH - properties()->coll_w) / 2;
+        properties()->coll_y_offset = (SHOT_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Shot_movement(int16_t delta)

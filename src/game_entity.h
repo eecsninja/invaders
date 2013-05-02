@@ -67,7 +67,7 @@ enum GameEntityTypes {
 
 namespace GameEntities {
 
-    // When all instances of a class of GameEntity have the same properties,
+    // When all instances of a class of GameEntity have the same properties(),
     // use this struct to store the common property values and save memory.
     struct GameEntityTypeProperties {
         uint16_t frame_duration;  // How much time before going to next frame.
@@ -99,16 +99,17 @@ namespace GameEntities {
         int image_num;
         int type;
 
-        GameEntityTypeProperties* properties;
     public:
         GameEntity() : type(GAME_ENTITY_UNKNOWN),
-                       status_bits(0),
-                       properties(&type_properties[GAME_ENTITY_UNKNOWN]) {}
+                       status_bits(0) {}
         void init(int type, int x, int y, int dx, int dy, bool active);
         void movement(int16_t delta);
         static void set_type_property(int type,
                                       const GameEntityTypeProperties& prop) {
             type_properties[type] = prop;
+        }
+        GameEntityTypeProperties* properties() const {
+            return &type_properties[type];
         }
         void draw();
         void cleanup_draw();
@@ -126,15 +127,15 @@ namespace GameEntities {
         int get_y() const { return y_int(); }
         int x_int() const { return FIXED_TO_INT(x); }
         int y_int() const { return FIXED_TO_INT(y); }
-        int coll_w() const { return properties->coll_w; }
-        int coll_h() const { return properties->coll_h; }
-        int coll_x_offset() const { return properties->coll_x_offset; }
-        int coll_y_offset() const { return properties->coll_y_offset; }
+        int coll_w() const { return properties()->coll_w; }
+        int coll_h() const { return properties()->coll_h; }
+        int coll_x_offset() const { return properties()->coll_x_offset; }
+        int coll_y_offset() const { return properties()->coll_y_offset; }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
-        void set_frame_duration(uint16_t dur) { properties->frame_duration = dur; }
+        void set_frame_duration(uint16_t dur) { properties()->frame_duration = dur; }
         // Explosion
-        void set_explosion(uint16_t dur) { activate(); properties->frame_duration = dur; }
+        void set_explosion(uint16_t dur) { activate(); properties()->frame_duration = dur; }
         void duration(int16_t delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }

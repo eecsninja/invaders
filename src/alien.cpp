@@ -44,7 +44,7 @@ namespace GameEntities {
     {
         init(type, x, y, dx, dy, active);
 
-        int* images = properties->images;
+        int* images = properties()->images;
         switch(type) {
         default:
         case GAME_ENTITY_ALIEN:
@@ -54,7 +54,7 @@ namespace GameEntities {
             images[3] = game->get_image("alien-1-4.png");
             images[4] = game->get_image("alien-1-3.png");
             images[5] = game->get_image("alien-1-2.png");
-            properties->points = 25;
+            properties()->points = 25;
             break;
         case GAME_ENTITY_ALIEN2:
             images[0] = game->get_image("alien-2-1.png");
@@ -63,7 +63,7 @@ namespace GameEntities {
             images[3] = game->get_image("alien-2-4.png");
             images[4] = game->get_image("alien-2-3.png");
             images[5] = game->get_image("alien-2-2.png");
-            properties->points = 50;
+            properties()->points = 50;
             break;
         case GAME_ENTITY_ALIEN3:
             images[0] = game->get_image("alien-3-1.png");
@@ -72,48 +72,48 @@ namespace GameEntities {
             images[3] = game->get_image("alien-3-4.png");
             images[4] = game->get_image("alien-3-3.png");
             images[5] = game->get_image("alien-3-2.png");
-            properties->points = 100;
+            properties()->points = 100;
             break;
         }
 
         position = pos;
         fire_chance = chance;
 
-        properties->frame_duration = 225;
-        properties->right_limit = screen_w - ALIEN_WIDTH;
-        properties->bottom_limit = 530;
+        properties()->frame_duration = 225;
+        properties()->right_limit = screen_w - ALIEN_WIDTH;
+        properties()->bottom_limit = 530;
         switch (type) {
         default:
-            properties->coll_w = ALIEN_WIDTH;
+            properties()->coll_w = ALIEN_WIDTH;
             break;
         case 3:
-            properties->coll_w = int (ALIEN_WIDTH * 0.8);
+            properties()->coll_w = int (ALIEN_WIDTH * 0.8);
             break;
         }
-        properties->coll_h = int (ALIEN_HEIGHT * 0.8);
-        properties->coll_x_offset = (ALIEN_WIDTH - properties->coll_w) / 2;
-        properties->coll_y_offset = (ALIEN_HEIGHT - properties->coll_h) / 2;
+        properties()->coll_h = int (ALIEN_HEIGHT * 0.8);
+        properties()->coll_x_offset = (ALIEN_WIDTH - properties()->coll_w) / 2;
+        properties()->coll_y_offset = (ALIEN_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Alien_movement(int16_t delta)
     {
         // control in place animation
         frame_time_count += delta;
-        if (frame_time_count > properties->frame_duration) {
+        if (frame_time_count > properties()->frame_duration) {
             frame_time_count = 0;
             if (++image_num >= NUM_ALIEN_IMAGES) {
                 image_num = 0;
             }
         }
         // bottom of the screen, game over
-        if (y_int() > properties->bottom_limit) {
+        if (y_int() > properties()->bottom_limit) {
             game->msg_alien_landed();
         }
         // change direction and move down
         if (dx < 0 && x_int() < side_padding) {
             game->run_logic();
         }
-        else if (dx > 0 && x_int() > properties->right_limit - side_padding) {
+        else if (dx > 0 && x_int() > properties()->right_limit - side_padding) {
             game->run_logic();
         }
 

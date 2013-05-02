@@ -51,7 +51,6 @@ namespace GameEntities {
         this->dy = dy;
         this->status_bits = (active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE);
         this->frame_time_count = 0;
-        this->properties = &type_properties[type];
         this->image_num = 0;
     }
 
@@ -60,7 +59,7 @@ namespace GameEntities {
     }
     void GameEntity::draw()
     {
-        video->schedule_blit(properties->images[image_num], x_int(), y_int());
+        video->schedule_blit(properties()->images[image_num], x_int(), y_int());
     }
     void GameEntity::cleanup_draw()
     {
@@ -101,7 +100,7 @@ namespace GameEntities {
             return;
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->deactivate();
-        game->msg_alien_killed(other->position, other->properties->points);
+        game->msg_alien_killed(other->position, other->properties()->points);
         other->kill();
         set_hit(true);
     }
@@ -124,13 +123,13 @@ namespace GameEntities {
         game->explode(this->x_int(), this->y_int(), long_explosion);
         this->deactivate();
         other->deactivate();
-        game->msg_bonus_ship_destroyed(this->properties->points);
+        game->msg_bonus_ship_destroyed(this->properties()->points);
     }
     void GameEntity::duration(int16_t delta)
     {
         // control explosion duration
         frame_time_count += delta;
-        if (frame_time_count > properties->frame_duration) {
+        if (frame_time_count > properties()->frame_duration) {
             frame_time_count = 0;
             deactivate();
         }
@@ -171,18 +170,18 @@ namespace GameEntities {
     void GameEntity::Explosion_init(int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
-        properties->images[0] = game->get_image("explosion.png");
+        properties()->images[0] = game->get_image("explosion.png");
     }
 
     void GameEntity::ShieldPiece_init(int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
-        properties->images[0] = game->get_image("shield_piece.png");
+        properties()->images[0] = game->get_image("shield_piece.png");
 
-        properties->coll_w = SHIELD_PIECE_SIZE;
-        properties->coll_h = int (SHIELD_PIECE_SIZE * 0.9);
-        properties->coll_x_offset = (SHIELD_PIECE_SIZE - properties->coll_w) / 2;
-        properties->coll_y_offset = (SHIELD_PIECE_SIZE - properties->coll_h) / 2;
+        properties()->coll_w = SHIELD_PIECE_SIZE;
+        properties()->coll_h = int (SHIELD_PIECE_SIZE * 0.9);
+        properties()->coll_x_offset = (SHIELD_PIECE_SIZE - properties()->coll_w) / 2;
+        properties()->coll_y_offset = (SHIELD_PIECE_SIZE - properties()->coll_h) / 2;
     }
 
     Game::Game* GameEntity::game = NULL;
