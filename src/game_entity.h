@@ -34,7 +34,6 @@
 #define GAME_ENTITY_H
 
 #include <assert.h>
-#include <SDL/SDL.h>
 
 #include "game.h"
 #include "screen.h"
@@ -78,8 +77,9 @@ namespace GameEntities {
 
         int right_limit, bottom_limit;
 
-        // All image frames used to draw the entity.
-        SDL_Surface* images[NUM_GAME_ENTITY_IMAGES];
+        // All image frames used to draw the entity.  Each image is represented
+        // by a unique integer handle.
+        int images[NUM_GAME_ENTITY_IMAGES];
     };
 
     class GameEntity {
@@ -132,9 +132,9 @@ namespace GameEntities {
         int coll_y_offset() const { return properties->coll_y_offset; }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
-        void set_frame_duration(Uint32 dur) { properties->frame_duration = dur; }
+        void set_frame_duration(uint16_t dur) { properties->frame_duration = dur; }
         // Explosion
-        void set_explosion(Uint32 dur) { activate(); properties->frame_duration = dur; }
+        void set_explosion(uint16_t dur) { activate(); properties->frame_duration = dur; }
         void duration(int16_t delta);
         // Alien
         void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }
@@ -185,22 +185,8 @@ namespace GameEntities {
         void Shot_init(int x, int y, int dx, int dy, bool active);
         void Shot_movement(int16_t delta);
 
-        void Explosion_init(int x, int y, int dx, int dy, bool active)
-        {
-            init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
-            properties->images[0] = game->get_image("explosion.png");
-        }
-
-        void ShieldPiece_init(int x, int y, int dx, int dy, bool active)
-        {
-            init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
-            SDL_Surface* image = properties->images[0] = game->get_image("shield_piece.png");
-
-            properties->coll_w = image->w;
-            properties->coll_h = int (image->h * 0.9);
-            properties->coll_x_offset = (image->w - properties->coll_w) / 2;
-            properties->coll_y_offset = (image->h - properties->coll_h) / 2;
-        }
+        void Explosion_init(int x, int y, int dx, int dy, bool active);
+        void ShieldPiece_init(int x, int y, int dx, int dy, bool active);
     };
 
     // Retain these GameEntity subclass names so dependent code doesn't have to

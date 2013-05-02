@@ -48,24 +48,31 @@ extern SDL_Rect clip;
 
 namespace Graphics {
 
+    class Images;
+
     class Video {
     private:
         // A list of scheduled blits.
         struct blit {
-            SDL_Surface* img;
+            int image_index;
             SDL_Rect src;
             SDL_Rect dst;
         } blits[max_updates];
         int num_blits;
+        Images* image_lib;
 
     public:
-        Video() : num_blits(0) {}
+        Video() : num_blits(0),
+                  image_lib(NULL) {}
+
+        // Provide a pointer to an image library.
+        void set_image_lib(Images* images);
 
         // Set the operating video mode.
         void set_video_mode(bool fullscreen);
 
         // Add a blit task to the blit queue.
-        void schedule_blit(SDL_Surface* image, int x, int y);
+        void schedule_blit(int image_index, int x, int y);
 
         // Perform all queued blits and reset the blit counter.
         void flush_blits();

@@ -34,13 +34,17 @@
 
 #define NUM_ALIEN_IMAGES     6
 
+// Taken from dimensions of image files.
+#define ALIEN_WIDTH         45
+#define ALIEN_HEIGHT        30
+
 namespace GameEntities {
 
     void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance)
     {
         init(type, x, y, dx, dy, active);
 
-        SDL_Surface** images = properties->images;
+        int* images = properties->images;
         switch(type) {
         default:
         case GAME_ENTITY_ALIEN:
@@ -71,25 +75,24 @@ namespace GameEntities {
             properties->points = 100;
             break;
         }
-        SDL_Surface* image = images[0];
 
         position = pos;
         fire_chance = chance;
 
         properties->frame_duration = 225;
-        properties->right_limit = screen_w - image->w;
+        properties->right_limit = screen_w - ALIEN_WIDTH;
         properties->bottom_limit = 530;
         switch (type) {
         default:
-            properties->coll_w = image->w;
+            properties->coll_w = ALIEN_WIDTH;
             break;
         case 3:
-            properties->coll_w = int (image->w * 0.8);
+            properties->coll_w = int (ALIEN_WIDTH * 0.8);
             break;
         }
-        properties->coll_h = int (image->h * 0.8);
-        properties->coll_x_offset = (image->w - properties->coll_w) / 2;
-        properties->coll_y_offset = (image->h - properties->coll_h) / 2;
+        properties->coll_h = int (ALIEN_HEIGHT * 0.8);
+        properties->coll_x_offset = (ALIEN_WIDTH - properties->coll_w) / 2;
+        properties->coll_y_offset = (ALIEN_HEIGHT - properties->coll_h) / 2;
     }
 
     void GameEntity::Alien_movement(int16_t delta)

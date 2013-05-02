@@ -34,34 +34,44 @@
 
 #define NUM_BONUS_SHIP_IMAGES     2
 
+// Taken from bonus ship image files.
+#define BONUS_SHIP_WIDTH         60
+#define BONUS_SHIP_HEIGHT        26
+#define SMALL_BONUS_SHIP_WIDTH   45
+#define SMALL_BONUS_SHIP_HEIGHT  20
+
 namespace GameEntities {
 
     void GameEntity::BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active)
     {
         init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP, x, y, dx, dy, active);
 
-        SDL_Surface** images = properties->images;
+        int* images = properties->images;
+        int width, height;
         if (!is_small) {
             images[0] = game->get_image("bonus-1-1.png");
             images[1] = game->get_image("bonus-1-2.png");
+            width = BONUS_SHIP_WIDTH;
+            height = BONUS_SHIP_HEIGHT;
 
             properties->points = 1000;
         } else {
             images[0] = game->get_image("bonus-2-1.png");
             images[1] = game->get_image("bonus-2-2.png");
-          properties->points = 5000;
+            width = SMALL_BONUS_SHIP_WIDTH;
+            height = SMALL_BONUS_SHIP_HEIGHT;
+
+            properties->points = 5000;
         }
-        SDL_Surface* image = images[0];
         properties->frame_duration = 55;
-        properties->coll_w = int (image->w * 0.9);
-        properties->coll_h = image->h;
-        properties->coll_x_offset = (image->w - properties->coll_w) / 2;
-        properties->coll_y_offset = (image->h - properties->coll_h) / 2;
+        properties->coll_w = int (width * 0.9);
+        properties->coll_h = height;
+        properties->coll_x_offset = (width - properties->coll_w) / 2;
+        properties->coll_y_offset = (height - properties->coll_h) / 2;
     };
 
     void GameEntity::BonusShip_movement(int16_t delta)
     {
-        SDL_Surface** images = properties->images;
         // control in place animation
         frame_time_count += delta;
         if (frame_time_count > properties->frame_duration) {
@@ -69,12 +79,11 @@ namespace GameEntities {
             if (++image_num >= NUM_BONUS_SHIP_IMAGES) {
                 image_num = 0;
             }
-            SDL_Surface* image = images[image_num];
         }
         x += INT_TO_FIXED(delta * dx) / 1000;
         if (dx > 0 && x_int() > screen_w) {
             deactivate();
-        } else if (dx < 0 && x_int() < -images[0]->w) {
+        } else if (dx < 0 && x_int() < BONUS_SHIP_WIDTH) {
             deactivate();
         }
     }

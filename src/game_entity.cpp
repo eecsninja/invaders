@@ -37,6 +37,9 @@
 #define short_explosion       50
 #define long_explosion       200
 
+// Should match both the image file and the definition in game.cpp
+#define SHIELD_PIECE_SIZE     20
+
 namespace GameEntities {
 
     void GameEntity::init(int type, int x, int y, int dx, int dy, bool active)
@@ -163,6 +166,23 @@ namespace GameEntities {
 #ifdef EVENT_COUNTER
         event_counter.do_movement_call();
 #endif
+    }
+
+    void GameEntity::Explosion_init(int x, int y, int dx, int dy, bool active)
+    {
+        init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
+        properties->images[0] = game->get_image("explosion.png");
+    }
+
+    void GameEntity::ShieldPiece_init(int x, int y, int dx, int dy, bool active)
+    {
+        init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
+        properties->images[0] = game->get_image("shield_piece.png");
+
+        properties->coll_w = SHIELD_PIECE_SIZE;
+        properties->coll_h = int (SHIELD_PIECE_SIZE * 0.9);
+        properties->coll_x_offset = (SHIELD_PIECE_SIZE - properties->coll_w) / 2;
+        properties->coll_y_offset = (SHIELD_PIECE_SIZE - properties->coll_h) / 2;
     }
 
     Game::Game* GameEntity::game = NULL;

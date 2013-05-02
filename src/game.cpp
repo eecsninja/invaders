@@ -920,10 +920,7 @@ namespace Game {
     {
         video.set_video_mode(false);
         images.load_images(image_list);
-        wave_background = get_image("wave_background.png");
-        background = get_image("background.png");
-        ui_header = get_image("ui_header.png");
-        ui_points = get_image("ui_points.png");
+        video.set_image_lib(&images);
 
         GameEntity::set_game(this);
         GameEntity::set_video(&video);
@@ -933,7 +930,7 @@ namespace Game {
         GameEntity::set_game(NULL);
     }
 
-    SDL_Surface* Game::get_image(const char* filename) {
-        return images.get_image(filename);
+    int Game::get_image(const char* filename) {
+        return images.get_image_index(filename);
     }
 }

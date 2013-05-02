@@ -35,7 +35,18 @@
 #include <SDL/SDL.h>
 #include <stdlib.h>
 
+#include "images.h"
+
 namespace Graphics {
+
+    void Video::set_image_lib(Images* images) {
+        image_lib = images;
+
+        wave_background = images->get_image("wave_background.png");
+        background = images->get_image("background.png");
+        ui_header = images->get_image("ui_header.png");
+        ui_points = images->get_image("ui_points.png");
+    }
 
     void Video::set_video_mode(bool fullscreen) {
         int flags = SDL_SWSURFACE;
@@ -51,29 +62,32 @@ namespace Graphics {
         SDL_SetClipRect(screen, &clip);
     }
 
-    void Video::schedule_blit(SDL_Surface* image, int x, int y) {
+    void Video::schedule_blit(int image_index, int x, int y) {
         if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;
         }
 
         blit* update = &blits[num_blits++];
-        update->img = image;
+        update->image_index = image_index;
 
         update->src.x = 0;
         update->src.y = 0;
-        update->src.w = image->w;
-        update->src.h = image->h;
+        update->src.w = screen_w;
+        update->src.h = screen_h;
 
         update->dst.x = x;
         update->dst.y = y;
-        update->dst.w = image->w;
-        update->dst.h = image->h;
+        update->dst.w = screen_w;
+        update->dst.h = screen_h;
     }
 
     void Video::flush_blits() {
-        for (int i = 0; i < num_blits; ++i)
-            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
+        for (int i = 0; i < num_blits && image_lib; ++i) {
+            SDL_Surface* image = image_lib->get_image(blits[i].image_index);
+            if (image)
+                SDL_BlitSurface(image, &blits[i].src, screen, &blits[i].dst);
+        }
         num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
     }
