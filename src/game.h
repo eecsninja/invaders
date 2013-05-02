@@ -114,8 +114,8 @@ namespace Game {
         // Sound::Sound sound;
         // Ui::Ui ui;
         // Ui::Status status;
-        Graphics::Video video;
-        Graphics::Images images;
+        Graphics::Video& video;
+        Graphics::Images& images;
         GameEntityPtr player, rbonus, sbonus, bonus;
         GameEntities::Alien* aliens;
         GameEntities::ShieldPiece* shields;
@@ -149,7 +149,7 @@ namespace Game {
         void wave_cleanup();
         void player_rebirth();
     public:
-        Game();
+        Game(Graphics::Video* video, Graphics::Images* images);
         ~Game();
         void explode(fixed x, fixed y, uint32_t duration);
         void game_control();

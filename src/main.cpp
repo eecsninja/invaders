@@ -34,6 +34,7 @@
 #include <stdlib.h>
 
 #include "game.h"
+#include "images.h"
 #include "screen.h"
 
 const char* datadir;
@@ -41,7 +42,9 @@ const char* datadir;
 int main(int argc, char* argv[])
 {
     datadir = "data/";
-    Game::Game game;
+    Graphics::Images images;
+    Graphics::Video video;
+    Game::Game game(&video, &images);
     game.game_control();
 
     return 0;

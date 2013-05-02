@@ -62,6 +62,9 @@ extern const char* datadir;
 
 //#define FRAME_COUNTER
 
+using Graphics::Video;
+using Graphics::Images;
+
 using GameEntities::GameEntity;
 using GameEntities::Player;
 using GameEntities::Alien;
@@ -999,7 +1002,10 @@ namespace Game {
             explosion_counter = 0;
         }
     }
-    Game::Game() : // ui(&sound, this, 0),
+    Game::Game(Video* video_ptr, Images* images_ptr) :
+                   // ui(&sound, this, 0),
+                   video(*video_ptr),
+                   images(*images_ptr),
                    player_life(0),
                    player(NULL),
                    bonus(NULL),
