@@ -53,6 +53,18 @@ typedef struct {
 } blit;
 extern blit blits[max_updates];
 
-void set_video_mode(bool fullscreen);
+namespace Graphics {
+    // Set the operating video mode.
+    void set_video_mode(bool fullscreen);
+
+    // Add a blit task to the blit queue.
+    void schedule_blit(SDL_Surface* image, int x, int y);
+
+    // Perform all queued blits and reset the blit counter.
+    void flush_blits();
+
+    // Redraw the entire screen, including all the scheduled blits.
+    void update_screen();
+};
 
 #endif  //SCREEN_H

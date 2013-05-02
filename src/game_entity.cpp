@@ -54,35 +54,10 @@ namespace GameEntities {
 
     void GameEntity::erase()
     {
-        SDL_Surface** images = properties->images;
-        SDL_Surface* image = images[image_num];
-        blit* update;
-        update = &blits[screen_updates++];
-        update->img = wave_background;
-        update->src.x = (Sint16) x_int();
-        update->src.y = (Sint16) y_int();
-        update->src.w = image->w;
-        update->src.h = image->h;
-        update->dst.x = (Sint16) x_int();
-        update->dst.y = (Sint16) y_int();
-        update->dst.w = image->w;
-        update->dst.h = image->h;
     }
     void GameEntity::draw()
     {
-        SDL_Surface** images = properties->images;
-        SDL_Surface* image = images[image_num];
-        blit* update;
-        update = &blits[screen_updates++];
-        update->img = image;
-        update->src.x = 0;
-        update->src.y = 0;
-        update->src.w = image->w;
-        update->src.h = image->h;
-        update->dst.x = (Sint16) x_int();
-        update->dst.y = (Sint16) y_int();
-        update->dst.w = image->w;
-        update->dst.h = image->h;
+        Graphics::schedule_blit(properties->images[image_num], x_int(), y_int());
     }
     void GameEntity::cleanup_draw()
     {

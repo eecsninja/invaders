@@ -168,8 +168,7 @@ namespace Game {
         // output wave message and status display
         //ui.wave_msg(++wave);
         //sound.play_start_wave();
-        SDL_BlitSurface(wave_background, NULL, screen, NULL);
-        SDL_UpdateRect(screen,0,0,0,0);
+        Graphics::update_screen();
         //status.blit_wave(wave);
         //status.blit_score(score);
         //status.blit_lives(player_life);
@@ -663,12 +662,7 @@ namespace Game {
                 if (shields[i].is_alive())
                     shields[i].draw();
             }
-            // update screen
-            for (int i = 0; i < screen_updates; ++i) {
-                SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
-            }
-            SDL_UpdateRect(screen, 0, 0, 0, 0);
-            screen_updates = 0;
+            Graphics::update_screen();
 
 #ifdef EVENT_COUNTER
             if (event_counter.num_loops > 0 &&
@@ -680,8 +674,6 @@ namespace Game {
     }
     void Game::player_rebirth()
     {
-        //erase everything
-        SDL_BlitSurface(wave_background, NULL, screen, NULL);
         // re-init player
         player->init_x(player_center);
         player->init_y(player_top);
@@ -698,28 +690,18 @@ namespace Game {
         for (int i = 0; i < NUM_ALIENS; ++i) {
             aliens[i].cleanup_draw();
         }
-        // update screen
-        for (int i = 0; i < screen_updates; ++i)
-            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
-        screen_updates = 0;
-        SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
+        Graphics::update_screen();
         //sound.play_player_rebirth();
     }
     void Game::wave_cleanup()
     {
-        //erase last alien shots, explosions, and shieldpieces
-        SDL_BlitSurface(wave_background, NULL, screen, NULL);
         // redraw all that should remain
         if (player->is_active())
             player->cleanup_draw();
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             shields[i].cleanup_draw();
         }
-        // update screen
-        for (int i = 0; i < screen_updates; ++i)
-            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
-        screen_updates = 0;
-        SDL_UpdateRect(screen,clip.x,clip.y,clip.w,clip.h);
+        Graphics::update_screen();
     }
     void Game::pause()
     {
@@ -938,7 +920,7 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
-        set_video_mode(false);
+        Graphics::set_video_mode(false);
         images.load_images(image_list);
         wave_background = get_image("wave_background.png");
         background = get_image("background.png");

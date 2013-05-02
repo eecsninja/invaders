@@ -35,13 +35,48 @@
 #include <SDL/SDL.h>
 #include <stdlib.h>
 
-void set_video_mode(bool fullscreen) {
-    int flags = SDL_SWSURFACE;
-    if (fullscreen)
-        flags |= SDL_FULLSCREEN;
-    screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
-    if (screen == NULL) {
-        fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
-        exit(1);
+namespace Graphics {
+
+    void set_video_mode(bool fullscreen) {
+        int flags = SDL_SWSURFACE;
+        if (fullscreen)
+            flags |= SDL_FULLSCREEN;
+        screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
+        if (screen == NULL) {
+            fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
+            exit(1);
+        }
+    }
+
+    void schedule_blit(SDL_Surface* image, int x, int y) {
+        if (screen_updates >= max_updates) {
+            fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
+            return;
+        }
+
+        blit* update = &blits[screen_updates++];
+        update->img = image;
+
+        update->src.x = 0;
+        update->src.y = 0;
+        update->src.w = image->w;
+        update->src.h = image->h;
+
+        update->dst.x = x;
+        update->dst.y = y;
+        update->dst.w = image->w;
+        update->dst.h = image->h;
+    }
+
+    void flush_blits() {
+        for (int i = 0; i < screen_updates; ++i)
+            SDL_BlitSurface(blits[i].img, &blits[i].src, screen, &blits[i].dst);
+        screen_updates = 0;
+        SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
+    }
+
+    void update_screen() {
+        SDL_BlitSurface(wave_background, NULL, screen, NULL);
+        flush_blits();
     }
 }
