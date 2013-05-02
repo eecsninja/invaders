@@ -55,8 +55,8 @@ namespace Graphics {
         // A list of scheduled blits.
         struct blit {
             int image_index;
-            SDL_Rect src;
-            SDL_Rect dst;
+            int x;
+            int y;
         } blits[max_updates];
         int num_blits;
         Images* image_lib;

@@ -77,23 +77,19 @@ namespace Graphics {
 
         blit* update = &blits[num_blits++];
         update->image_index = image_index;
-
-        update->src.x = 0;
-        update->src.y = 0;
-        update->src.w = screen_w;
-        update->src.h = screen_h;
-
-        update->dst.x = x;
-        update->dst.y = y;
-        update->dst.w = screen_w;
-        update->dst.h = screen_h;
+        update->x = x;
+        update->y = y;
     }
 
     void Video::flush_blits() {
         for (int i = 0; i < num_blits && image_lib; ++i) {
             SDL_Surface* image = image_lib->get_image(blits[i].image_index);
-            if (image)
-                SDL_BlitSurface(image, &blits[i].src, screen, &blits[i].dst);
+            if (image) {
+                SDL_Rect dst;
+                dst.x = blits[i].x;
+                dst.y = blits[i].y;
+                SDL_BlitSurface(image, NULL, screen, &dst);
+            }
         }
         num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
