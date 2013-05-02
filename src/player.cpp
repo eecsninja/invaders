@@ -37,7 +37,7 @@ namespace GameEntities {
     void GameEntity::Player_init (int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_PLAYER, x, y, dx, dy, active);
-        image = game->get_image("ship.png");
+        SDL_Surface* image = images[0] = game->get_image("ship.png");
 
         properties->right_limit = screen_w - image->w;
         properties->coll_w = int (image->w * 0.9);

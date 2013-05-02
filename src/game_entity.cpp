@@ -46,10 +46,12 @@ namespace GameEntities {
         this->status_bits = (active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE);
         this->frame_time_count = 0;
         this->properties = &type_properties[type];
+        this->image_num = 0;
     }
 
     void GameEntity::erase()
     {
+        SDL_Surface* image = images[image_num];
         blit* update;
         update = &blits[screen_updates++];
         update->img = wave_background;
@@ -64,6 +66,7 @@ namespace GameEntities {
     }
     void GameEntity::draw()
     {
+        SDL_Surface* image = images[image_num];
         blit* update;
         update = &blits[screen_updates++];
         update->img = image;

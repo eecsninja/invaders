@@ -39,18 +39,18 @@ namespace GameEntities {
     void GameEntity::BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active)
     {
         init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP, x, y, dx, dy, active);
-        image_num = 0;
 
         if (!is_small) {
-            image = images[0] = game->get_image("bonus-1-1.png");
+            images[0] = game->get_image("bonus-1-1.png");
             images[1] = game->get_image("bonus-1-2.png");
 
             properties->points = 1000;
         } else {
-            image = images[0] = game->get_image("bonus-2-1.png");
+            images[0] = game->get_image("bonus-2-1.png");
             images[1] = game->get_image("bonus-2-2.png");
           properties->points = 5000;
         }
+        SDL_Surface* image = images[0];
         properties->frame_duration = 55;
         properties->coll_w = int (image->w * 0.9);
         properties->coll_h = image->h;
@@ -67,12 +67,12 @@ namespace GameEntities {
             if (++image_num >= NUM_BONUS_SHIP_IMAGES) {
                 image_num = 0;
             }
-            image = images[image_num];
+            SDL_Surface* image = images[image_num];
         }
         x += INT_TO_FIXED(delta * dx) / 1000;
         if (dx > 0 && x_int() > screen_w) {
             deactivate();
-        } else if (dx < 0 && x_int() < -image->w) {
+        } else if (dx < 0 && x_int() < -images[0]->w) {
             deactivate();
         }
     }

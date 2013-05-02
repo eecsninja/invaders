@@ -39,7 +39,6 @@ namespace GameEntities {
     void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance)
     {
         init(type, x, y, dx, dy, active);
-        image_num = 0;
 
         switch(type) {
         default:
@@ -71,7 +70,7 @@ namespace GameEntities {
             properties->points = 100;
             break;
         }
-        image = images[0];
+        SDL_Surface* image = images[0];
 
         position = pos;
         fire_chance = chance;
@@ -101,7 +100,6 @@ namespace GameEntities {
             if (++image_num >= NUM_ALIEN_IMAGES) {
                 image_num = 0;
             }
-            image = images[image_num];
         }
         // bottom of the screen, game over
         if (y_int() > properties->bottom_limit) {

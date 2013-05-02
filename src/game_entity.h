@@ -182,13 +182,13 @@ namespace GameEntities {
         void Explosion_init(int x, int y, int dx, int dy, bool active)
         {
             init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
-            image = game->get_image("explosion.png");
+            images[0] = game->get_image("explosion.png");
         }
 
         void ShieldPiece_init(int x, int y, int dx, int dy, bool active)
         {
             init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
-            image = game->get_image("shield_piece.png");
+            SDL_Surface* image = images[0] = game->get_image("shield_piece.png");
 
             properties->coll_w = image->w;
             properties->coll_h = int (image->h * 0.9);
