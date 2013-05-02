@@ -350,7 +350,7 @@ namespace Game {
     {
         System::KeyState keys;
         int reloading = 0;
-        last_bonus_launch = last_alien_shot = last_loop_time = system_get_ticks();
+        last_bonus_launch = last_alien_shot = last_loop_time = System::get_ticks();
 
 #ifdef EVENT_COUNTER
         event_counter.reset();
@@ -362,8 +362,8 @@ namespace Game {
             // used to calculate how far the entities should move this loop
             // delta is the number of milliseconds the last loop iteration took
             // movement is a function of delta
-            delta = system_get_ticks() - last_loop_time;
-            last_loop_time = system_get_ticks();
+            delta = System::get_ticks() - last_loop_time;
+            last_loop_time = System::get_ticks();
 
             // background track
             //sound.play_bg(alien_count);
@@ -586,14 +586,14 @@ namespace Game {
                     //ui.check_high_scores(score, wave);
                     return;
                 }
-                dead_pause = system_get_ticks();
+                dead_pause = System::get_ticks();
                 //sound.play_player_dead();
                 //status.erase_player_ship(player_life, get_image("ship.png"));
                 player_rebirth();
                 //sound.play_bonus();
                 //sound.play_bg(alien_count);
-                last_loop_time += system_get_ticks() - dead_pause;
-                last_bonus_launch = last_alien_shot = system_get_ticks();
+                last_loop_time += System::get_ticks() - dead_pause;
+                last_bonus_launch = last_alien_shot = System::get_ticks();
                 // erase player and alien shots to give player a chance to continue
                 for (int i = 0; i < num_alien_shots; ++i) {
                     alien_shots[i].deactivate();
@@ -701,12 +701,12 @@ namespace Game {
         Uint32 begin_pause;
         //sound.halt_bonus();
         //sound.halt_bg(alien_count);
-        begin_pause = system_get_ticks();
+        begin_pause = System::get_ticks();
         while (1) {
             System::KeyState keys = System::get_key_state();
             if (keys.pause) {
-                last_loop_time +=  system_get_ticks() - begin_pause;
-                last_bonus_launch = last_alien_shot = system_get_ticks();
+                last_loop_time +=  System::get_ticks() - begin_pause;
+                last_bonus_launch = last_alien_shot = System::get_ticks();
                 //sound.play_bonus();
                 return;
             }
@@ -715,11 +715,11 @@ namespace Game {
     void Game::fire_shot()
     {
         // check that player has waited long enough to fire
-        if (system_get_ticks() - last_shot < player_shot_delay) {
+        if (System::get_ticks() - last_shot < player_shot_delay) {
             return;
         }
         // record time and fire
-        last_shot = system_get_ticks();
+        last_shot = System::get_ticks();
         player_shots[player_shot_counter].init_x(player->get_x()+player_init_x_shot_pos);
         player_shots[player_shot_counter].init_y(player->get_y()-player_init_y_shot_pos);
         player_shots[player_shot_counter].set_hit(false);
@@ -732,10 +732,10 @@ namespace Game {
     void Game::launch_bonus_ship()
     {
 #define top 60
-        if (system_get_ticks() - last_bonus_launch < bonus_launch_delay) {
+        if (System::get_ticks() - last_bonus_launch < bonus_launch_delay) {
             return;
         }
-        last_bonus_launch = system_get_ticks();
+        last_bonus_launch = System::get_ticks();
         static int rand_list_count = 0;
         if (bonus_select[rand_list_count] == 1) {
             bonus = sbonus;
@@ -763,11 +763,11 @@ namespace Game {
     void Game::alien_fire()
     {
         // check that aliens have waited long enough to fire
-        if (system_get_ticks() - last_alien_shot < alien_shot_delay) {
+        if (System::get_ticks() - last_alien_shot < alien_shot_delay) {
             return;
         }
         // record time and fire
-        last_alien_shot = system_get_ticks();
+        last_alien_shot = System::get_ticks();
         static int alien_to_fire = 0;
         ++alien_to_fire;
         for (int i = 0; i < NUM_ALIENS; ++i) {

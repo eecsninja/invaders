@@ -61,10 +61,11 @@ namespace System {
 
         return key_state;
     }
-}
 
-// This is just a wrapper around SDL_GetTicks.  As part of the embedded port,
-// its contents will eventually be replaced with something else.
-uint32_t system_get_ticks() {
-    return SDL_GetTicks();
+    // This is just a wrapper around SDL_GetTicks.  As part of the embedded port,
+    // its contents will eventually be replaced with something else.
+    uint32_t get_ticks() {
+        return SDL_GetTicks();
+    }
+
 }

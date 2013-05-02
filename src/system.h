@@ -49,8 +49,10 @@ namespace System {
 
     // Returns the current key state.
     KeyState get_key_state();
+
+    // Returns the number of ticks on a system timer.
+    uint32_t get_ticks();
 }
 
-uint32_t system_get_ticks();
 
 #endif  // _SYSTEM_H_
