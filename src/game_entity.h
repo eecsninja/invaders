@@ -81,8 +81,6 @@ namespace GameEntities {
 
     class GameEntity {
     private:
-        static const int short_explosion = 50;
-        static const int long_explosion = 200;
         static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
 
         static Game::Game* game;      // Common pointer to the current game.

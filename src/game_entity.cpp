@@ -34,6 +34,9 @@
 
 #include "screen.h"
 
+#define short_explosion       50
+#define long_explosion       200
+
 namespace GameEntities {
 
     void GameEntity::init(int type, int x, int y, int dx, int dy, bool active)
