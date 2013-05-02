@@ -373,8 +373,8 @@ namespace Game {
 
 #ifdef FRAME_COUNTER
             // frame counter
-            static Uint32 last_fps_time;
-            static int fps;
+            Uint32 last_fps_time;
+            int fps;
             last_fps_time += delta;
             ++fps;
             // update fps counter
