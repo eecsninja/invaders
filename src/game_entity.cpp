@@ -54,9 +54,6 @@ namespace GameEntities {
         this->image_num = 0;
     }
 
-    void GameEntity::erase()
-    {
-    }
     void GameEntity::draw()
     {
         video->schedule_blit(properties()->images[image_num], x_int(), y_int());

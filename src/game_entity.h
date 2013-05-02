@@ -113,7 +113,6 @@ namespace GameEntities {
         }
         void draw();
         void cleanup_draw();
-        void erase();
         bool is_active() const {
             return TEST_BIT(status_bits, STATUS_ACTIVE) && is_alive();
         }

@@ -394,33 +394,6 @@ namespace Game {
                 pause();
             }
 
-            // erase everything
-            if (player->is_active())
-                player->erase();
-            if (bonus->is_active())
-                bonus->erase();
-            for (int i = 0; i < NUM_ALIENS; ++i)
-              aliens[i].erase();
-            for (int i = 0; i < num_player_shots; ++i) {
-                if (player_shots[i].is_active()) {
-                    player_shots[i].erase();
-                }
-            }
-            for (int i = 0; i < num_alien_shots; ++i) {
-                if (alien_shots[i].is_active()) {
-                    alien_shots[i].erase();
-                }
-            }
-            for (int i = 0; i < num_explosions; ++i) {
-                if (explosions[i].is_active()) {
-                    explosions[i].erase();
-                }
-            }
-            for (int i = 0; i < NUM_SHIELDS; ++i) {
-                if(shields[i].is_alive())
-                    shields[i].erase();
-            }
-
             // player attempt to fire
             if (!reloading) {
                 if (keys.fire) {
