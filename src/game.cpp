@@ -91,6 +91,18 @@ using GameEntities::Shot;
 #define SHIELD_PIECE_SIZE           20  // shield height and width
 #define NUM_SHIELDS   (NUM_SHIELD_GROUPS * SHIELD_GROUP_WIDTH * SHIELD_GROUP_HEIGHT)
 
+// Taken from image file dimensions.
+#define PLAYER_WIDTH             43
+#define PLAYER_HEIGHT            25
+#define ALIEN_WIDTH              45
+#define ALIEN_HEIGHT             30
+#define BONUS_SHIP_WIDTH         60
+#define BONUS_SHIP_HEIGHT        26
+#define SMALL_BONUS_SHIP_WIDTH   45
+#define SMALL_BONUS_SHIP_HEIGHT  20
+#define SHOT_WIDTH                5
+#define SHOT_HEIGHT              16
+
 #ifdef EVENT_COUNTER
 #define EVENT_COUNTER_LOOP_LIMIT        1000
 EventCounter event_counter;
@@ -170,7 +182,7 @@ namespace Game {
         //status.blit_wave(wave);
         //status.blit_score(score);
         //status.blit_lives(player_life);
-        //status.blit_player_ships(player_life, get_image("ship.png"));
+        //status.blit_player_ships(player_life, images.get_image_index("ship.png"));
     }
     void Game::init_aliens(int rand_max, int speed)
     {
@@ -241,12 +253,124 @@ namespace Game {
                                   j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
                                   SHIELD_Y_OFFSET, 0, 0, true);
         }
-        GameEntities::GameEntityTypeProperties prop;
-        prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
-        prop.coll_h = SHIELD_GROUP_HEIGHT * SHIELD_PIECE_SIZE;
-        prop.coll_x_offset = 0;
-        prop.coll_y_offset = 0;
-        GameEntity::set_type_property(GAME_ENTITY_SHIELD_GROUP, prop);
+        for (int type = 0; type < NUM_GAME_ENTITY_TYPES; ++type) {
+            GameEntities::GameEntityTypeProperties prop;
+            memset(&prop, 0, sizeof(prop));
+
+            switch(type) {
+            case GAME_ENTITY_PLAYER:
+                prop.images[0] = images.get_image_index("ship.png");
+
+                prop.w = PLAYER_WIDTH;
+                prop.h = PLAYER_HEIGHT;
+                prop.coll_w = int (PLAYER_WIDTH * 0.9);
+                prop.coll_h = int (PLAYER_HEIGHT * 0.8);
+                prop.right_limit = screen_w - PLAYER_WIDTH;
+                break;
+
+            case GAME_ENTITY_ALIEN:
+                prop.images[0] = images.get_image_index("alien-1-1.png");
+                prop.images[1] = images.get_image_index("alien-1-2.png");
+                prop.images[2] = images.get_image_index("alien-1-3.png");
+                prop.images[3] = images.get_image_index("alien-1-4.png");
+                prop.images[4] = images.get_image_index("alien-1-3.png");
+                prop.images[5] = images.get_image_index("alien-1-2.png");
+
+                prop.points = 25;
+                prop.frame_duration = 225;
+                prop.right_limit = screen_w - ALIEN_WIDTH;
+                prop.bottom_limit = 530;
+                prop.w = ALIEN_WIDTH;
+                prop.h = ALIEN_HEIGHT;
+                prop.coll_w = ALIEN_WIDTH;
+                prop.coll_h = int (ALIEN_HEIGHT * 0.8);
+                break;
+            case GAME_ENTITY_ALIEN2:
+                prop.images[0] = images.get_image_index("alien-2-1.png");
+                prop.images[1] = images.get_image_index("alien-2-2.png");
+                prop.images[2] = images.get_image_index("alien-2-3.png");
+                prop.images[3] = images.get_image_index("alien-2-4.png");
+                prop.images[4] = images.get_image_index("alien-2-3.png");
+                prop.images[5] = images.get_image_index("alien-2-2.png");
+
+                prop.points = 50;
+                prop.frame_duration = 225;
+                prop.right_limit = screen_w - ALIEN_WIDTH;
+                prop.bottom_limit = 530;
+                prop.w = ALIEN_WIDTH;
+                prop.h = ALIEN_HEIGHT;
+                prop.coll_w = ALIEN_WIDTH;
+                prop.coll_h = int (ALIEN_HEIGHT * 0.8);
+                break;
+            case GAME_ENTITY_ALIEN3:
+                prop.images[0] = images.get_image_index("alien-3-1.png");
+                prop.images[1] = images.get_image_index("alien-3-2.png");
+                prop.images[2] = images.get_image_index("alien-3-3.png");
+                prop.images[3] = images.get_image_index("alien-3-4.png");
+                prop.images[4] = images.get_image_index("alien-3-3.png");
+                prop.images[5] = images.get_image_index("alien-3-2.png");
+
+                prop.points = 100;
+                prop.frame_duration = 225;
+                prop.right_limit = screen_w - ALIEN_WIDTH;
+                prop.bottom_limit = 530;
+
+                prop.w = ALIEN_WIDTH;
+                prop.h = ALIEN_HEIGHT;
+                prop.coll_w = int (ALIEN_WIDTH * 0.8);
+                prop.coll_h = int (ALIEN_HEIGHT * 0.8);
+
+                break;
+            case GAME_ENTITY_BONUS_SHIP:
+                prop.images[0] = images.get_image_index("bonus-1-1.png");
+                prop.images[1] = images.get_image_index("bonus-1-2.png");
+
+                prop.points = 1000;
+                prop.frame_duration = 55;
+                prop.w = BONUS_SHIP_WIDTH;
+                prop.coll_w = int (BONUS_SHIP_WIDTH * 0.9);
+                prop.coll_h = prop.h = BONUS_SHIP_HEIGHT;
+                break;
+            case GAME_ENTITY_SMALL_BONUS_SHIP:
+                prop.images[0] = images.get_image_index("bonus-2-1.png");
+                prop.images[1] = images.get_image_index("bonus-2-2.png");
+
+                prop.points = 5000;
+                prop.frame_duration = 55;
+                prop.w = SMALL_BONUS_SHIP_WIDTH;
+                prop.coll_w = int (SMALL_BONUS_SHIP_WIDTH * 0.9);
+                prop.coll_h = prop.h = SMALL_BONUS_SHIP_HEIGHT;
+                break;
+            case GAME_ENTITY_SHOT:
+                prop.images[0] = images.get_image_index("shot.png");
+
+                prop.coll_w = prop.w = SHOT_WIDTH;
+                prop.h = SHOT_HEIGHT;
+                prop.coll_h = int (SHOT_HEIGHT * 0.7);
+
+                break;
+            case GAME_ENTITY_SHIELD_PIECE:
+                prop.images[0] = images.get_image_index("shield_piece.png");
+
+                prop.coll_w = prop.w = SHIELD_PIECE_SIZE;
+                prop.coll_h = int (SHIELD_PIECE_SIZE * 0.9);
+                break;
+            case GAME_ENTITY_EXPLOSION:
+                prop.images[0] = images.get_image_index("explosion.png");
+                break;
+            case GAME_ENTITY_SHIELD_GROUP:
+                prop.w = prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
+                prop.h = prop.coll_h = SHIELD_GROUP_HEIGHT * SHIELD_PIECE_SIZE;
+                break;
+            default:
+                continue;
+            }
+
+            prop.coll_x_offset = (prop.w - prop.coll_w) / 2;
+            prop.coll_y_offset = (prop.h - prop.coll_h) / 2;
+
+            GameEntity::set_type_property(type, prop);
+        }
 
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
@@ -561,7 +685,7 @@ namespace Game {
                 }
                 dead_pause = System::get_ticks();
                 //sound.play_player_dead();
-                //status.erase_player_ship(player_life, get_image("ship.png"));
+                //status.erase_player_ship(player_life, images.get_image_index("ship.png"));
                 player_rebirth();
                 //sound.play_bonus();
                 //sound.play_bg(alien_count);
@@ -782,7 +906,7 @@ namespace Game {
             //sound.play_free_guy();
             ++player_life;
             //status.blit_lives(player_life);
-            //status.blit_player_ships(player_life, get_image("ship.png"));
+            //status.blit_player_ships(player_life, images.get_image_index("ship.png"));
             next_free_guy += free_guy_val;
         }
     }
@@ -893,9 +1017,5 @@ namespace Game {
     Game::~Game()
     {
         GameEntity::set_game(NULL);
-    }
-
-    int Game::get_image(const char* filename) {
-        return images.get_image_index(filename);
     }
 }

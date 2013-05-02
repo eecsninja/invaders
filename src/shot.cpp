@@ -32,22 +32,11 @@
 
 #include "shot.h"
 
-// Taken from shot image file.
-#define SHOT_WIDTH    5
-#define SHOT_HEIGHT  16
-
 namespace GameEntities {
 
     void GameEntity::Shot_init(int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_SHOT, x, y, dx, dy, active);
-
-        properties()->images[0] = game->get_image("shot.png");
-
-        properties()->coll_w = SHOT_WIDTH;
-        properties()->coll_h = int (SHOT_HEIGHT * 0.7);
-        properties()->coll_x_offset = (SHOT_WIDTH - properties()->coll_w) / 2;
-        properties()->coll_y_offset = (SHOT_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Shot_movement(int16_t delta)

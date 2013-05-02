@@ -34,65 +34,14 @@
 
 #define NUM_ALIEN_IMAGES     6
 
-// Taken from dimensions of image files.
-#define ALIEN_WIDTH         45
-#define ALIEN_HEIGHT        30
-
 namespace GameEntities {
 
     void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance)
     {
         init(type, x, y, dx, dy, active);
 
-        int* images = properties()->images;
-        switch(type) {
-        default:
-        case GAME_ENTITY_ALIEN:
-            images[0] = game->get_image("alien-1-1.png");
-            images[1] = game->get_image("alien-1-2.png");
-            images[2] = game->get_image("alien-1-3.png");
-            images[3] = game->get_image("alien-1-4.png");
-            images[4] = game->get_image("alien-1-3.png");
-            images[5] = game->get_image("alien-1-2.png");
-            properties()->points = 25;
-            break;
-        case GAME_ENTITY_ALIEN2:
-            images[0] = game->get_image("alien-2-1.png");
-            images[1] = game->get_image("alien-2-2.png");
-            images[2] = game->get_image("alien-2-3.png");
-            images[3] = game->get_image("alien-2-4.png");
-            images[4] = game->get_image("alien-2-3.png");
-            images[5] = game->get_image("alien-2-2.png");
-            properties()->points = 50;
-            break;
-        case GAME_ENTITY_ALIEN3:
-            images[0] = game->get_image("alien-3-1.png");
-            images[1] = game->get_image("alien-3-2.png");
-            images[2] = game->get_image("alien-3-3.png");
-            images[3] = game->get_image("alien-3-4.png");
-            images[4] = game->get_image("alien-3-3.png");
-            images[5] = game->get_image("alien-3-2.png");
-            properties()->points = 100;
-            break;
-        }
-
         position = pos;
         fire_chance = chance;
-
-        properties()->frame_duration = 225;
-        properties()->right_limit = screen_w - ALIEN_WIDTH;
-        properties()->bottom_limit = 530;
-        switch (type) {
-        default:
-            properties()->coll_w = ALIEN_WIDTH;
-            break;
-        case 3:
-            properties()->coll_w = int (ALIEN_WIDTH * 0.8);
-            break;
-        }
-        properties()->coll_h = int (ALIEN_HEIGHT * 0.8);
-        properties()->coll_x_offset = (ALIEN_WIDTH - properties()->coll_w) / 2;
-        properties()->coll_y_offset = (ALIEN_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Alien_movement(int16_t delta)

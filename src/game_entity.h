@@ -72,6 +72,10 @@ namespace GameEntities {
     struct GameEntityTypeProperties {
         uint16_t frame_duration;  // How much time before going to next frame.
         int points; // point value of individual objects
+
+        // width and height of the object image.
+        int w, h;
+
         // heights, widths, and coords used for reduced bounding box collision detection
         int coll_w, coll_h, coll_x_offset, coll_y_offset;
 

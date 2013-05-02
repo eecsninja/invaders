@@ -153,7 +153,6 @@ namespace Game {
         ~Game();
         void explode(fixed x, fixed y, uint32_t duration);
         void game_control();
-        int get_image(const char* filename);
         void msg_player_dead();
         void msg_alien_landed();
         void msg_alien_killed(int pos, int points);

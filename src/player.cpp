@@ -32,22 +32,11 @@
 
 #include "player.h"
 
-// Taken from image file dimensions.
-#define PLAYER_WIDTH     43
-#define PLAYER_HEIGHT    25
-
 namespace GameEntities {
 
     void GameEntity::Player_init (int x, int y, int dx, int dy, bool active)
     {
         init(GAME_ENTITY_PLAYER, x, y, dx, dy, active);
-        properties()->images[0] = game->get_image("ship.png");
-
-        properties()->right_limit = screen_w - PLAYER_WIDTH;
-        properties()->coll_w = int (PLAYER_WIDTH * 0.9);
-        properties()->coll_h = int (PLAYER_HEIGHT * 0.8);
-        properties()->coll_x_offset = (PLAYER_WIDTH - properties()->coll_w) / 2;
-        properties()->coll_y_offset = (PLAYER_HEIGHT - properties()->coll_h) / 2;
     }
 
     void GameEntity::Player_movement(int16_t delta)
