@@ -61,9 +61,18 @@ namespace Graphics {
         int num_blits;
         Images* image_lib;
 
+        SDL_Surface *screen;       // Video screen
+        // Background/UI images
+        SDL_Surface *background, *wave_background, *ui_header, *ui_points;
+
+        SDL_Rect clip;   // Clipping rectangle.
+
     public:
         Video() : num_blits(0),
                   image_lib(NULL) {}
+
+        // Initialize video.  Returns true on success.
+        bool init();
 
         // Provide a pointer to an image library.
         void set_image_lib(Images* images);

@@ -918,6 +918,7 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
+        video.init();
         video.set_video_mode(false);
         images.load_images(image_list);
         video.set_image_lib(&images);

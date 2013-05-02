@@ -32,23 +32,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL/SDL.h>
 
 #include "game.h"
 #include "screen.h"
-
-SDL_Surface *screen, *background, *wave_background, *ui_header, *ui_points;
-SDL_Rect clip;
 
 const char* datadir;
 
 int main(int argc, char* argv[])
 {
-    atexit(SDL_Quit);
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
-        return -1;
-    }
     datadir = "data/";
     Game::Game game;
     game.game_control();

@@ -32,12 +32,19 @@
 
 #include "screen.h"
 
-#include <SDL/SDL.h>
 #include <stdlib.h>
 
 #include "images.h"
 
 namespace Graphics {
+
+    bool Video::init() {
+        atexit(SDL_Quit);
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
+            fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+            return false;
+        }
+    }
 
     void Video::set_image_lib(Images* images) {
         image_lib = images;
