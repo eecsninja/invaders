@@ -2,7 +2,7 @@
  images.h
  Classic Invaders
 
- Copyright (c) 2013, Simon Que
+ Copyright (c) 2013, Todd Steinackle, Simon Que
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification, are permitted
