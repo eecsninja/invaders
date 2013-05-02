@@ -111,9 +111,9 @@ namespace Game {
 
     class Game {
         typedef GameEntities::GameEntity* GameEntityPtr;
-        Sound::Sound sound;
-        Ui::Ui ui;
-        Ui::Status status;
+        // Sound::Sound sound;
+        // Ui::Ui ui;
+        // Ui::Status status;
         Graphics::Video video;
         Graphics::Images images;
         GameEntityPtr player, rbonus, sbonus, bonus;
