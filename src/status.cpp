@@ -33,6 +33,11 @@
 #include "status.h"
 #include "screen.h"
 
+#define top_margin_y        10
+#define bottom_margin_y    575
+#define text_padding        15
+#define ship_padding         3
+
 namespace Ui {
 
     Status::Status()

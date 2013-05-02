@@ -36,10 +36,6 @@
 namespace Ui {
 
     class Status {
-        const static int top_margin_y = 10;
-        const static int bottom_margin_y = 575;
-        const static int text_padding = 15;
-        const static int ship_padding = 3;
     public:
         Status();
         ~Status();
