@@ -34,9 +34,9 @@
 
 namespace GameEntities {
 
-    void GameEntity::Shot_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+    void GameEntity::Shot_init(int x, int y, int dx, int dy, bool active)
     {
-        init(GAME_ENTITY_SHOT, x, y, dx, dy, active, game);
+        init(GAME_ENTITY_SHOT, x, y, dx, dy, active);
 
         image = game->get_image("shot.png");
 

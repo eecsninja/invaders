@@ -36,7 +36,7 @@
 
 namespace GameEntities {
 
-    void GameEntity::init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game)
+    void GameEntity::init(int type, int x, int y, int dx, int dy, bool active)
     {
         this->type = type;
         this->x = INT_TO_FIXED(x);
@@ -44,7 +44,6 @@ namespace GameEntities {
         this->dx = dx;
         this->dy = dy;
         this->status_bits = (active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE);
-        this->game = game;
         this->frame_time_count = 0;
         this->properties = &type_properties[type];
     }
@@ -183,5 +182,6 @@ namespace GameEntities {
 #endif
     }
 
+    Game::Game* GameEntity::game = NULL;
     GameEntityTypeProperties GameEntity::type_properties[NUM_GAME_ENTITY_TYPES];
 }

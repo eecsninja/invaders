@@ -33,6 +33,7 @@
 #ifndef GAME_ENTITY_H
 #define GAME_ENTITY_H
 
+#include <assert.h>
 #include <SDL/SDL.h>
 
 #include "game.h"
@@ -84,11 +85,11 @@ namespace GameEntities {
         static const int long_explosion = 200;
         static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
 
+        static Game::Game* game;      // Common pointer to the current game.
+
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
         uint8_t status_bits;
-        Game::Game* game;
-        SDL_Surface* image;
         uint16_t frame_time_count; // control in place animation speed
         uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
@@ -102,7 +103,7 @@ namespace GameEntities {
         GameEntity() : type(GAME_ENTITY_UNKNOWN),
                        status_bits(0),
                        properties(&type_properties[GAME_ENTITY_UNKNOWN]) {}
-        void init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void init(int type, int x, int y, int dx, int dy, bool active);
         void movement(int16_t delta);
         static void set_type_property(int type,
                                       const GameEntityTypeProperties& prop) {
@@ -157,28 +158,36 @@ namespace GameEntities {
         void shot_shot_collision(GameEntity* other);
         void bonus_shot_collision(GameEntity* other);
 
+        // Static member mutator.  Make sure to check that there is no existing
+        // Game pointer being overwritten.
+        static void set_game(Game::Game *game) {
+            if (game)
+                assert(GameEntity::game == NULL);
+            GameEntity::game = game;
+        }
+
         // Per-type functions.
-        void Player_init(int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void Player_init(int x, int y, int dx, int dy, bool active);
         void Player_movement(int16_t delta);
 
-        void Alien_init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance);
+        void Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance);
         void Alien_movement(int16_t delta);
 
-        void BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active);
         void BonusShip_movement(int16_t delta);
 
-        void Shot_init(int x, int y, int dx, int dy, bool active, Game::Game* game);
+        void Shot_init(int x, int y, int dx, int dy, bool active);
         void Shot_movement(int16_t delta);
 
-        void Explosion_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+        void Explosion_init(int x, int y, int dx, int dy, bool active)
         {
-            init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active, game);
+            init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
             image = game->get_image("explosion.png");
         }
 
-        void ShieldPiece_init(int x, int y, int dx, int dy, bool active, Game::Game* game)
+        void ShieldPiece_init(int x, int y, int dx, int dy, bool active)
         {
-            init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active, game);
+            init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
             image = game->get_image("shield_piece.png");
 
             properties->coll_w = image->w;

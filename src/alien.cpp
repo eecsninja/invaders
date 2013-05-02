@@ -36,9 +36,9 @@
 
 namespace GameEntities {
 
-    void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, Game::Game* game, int pos, int chance)
+    void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance)
     {
-        init(type, x, y, dx, dy, active, game);
+        init(type, x, y, dx, dy, active);
         image_num = 0;
 
         switch(type) {

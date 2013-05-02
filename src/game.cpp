@@ -207,24 +207,24 @@ namespace Game {
                     break;
                 }
                 aliens[alien_count].Alien_init(type, alien_x, alien_y, -speed,
-                                               0, active, this, alien_count+1,
+                                               0, active, alien_count+1,
                                                RAND(rand_max));
                 ++alien_count;
             }
         }
         // create alien shots
         for (int i= 0; i < num_alien_shots; ++i) {
-            alien_shots[i].Shot_init(0, 0, 0, alien_shot_speed, false, this);
+            alien_shots[i].Shot_init(0, 0, 0, alien_shot_speed, false);
         }
     }
     void Game::factory()
     {
         // create the player ship and place it in the center of the screen
-        player->Player_init(player_center, player_top, 0, 0, true, this);
+        player->Player_init(player_center, player_top, 0, 0, true);
 
         // create bonus ship and small bonus ship
-        bonus->BonusShip_init(false, 0, 0, 0, 0, false, this);
-        sbonus->BonusShip_init(true, 0, 0, 0, 0, false, this);
+        bonus->BonusShip_init(false, 0, 0, 0, 0, false);
+        sbonus->BonusShip_init(true, 0, 0, 0, 0, false);
 
         // create the shields
         int num_shields = 0;
@@ -236,13 +236,13 @@ namespace Game {
                             SHIELD_X_OFFSET + ((k == 0) ? 20 : 0) +
                             (i * SHIELD_PIECE_SIZE);
                     int y = SHIELD_Y_OFFSET + SHIELD_PIECE_SIZE * k;
-                    shields[num_shields++].ShieldPiece_init(x, y, 0, 0, true, this);
+                    shields[num_shields++].ShieldPiece_init(x, y, 0, 0, true);
                 }
             }
 
             shield_groups[j].init(GAME_ENTITY_SHIELD_GROUP,
                                   j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
-                                  SHIELD_Y_OFFSET, 0, 0, true, this);
+                                  SHIELD_Y_OFFSET, 0, 0, true);
         }
         GameEntities::GameEntityTypeProperties prop;
         prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
@@ -253,10 +253,10 @@ namespace Game {
 
         // create explosions and player shots
         for (int i= 0; i < num_explosions; ++i) {
-            explosions[i].Explosion_init(0, 0, 0, 0, false, this);
+            explosions[i].Explosion_init(0, 0, 0, 0, false);
         }
         for (int i= 0; i < num_player_shots; ++i) {
-            player_shots[i].Shot_init(0, 0, 0, shot_speed, false, this);
+            player_shots[i].Shot_init(0, 0, 0, shot_speed, false);
         }
 
         player_shot_delay = 225;
@@ -944,9 +944,12 @@ namespace Game {
         background = get_image("background.png");
         ui_header = get_image("ui_header.png");
         ui_points = get_image("ui_points.png");
+
+        GameEntity::set_game(this);
     }
     Game::~Game()
     {
+        GameEntity::set_game(NULL);
     }
 
     SDL_Surface* Game::get_image(const char* filename) {
