@@ -999,7 +999,7 @@ namespace Game {
             explosion_counter = 0;
         }
     }
-    Game::Game() : ui(&sound, this, 0),
+    Game::Game() : // ui(&sound, this, 0),
                    player_life(0),
                    player(NULL),
                    bonus(NULL),
