@@ -38,6 +38,7 @@ namespace GameEntities {
     {
         init(GAME_ENTITY_SHOT, x, y, dx, dy, active);
 
+        SDL_Surface** images = properties->images;
         SDL_Surface* image = images[0] = game->get_image("shot.png");
 
         properties->coll_w = image->w;

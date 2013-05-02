@@ -40,6 +40,7 @@ namespace GameEntities {
     {
         init(type, x, y, dx, dy, active);
 
+        SDL_Surface** images = properties->images;
         switch(type) {
         default:
         case GAME_ENTITY_ALIEN:

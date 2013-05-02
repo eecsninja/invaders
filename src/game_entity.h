@@ -77,6 +77,9 @@ namespace GameEntities {
         int coll_w, coll_h, coll_x_offset, coll_y_offset;
 
         int right_limit, bottom_limit;
+
+        // All image frames used to draw the entity.
+        SDL_Surface* images[NUM_GAME_ENTITY_IMAGES];
     };
 
     class GameEntity {
@@ -92,7 +95,6 @@ namespace GameEntities {
         uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
 
-        SDL_Surface* images[NUM_GAME_ENTITY_IMAGES];
         int image_num;
         int type;
 
@@ -180,13 +182,13 @@ namespace GameEntities {
         void Explosion_init(int x, int y, int dx, int dy, bool active)
         {
             init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
-            images[0] = game->get_image("explosion.png");
+            properties->images[0] = game->get_image("explosion.png");
         }
 
         void ShieldPiece_init(int x, int y, int dx, int dy, bool active)
         {
             init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
-            SDL_Surface* image = images[0] = game->get_image("shield_piece.png");
+            SDL_Surface* image = properties->images[0] = game->get_image("shield_piece.png");
 
             properties->coll_w = image->w;
             properties->coll_h = int (image->h * 0.9);

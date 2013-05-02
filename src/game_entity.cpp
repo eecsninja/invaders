@@ -54,6 +54,7 @@ namespace GameEntities {
 
     void GameEntity::erase()
     {
+        SDL_Surface** images = properties->images;
         SDL_Surface* image = images[image_num];
         blit* update;
         update = &blits[screen_updates++];
@@ -69,6 +70,7 @@ namespace GameEntities {
     }
     void GameEntity::draw()
     {
+        SDL_Surface** images = properties->images;
         SDL_Surface* image = images[image_num];
         blit* update;
         update = &blits[screen_updates++];

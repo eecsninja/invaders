@@ -40,6 +40,7 @@ namespace GameEntities {
     {
         init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP, x, y, dx, dy, active);
 
+        SDL_Surface** images = properties->images;
         if (!is_small) {
             images[0] = game->get_image("bonus-1-1.png");
             images[1] = game->get_image("bonus-1-2.png");
@@ -60,6 +61,7 @@ namespace GameEntities {
 
     void GameEntity::BonusShip_movement(int16_t delta)
     {
+        SDL_Surface** images = properties->images;
         // control in place animation
         frame_time_count += delta;
         if (frame_time_count > properties->frame_duration) {
