@@ -46,7 +46,8 @@ namespace GameEntities {
         this->y = INT_TO_FIXED(y);
         this->dx = dx;
         this->dy = dy;
-        this->status_bits = (active ? (1<<STATUS_ACTIVE) : 0) | (1<<STATUS_ALIVE);
+        this->alive = true;
+        this->active = active;
         this->frame_time_count = 0;
         this->image_num = 0;
     }

@@ -38,14 +38,6 @@
 #include "game.h"
 #include "screen.h"
 
-#define STATUS_ACTIVE   0
-#define STATUS_ALIVE    1
-#define STATUS_HIT      2  // used by Shot to avoid hitting more than one object
-
-#define SET_BIT(var, bit)  var |= (1<<(bit))
-#define CLR_BIT(var, bit)  var &= ~(1<<(bit))
-#define TEST_BIT(var, bit)  ((var) & (1<<(bit)))
-
 extern EventCounter event_counter;
 
 enum GameEntityTypes {
@@ -95,17 +87,20 @@ namespace GameEntities {
 
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
-        uint8_t status_bits;
         uint16_t frame_time_count; // control in place animation speed
         uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
+
+        // Entity state flags.
+        bool alive:1;
+        bool active:1;
+        bool hit:1;       // used by Shot to avoid hitting more than one object
 
         int image_num;
         int type;
 
     public:
-        GameEntity() : type(GAME_ENTITY_UNKNOWN),
-                       status_bits(0) {}
+        GameEntity() : type(GAME_ENTITY_UNKNOWN) {}
         void init(int type, int x, int y, int dx, int dy, bool active);
         void movement(int16_t delta);
         static void set_type_property(int type,
@@ -118,12 +113,12 @@ namespace GameEntities {
         void draw();
         void cleanup_draw();
         bool is_active() const {
-            return TEST_BIT(status_bits, STATUS_ACTIVE) && is_alive();
+            return active && is_alive();
         }
-        void deactivate() { CLR_BIT(status_bits, STATUS_ACTIVE); }
-        void activate() { SET_BIT(status_bits, STATUS_ACTIVE); }
-        bool is_alive() const { return TEST_BIT(status_bits, STATUS_ALIVE); }
-        void kill() { CLR_BIT(status_bits, STATUS_ALIVE); }
+        void deactivate() { active = false; }
+        void activate() { active = true; }
+        bool is_alive() const { return alive; }
+        void kill() { alive = false; }
         void init_x(int init) { x = INT_TO_FIXED(init); }
         void init_y(int init) { y = INT_TO_FIXED(init); }
         int get_x() const { return x_int(); }
@@ -147,13 +142,8 @@ namespace GameEntities {
         int get_pos() const { return position; }
         int get_fire_chance() const { return fire_chance; }
         // Shot
-        void set_hit(bool hit) {
-            if (hit)
-                SET_BIT(status_bits, STATUS_HIT);
-            else
-                CLR_BIT(status_bits, STATUS_HIT);
-        }
-        bool is_hit() const { return TEST_BIT(status_bits, STATUS_HIT); }
+        void set_hit(bool hit) { this->hit = hit; }
+        bool is_hit() const { return hit; }
         // collision handling
         void alien_shield_collision(GameEntity* other) { other->kill(); }
         void player_alien_collision(GameEntity* other);
