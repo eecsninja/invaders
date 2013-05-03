@@ -362,6 +362,7 @@ namespace Game {
                 prop.images[0] = images.get_image_index("shield_piece.png");
 
                 prop.coll_w = prop.w = SHIELD_PIECE_SIZE;
+                prop.h = SHIELD_PIECE_SIZE;
                 prop.coll_h = int (SHIELD_PIECE_SIZE * 0.9);
                 break;
             case GAME_ENTITY_EXPLOSION:
