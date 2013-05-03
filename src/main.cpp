@@ -39,9 +39,14 @@
 
 const char* datadir;
 
+extern void system_init(void);
+
 int main(int argc, char* argv[])
 {
     datadir = "data/";
+
+    system_init();
+
     Graphics::Images images;
     Graphics::Screen screen;
     Game::Game game(&screen, &images);
