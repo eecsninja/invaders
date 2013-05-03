@@ -65,6 +65,7 @@ extern const char* datadir;
 using Graphics::Images;
 using Graphics::Screen;
 
+using GameEntities::GameEntityTypeProperties;
 using GameEntities::GameEntity;
 using GameEntities::Player;
 using GameEntities::Alien;
@@ -147,6 +148,8 @@ namespace Game {
         printf("Memory needed for game data: %u bytes\n", sizeof(GameData));
         printf("Memory needed for one game entity: %u bytes\n",
                sizeof(GameEntity));
+        printf("Memory needed for game entity type properties: %u bytes\n",
+               sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
 
         // Define arrays statically, so they can be freed when the game loop exits.
         GameData data;
