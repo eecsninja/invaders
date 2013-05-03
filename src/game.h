@@ -72,6 +72,10 @@ struct EventCounter {
     int num_movement_calls;
     int num_loops;
 
+    ~EventCounter() {
+      report();
+    }
+
     void reset() {
         memset(this, 0, sizeof(*this));
     }
