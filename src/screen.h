@@ -33,6 +33,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <stdint.h>
+
 //#include <SDL/SDL.h>
 
 #define screen_w      800
@@ -43,11 +45,11 @@
 namespace Graphics {
 
     struct SDL_Surface {
-        int w, h;
+        uint16_t w, h;
     };
     struct SDL_Rect {
-        int x, y;
-        int w, h;
+        uint16_t x, y;
+        uint16_t w, h;
     };
 
     class Images;
@@ -56,11 +58,11 @@ namespace Graphics {
     private:
         // A list of scheduled blits.
         struct blit {
-            int image_index;
-            int x;
-            int y;
+            uint8_t image_index;
+            uint16_t x;
+            uint16_t y;
         } blits[max_updates];
-        int num_blits;
+        uint8_t num_blits;
         Images* image_lib;
 
         SDL_Surface *screen;       // Video screen
