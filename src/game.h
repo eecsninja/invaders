@@ -118,7 +118,7 @@ namespace Game {
         Graphics::Images& images;
         GameEntityPtr player, rbonus, sbonus, bonus;
         GameEntities::Alien* aliens;
-        GameEntities::ShieldPiece* shields;
+        bool* shields;  // Points to an array of shield states. 1=alive, 0=dead
         GameEntities::Shot* player_shots, *alien_shots;
         GameEntities::Explosion* explosions;
         // For coarse collision detection with multiple shield pieces.
