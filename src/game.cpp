@@ -121,11 +121,10 @@ static const char* image_list[] = { "ship.png", "shot.png",
     "ui_header.png", "ui_points.png", NULL
 };
 
-namespace Game {
-
-    void Game::game_control()
-    {
-        // Define arrays locally, so they can be freed when the game loop exits.
+namespace {
+    // Put all the data arrays needed by Game into a separate struct, so the
+    // amount of memory required can be easily obtained using sizeof().
+    struct GameData {
         Alien alien_array[NUM_ALIENS];
         ShieldPiece shield_array[NUM_SHIELDS];
 
@@ -138,19 +137,33 @@ namespace Game {
         int launch_delay_array[random_list_len];
 
         GameEntity shield_group_array[NUM_SHIELD_GROUPS];
+    };
+}
 
-        aliens = alien_array;
-        shields = shield_array;
+namespace Game {
 
-        player_shots = player_shot_array;
-        alien_shots = alien_shot_array;
-        explosions = explosion_array;
+    void Game::game_control()
+    {
+        printf("Memory needed for game data: %u bytes\n", sizeof(GameData));
+        printf("Memory needed for one game entity: %u bytes\n",
+               sizeof(GameEntity));
 
-        direction = direction_array;
-        bonus_select = bonus_select_array;
-        launch_delay = launch_delay_array;
+        // Define arrays statically, so they can be freed when the game loop exits.
+        GameData data;
 
-        shield_groups = shield_group_array;
+        // Populate the game data pointers.
+        aliens = data.alien_array;
+        shields = data.shield_array;
+
+        player_shots = data.player_shot_array;
+        alien_shots = data.alien_shot_array;
+        explosions = data.explosion_array;
+
+        direction = data.direction_array;
+        bonus_select = data.bonus_select_array;
+        launch_delay = data.launch_delay_array;
+
+        shield_groups = data.shield_group_array;
 
         // Instantiate these here, instead of allocating from heap.
         Player player_obj;
