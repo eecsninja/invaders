@@ -56,14 +56,15 @@ namespace Graphics {
 
     bool Images::load_images(const char** filenames)
     {
+/*
         for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i) {
+
             const char* filename = filenames[i];
             strcpy(this->filenames[i], filename);
 
             char path[1024];
             sprintf(path, "%s%s", datadir, filename);
 
-/*
             SDL_Surface* temp = IMG_Load(path);
             if (temp == NULL) {
                 fprintf(stderr, "Unable to load image file: %s\n", filename);
@@ -72,8 +73,8 @@ namespace Graphics {
             SDL_Surface* image = SDL_DisplayFormatAlpha(temp);
             images[i] = image;
             SDL_FreeSurface(temp);
-*/
         }
+*/
         return true;
     }
 
@@ -91,9 +92,11 @@ namespace Graphics {
 
     // Get index of image with file name.  Returns -1 if not found.
     int Images::get_image_index(const char* filename) {
+/*
         for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i)
             if(strcmp(filename, filenames[i]) == 0)
                 return i;
+*/
         return -1;
     }
 }

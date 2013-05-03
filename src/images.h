@@ -43,7 +43,7 @@ namespace Graphics {
       class Images {
       private:
           SDL_Surface* images[MAX_NUM_IMAGES];
-          char filenames[MAX_STRING_LENGTH][MAX_NUM_IMAGES];
+          //char filenames[MAX_STRING_LENGTH][MAX_NUM_IMAGES];
           int num_images;
       public:
           Images();
