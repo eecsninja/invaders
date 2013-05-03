@@ -38,7 +38,7 @@
 #define screen_w      800
 #define screen_h      600
 #define side_padding    5
-#define max_updates   360
+#define max_updates    16
 
 namespace Graphics {
 
