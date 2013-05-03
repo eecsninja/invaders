@@ -88,16 +88,17 @@ namespace GameEntities {
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
         uint16_t frame_time_count; // control in place animation speed
-        uint8_t position;   // used by Aliens to determine if and when to fire
         uint8_t fire_chance;
+
+        uint8_t position:6;   // used by Aliens to determine if and when to fire
 
         // Entity state flags.
         bool alive:1;
         bool active:1;
         bool hit:1;       // used by Shot to avoid hitting more than one object
 
-        int image_num;
-        int type;
+        int image_num:3;  // Index of the current animation image.
+        int type:4;       // Must have enough bits for NUM_GAME_ENTITY_TYPES-1.
 
     public:
         GameEntity() : type(GAME_ENTITY_UNKNOWN) {}
