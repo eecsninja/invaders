@@ -77,7 +77,7 @@ namespace GameEntities {
 
         // All image frames used to draw the entity.  Each image is represented
         // by a unique integer handle.
-        uint16_t images[NUM_GAME_ENTITY_IMAGES];
+        uint8_t images[NUM_GAME_ENTITY_IMAGES];
     };
 
     class GameEntity {
