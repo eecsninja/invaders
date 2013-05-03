@@ -38,10 +38,10 @@
 #include "images.h"
 
 namespace Graphics {
-    Video::Video() : num_blits(0),
-                     image_lib(NULL) {}
+    Screen::Screen() : num_blits(0),
+                       image_lib(NULL) {}
 
-    bool Video::init() {
+    bool Screen::init() {
         atexit(SDL_Quit);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
@@ -49,7 +49,7 @@ namespace Graphics {
         }
     }
 
-    void Video::set_image_lib(Images* images) {
+    void Screen::set_image_lib(Images* images) {
         image_lib = images;
 
         wave_background = images->get_image("wave_background.png");
@@ -58,7 +58,7 @@ namespace Graphics {
         ui_points = images->get_image("ui_points.png");
     }
 
-    void Video::set_video_mode(bool fullscreen) {
+    void Screen::set_video_mode(bool fullscreen) {
         int flags = SDL_SWSURFACE;
         if (fullscreen)
             flags |= SDL_FULLSCREEN;
@@ -72,7 +72,7 @@ namespace Graphics {
         SDL_SetClipRect(screen, &clip);
     }
 
-    void Video::schedule_blit(int image_index, int x, int y) {
+    void Screen::schedule_blit(int image_index, int x, int y) {
         if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;
@@ -84,7 +84,7 @@ namespace Graphics {
         update->y = y;
     }
 
-    void Video::flush_blits() {
+    void Screen::flush_blits() {
         for (int i = 0; i < num_blits && image_lib; ++i) {
             SDL_Surface* image = image_lib->get_image(blits[i].image_index);
             if (image) {
@@ -98,7 +98,7 @@ namespace Graphics {
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
     }
 
-    void Video::update_screen() {
+    void Screen::update() {
         SDL_BlitSurface(wave_background, NULL, screen, NULL);
         flush_blits();
     }

@@ -82,8 +82,8 @@ namespace GameEntities {
     private:
         static GameEntityTypeProperties type_properties[NUM_GAME_ENTITY_TYPES];
 
-        static Game::Game* game;        // Common pointer to the current game.
-        static Graphics::Video* video;  // Common pointer to video system.
+        static Game::Game* game;          // Common pointer to the current game.
+        static Graphics::Screen* screen;  // Common pointer to video screen.
 
         fixed x, y;   // location
         int dx, dy;   // velocity -- speed in pixels/sec and direction
@@ -160,10 +160,10 @@ namespace GameEntities {
                 assert(GameEntity::game == NULL);
             GameEntity::game = game;
         }
-        static void set_video(Graphics::Video* video) {
-            if (video)
-                assert(GameEntity::video == NULL);
-            GameEntity::video = video;
+        static void set_screen(Graphics::Screen* screen) {
+            if (screen)
+                assert(GameEntity::screen == NULL);
+            GameEntity::screen = screen;
         }
 
         // Per-type functions.

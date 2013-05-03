@@ -62,8 +62,8 @@ extern const char* datadir;
 
 //#define FRAME_COUNTER
 
-using Graphics::Video;
 using Graphics::Images;
+using Graphics::Screen;
 
 using GameEntities::GameEntityTypeProperties;
 using GameEntities::GameEntity;
@@ -197,7 +197,7 @@ namespace Game {
         // output wave message and status display
         //ui.wave_msg(++wave);
         //sound.play_start_wave();
-        video.update_screen();
+        screen.update();
         //status.blit_wave(wave);
         //status.blit_score(score);
         //status.blit_lives(player_life);
@@ -771,7 +771,7 @@ namespace Game {
                 if (shields[i].is_alive())
                     shields[i].draw();
             }
-            video.update_screen();
+            screen.update();
 
 #ifdef EVENT_COUNTER
             if (event_counter.num_loops > 0 &&
@@ -799,7 +799,7 @@ namespace Game {
         for (int i = 0; i < NUM_ALIENS; ++i) {
             aliens[i].cleanup_draw();
         }
-        video.update_screen();
+        screen.update();
         //sound.play_player_rebirth();
     }
     void Game::wave_cleanup()
@@ -810,7 +810,7 @@ namespace Game {
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             shields[i].cleanup_draw();
         }
-        video.update_screen();
+        screen.update();
     }
     void Game::pause()
     {
@@ -1018,9 +1018,9 @@ namespace Game {
             explosion_counter = 0;
         }
     }
-    Game::Game(Video* video_ptr, Images* images_ptr) :
+    Game::Game(Screen* screen_ptr, Images* images_ptr) :
                    // ui(&sound, this, 0),
-                   video(*video_ptr),
+                   screen(*screen_ptr),
                    images(*images_ptr),
                    player_life(0),
                    player(NULL),
@@ -1028,13 +1028,13 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
-        video.init();
-        video.set_video_mode(false);
+        screen.init();
+        screen.set_video_mode(false);
         images.load_images(image_list);
-        video.set_image_lib(&images);
+        screen.set_image_lib(&images);
 
         GameEntity::set_game(this);
-        GameEntity::set_video(&video);
+        GameEntity::set_screen(&screen);
     }
     Game::~Game()
     {
