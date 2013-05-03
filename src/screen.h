@@ -52,7 +52,7 @@ namespace Graphics {
 
     class Images;
 
-    class Video {
+    class Screen {
     private:
         // A list of scheduled blits.
         struct blit {
@@ -70,9 +70,9 @@ namespace Graphics {
         SDL_Rect clip;   // Clipping rectangle.
 
     public:
-        Video();
+        Screen();
 
-        // Initialize video.  Returns true on success.
+        // Initialize video screen.  Returns true on success.
         bool init();
 
         // Provide a pointer to an image library.
@@ -88,7 +88,7 @@ namespace Graphics {
         void flush_blits();
 
         // Redraw the entire screen, including all the scheduled blits.
-        void update_screen();
+        void update();
     };
 
 }  // namespace Graphics

@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
 {
     datadir = "data/";
     Graphics::Images images;
-    Graphics::Video video;
-    Game::Game game(&video, &images);
+    Graphics::Screen screen;
+    Game::Game game(&screen, &images);
     game.game_control();
 
     return 0;

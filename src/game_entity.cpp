@@ -53,7 +53,7 @@ namespace GameEntities {
 
     void GameEntity::draw()
     {
-        video->schedule_blit(properties()->images[image_num], x_int(), y_int());
+        screen->schedule_blit(properties()->images[image_num], x_int(), y_int());
     }
     void GameEntity::cleanup_draw()
     {
@@ -172,6 +172,6 @@ namespace GameEntities {
     }
 
     Game::Game* GameEntity::game = NULL;
-    Graphics::Video* GameEntity::video = NULL;
+    Graphics::Screen* GameEntity::screen = NULL;
     GameEntityTypeProperties GameEntity::type_properties[NUM_GAME_ENTITY_TYPES];
 }
