@@ -112,16 +112,6 @@ using GameEntities::Shot;
 EventCounter event_counter;
 #endif
 
-// a list of image files are loaded into a map and keyed by filename
-static const char* image_list[] = { "ship.png", "shot.png",
-    "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
-    "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
-    "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
-    "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
-    "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
-    "ui_header.png", "ui_points.png", NULL
-};
-
 namespace {
     // Put all the data arrays needed by Game into a separate struct, so the
     // amount of memory required can be easily obtained using sizeof().
@@ -1028,11 +1018,6 @@ namespace Game {
                    sbonus(NULL),
                    rbonus(NULL)
     {
-        screen.init();
-        screen.set_video_mode(false);
-        images.load_images(image_list);
-        screen.set_image_lib(&images);
-
         GameEntity::set_game(this);
         GameEntity::set_screen(&screen);
     }

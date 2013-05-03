@@ -69,15 +69,18 @@ namespace Graphics {
 
     public:
         Screen();
+        ~Screen() {
+            SDL_Quit();
+        }
 
         // Initialize video screen.  Returns true on success.
         bool init();
 
+        // Set the operating video mode.  Returns true on success.
+        bool set_video_mode(bool fullscreen);
+
         // Provide a pointer to an image library.
         void set_image_lib(Images* images);
-
-        // Set the operating video mode.
-        void set_video_mode(bool fullscreen);
 
         // Add a blit task to the blit queue.
         void schedule_blit(int image_index, int x, int y);

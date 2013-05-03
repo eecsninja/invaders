@@ -33,7 +33,6 @@
 #include "screen.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "images.h"
 
@@ -42,11 +41,27 @@ namespace Graphics {
                        image_lib(NULL) {}
 
     bool Screen::init() {
-        atexit(SDL_Quit);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
             return false;
         }
+        return true;
+    }
+
+    bool Screen::set_video_mode(bool fullscreen) {
+        int flags = SDL_SWSURFACE;
+        if (fullscreen)
+            flags |= SDL_FULLSCREEN;
+        screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
+        if (screen == NULL) {
+            fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
+            return false;
+        }
+
+        clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
+        SDL_SetClipRect(screen, &clip);
+
+        return true;
     }
 
     void Screen::set_image_lib(Images* images) {
@@ -56,20 +71,6 @@ namespace Graphics {
         background = images->get_image("background.png");
         ui_header = images->get_image("ui_header.png");
         ui_points = images->get_image("ui_points.png");
-    }
-
-    void Screen::set_video_mode(bool fullscreen) {
-        int flags = SDL_SWSURFACE;
-        if (fullscreen)
-            flags |= SDL_FULLSCREEN;
-        screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
-        if (screen == NULL) {
-            fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
-            exit(1);
-        }
-
-        clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
-        SDL_SetClipRect(screen, &clip);
     }
 
     void Screen::schedule_blit(int image_index, int x, int y) {
