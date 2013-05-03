@@ -63,19 +63,21 @@ namespace GameEntities {
     // use this struct to store the common property values and save memory.
     struct GameEntityTypeProperties {
         uint16_t frame_duration;  // How much time before going to next frame.
-        int points; // point value of individual objects
+        uint16_t points; // point value of individual objects
 
         // width and height of the object image.
-        int w, h;
+        // These should be <= 255.
+        uint8_t w, h;
 
         // heights, widths, and coords used for reduced bounding box collision detection
-        int coll_w, coll_h, coll_x_offset, coll_y_offset;
+        // These should be <= 255 and nonnegative.
+        uint8_t coll_w, coll_h, coll_x_offset, coll_y_offset;
 
-        int right_limit, bottom_limit;
+        uint16_t right_limit, bottom_limit;
 
         // All image frames used to draw the entity.  Each image is represented
         // by a unique integer handle.
-        int images[NUM_GAME_ENTITY_IMAGES];
+        uint16_t images[NUM_GAME_ENTITY_IMAGES];
     };
 
     class GameEntity {
