@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
     screen.set_image_lib(&images);
 
-    Game::Game game(&screen, &images);
+    Game::Game game(&screen);
     game.game_control();
 
     return 0;

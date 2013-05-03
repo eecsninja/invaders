@@ -37,6 +37,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "game_entity.h"
+
 extern const char* datadir;
 
 namespace Graphics {
@@ -77,14 +79,50 @@ namespace Graphics {
 
     SDL_Surface *Images::get_image(const char* filename)
     {
-        return get_image(get_image_index(filename));
+        int index = get_image_index(filename);
+        if (index < 0 || index >= MAX_NUM_IMAGES) {
+            fprintf(stderr, "Could not find image file %s.\n", filename);
+            return NULL;
+        }
+        return images[index];
     }
 
-    SDL_Surface *Images::get_image(int index)
+    SDL_Surface *Images::get_image(int type, int index)
     {
-        if (index < 0 || index >= MAX_NUM_IMAGES)
+        char base_name[100];
+        switch(type) {
+        case GAME_ENTITY_PLAYER:
+            strcpy(base_name, "ship");
+            break;
+        case GAME_ENTITY_ALIEN:
+        case GAME_ENTITY_ALIEN2:
+        case GAME_ENTITY_ALIEN3:
+            sprintf(base_name, "alien-%u-%u",
+                    type - GAME_ENTITY_ALIEN + 1, index + 1);
+            break;
+        case GAME_ENTITY_BONUS_SHIP:
+        case GAME_ENTITY_SMALL_BONUS_SHIP:
+            sprintf(base_name, "bonus-%u-%u",
+                    type - GAME_ENTITY_BONUS_SHIP + 1, index + 1);
+            break;
+        case GAME_ENTITY_SHOT:
+            strcpy(base_name, "shot");
+            break;
+        case GAME_ENTITY_SHIELD_PIECE:
+            strcpy(base_name, "shield_piece");
+            break;
+        case GAME_ENTITY_EXPLOSION:
+            strcpy(base_name, "explosion");
+            break;
+        case GAME_ENTITY_UNKNOWN:
+        case GAME_ENTITY_SHIELD_GROUP:
+        default:
+            fprintf(stderr, "Attempting to get image for invalid type: %u\n",
+                    type);
             return NULL;
-        return images[index];
+        }
+        strcat(base_name, ".png");
+        return get_image(base_name);
     }
 
     // Get index of image with file name.  Returns -1 if not found.

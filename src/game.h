@@ -38,7 +38,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "images.h"
 #include "screen.h"
 #include "sound.h"
 #include "status.h"
@@ -119,7 +118,6 @@ namespace Game {
         // Ui::Ui ui;
         // Ui::Status status;
         Graphics::Screen& screen;
-        Graphics::Images& images;
         GameEntityPtr player, rbonus, sbonus, bonus;
         GameEntities::Alien* aliens;
         bool* shields;  // Points to an array of shield states. 1=alive, 0=dead
@@ -153,7 +151,7 @@ namespace Game {
         void wave_cleanup();
         void player_rebirth();
     public:
-        Game(Graphics::Screen* screen, Graphics::Images* images);
+        Game(Graphics::Screen* screen);
         ~Game();
         void explode(fixed x, fixed y, uint32_t duration);
         void game_control();

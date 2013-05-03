@@ -73,13 +73,14 @@ namespace Graphics {
         ui_points = images->get_image("ui_points.png");
     }
 
-    void Screen::schedule_blit(int image_index, int x, int y) {
+    void Screen::schedule_blit(int type, int image_index, int x, int y) {
         if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;
         }
 
         blit* update = &blits[num_blits++];
+        update->type = type;
         update->image_index = image_index;
         update->x = x;
         update->y = y;
@@ -87,7 +88,8 @@ namespace Graphics {
 
     void Screen::flush_blits() {
         for (int i = 0; i < num_blits && image_lib; ++i) {
-            SDL_Surface* image = image_lib->get_image(blits[i].image_index);
+            SDL_Surface* image =
+                image_lib->get_image(blits[i].type, blits[i].image_index);
             if (image) {
                 SDL_Rect dst;
                 dst.x = blits[i].x;

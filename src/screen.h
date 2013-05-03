@@ -54,6 +54,7 @@ namespace Graphics {
     private:
         // A list of scheduled blits.
         struct blit {
+            int type;
             int image_index;
             int x;
             int y;
@@ -83,7 +84,7 @@ namespace Graphics {
         void set_image_lib(Images* images);
 
         // Add a blit task to the blit queue.
-        void schedule_blit(int image_index, int x, int y);
+        void schedule_blit(int type, int image_index, int x, int y);
 
         // Perform all queued blits and reset the blit counter.
         void flush_blits();

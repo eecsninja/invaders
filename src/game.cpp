@@ -285,7 +285,7 @@ namespace Game {
 
             switch(type) {
             case GAME_ENTITY_PLAYER:
-                prop.images[0] = images.get_image_index("ship.png");
+                prop.images[0] = 0;
 
                 prop.w = PLAYER_WIDTH;
                 prop.h = PLAYER_HEIGHT;
@@ -295,12 +295,12 @@ namespace Game {
                 break;
 
             case GAME_ENTITY_ALIEN:
-                prop.images[0] = images.get_image_index("alien-1-1.png");
-                prop.images[1] = images.get_image_index("alien-1-2.png");
-                prop.images[2] = images.get_image_index("alien-1-3.png");
-                prop.images[3] = images.get_image_index("alien-1-4.png");
-                prop.images[4] = images.get_image_index("alien-1-3.png");
-                prop.images[5] = images.get_image_index("alien-1-2.png");
+                prop.images[0] = 0;
+                prop.images[1] = 1;
+                prop.images[2] = 2;
+                prop.images[3] = 3;
+                prop.images[4] = 2;
+                prop.images[5] = 1;
 
                 prop.points = 25;
                 prop.frame_duration = 225;
@@ -312,12 +312,12 @@ namespace Game {
                 prop.coll_h = int (ALIEN_HEIGHT * 0.8);
                 break;
             case GAME_ENTITY_ALIEN2:
-                prop.images[0] = images.get_image_index("alien-2-1.png");
-                prop.images[1] = images.get_image_index("alien-2-2.png");
-                prop.images[2] = images.get_image_index("alien-2-3.png");
-                prop.images[3] = images.get_image_index("alien-2-4.png");
-                prop.images[4] = images.get_image_index("alien-2-3.png");
-                prop.images[5] = images.get_image_index("alien-2-2.png");
+                prop.images[0] = 0;
+                prop.images[1] = 1;
+                prop.images[2] = 2;
+                prop.images[3] = 3;
+                prop.images[4] = 2;
+                prop.images[5] = 1;
 
                 prop.points = 50;
                 prop.frame_duration = 225;
@@ -329,12 +329,12 @@ namespace Game {
                 prop.coll_h = int (ALIEN_HEIGHT * 0.8);
                 break;
             case GAME_ENTITY_ALIEN3:
-                prop.images[0] = images.get_image_index("alien-3-1.png");
-                prop.images[1] = images.get_image_index("alien-3-2.png");
-                prop.images[2] = images.get_image_index("alien-3-3.png");
-                prop.images[3] = images.get_image_index("alien-3-4.png");
-                prop.images[4] = images.get_image_index("alien-3-3.png");
-                prop.images[5] = images.get_image_index("alien-3-2.png");
+                prop.images[0] = 0;
+                prop.images[1] = 1;
+                prop.images[2] = 2;
+                prop.images[3] = 3;
+                prop.images[4] = 2;
+                prop.images[5] = 1;
 
                 prop.points = 100;
                 prop.frame_duration = 225;
@@ -348,8 +348,8 @@ namespace Game {
 
                 break;
             case GAME_ENTITY_BONUS_SHIP:
-                prop.images[0] = images.get_image_index("bonus-1-1.png");
-                prop.images[1] = images.get_image_index("bonus-1-2.png");
+                prop.images[0] = 0;
+                prop.images[1] = 1;
 
                 prop.points = 1000;
                 prop.frame_duration = 55;
@@ -358,8 +358,8 @@ namespace Game {
                 prop.coll_h = prop.h = BONUS_SHIP_HEIGHT;
                 break;
             case GAME_ENTITY_SMALL_BONUS_SHIP:
-                prop.images[0] = images.get_image_index("bonus-2-1.png");
-                prop.images[1] = images.get_image_index("bonus-2-2.png");
+                prop.images[0] = 0;
+                prop.images[1] = 1;
 
                 prop.points = 5000;
                 prop.frame_duration = 55;
@@ -368,7 +368,7 @@ namespace Game {
                 prop.coll_h = prop.h = SMALL_BONUS_SHIP_HEIGHT;
                 break;
             case GAME_ENTITY_SHOT:
-                prop.images[0] = images.get_image_index("shot.png");
+                prop.images[0] = 0;
 
                 prop.coll_w = prop.w = SHOT_WIDTH;
                 prop.h = SHOT_HEIGHT;
@@ -376,14 +376,14 @@ namespace Game {
 
                 break;
             case GAME_ENTITY_SHIELD_PIECE:
-                prop.images[0] = images.get_image_index("shield_piece.png");
+                prop.images[0] = 0;
 
                 prop.coll_w = prop.w = SHIELD_PIECE_SIZE;
                 prop.h = SHIELD_PIECE_SIZE;
                 prop.coll_h = int (SHIELD_PIECE_SIZE * 0.9);
                 break;
             case GAME_ENTITY_EXPLOSION:
-                prop.images[0] = images.get_image_index("explosion.png");
+                prop.images[0] = 0;
                 break;
             case GAME_ENTITY_SHIELD_GROUP:
                 prop.w = prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
@@ -1043,10 +1043,9 @@ namespace Game {
             explosion_counter = 0;
         }
     }
-    Game::Game(Screen* screen_ptr, Images* images_ptr) :
+    Game::Game(Screen* screen_ptr) :
                    // ui(&sound, this, 0),
                    screen(*screen_ptr),
-                   images(*images_ptr),
                    player_life(0),
                    player(NULL),
                    bonus(NULL),
