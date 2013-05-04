@@ -36,7 +36,12 @@
 struct SDL_Surface;
 
 #define MAX_NUM_IMAGES         32
+
+#ifdef __i386__
 #define MAX_STRING_LENGTH     256
+#else
+#define MAX_STRING_LENGTH       1
+#endif
 
 namespace Graphics {
 

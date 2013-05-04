@@ -32,8 +32,11 @@
 
 #include "images.h"
 
+#ifdef __i386__
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 
@@ -50,14 +53,17 @@ namespace Graphics {
 
     Images::~Images()
     {
+#ifdef __i386__
         for (int i = 0; i < MAX_NUM_IMAGES; ++i) {
             if (images[i])
                 SDL_FreeSurface(images[i]);
         }
+#endif
     }
 
     bool Images::load_images(const char** filenames)
     {
+#ifdef __i386__
         for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i) {
             const char* filename = filenames[i];
             strcpy(this->filenames[i], filename);
@@ -74,6 +80,7 @@ namespace Graphics {
             images[i] = image;
             SDL_FreeSurface(temp);
         }
+#endif  // defined(__i386__)
         return true;
     }
 
@@ -127,9 +134,11 @@ namespace Graphics {
 
     // Get index of image with file name.  Returns -1 if not found.
     int Images::get_image_index(const char* filename) {
+#ifdef __i386__
         for (int i = 0; i < MAX_NUM_IMAGES && filenames[i]; ++i)
             if(strcmp(filename, filenames[i]) == 0)
                 return i;
+#endif
         return -1;
     }
 }

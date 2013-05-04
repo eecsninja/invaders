@@ -33,7 +33,11 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#ifdef __i386__
 #include <SDL/SDL.h>
+#else
+struct SDL_Surface;
+#endif
 
 #define screen_w      800
 #define screen_h      600
@@ -60,12 +64,16 @@ namespace Graphics {
         // Background/UI images
         SDL_Surface *background, *wave_background, *ui_header, *ui_points;
 
+#ifdef __i386__
         SDL_Rect clip;   // Clipping rectangle.
+#endif
 
     public:
         Screen();
         ~Screen() {
+#ifdef __i386__
             SDL_Quit();
+#endif
         }
 
         // Initialize video screen.  Returns true on success.

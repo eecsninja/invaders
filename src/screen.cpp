@@ -41,14 +41,17 @@ namespace Graphics {
                        image_lib(NULL) {}
 
     bool Screen::init() {
+#ifdef __i386__
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
             return false;
         }
+#endif
         return true;
     }
 
     bool Screen::set_video_mode(bool fullscreen) {
+#ifdef __i386__
         int flags = SDL_SWSURFACE;
         if (fullscreen)
             flags |= SDL_FULLSCREEN;
@@ -60,7 +63,7 @@ namespace Graphics {
 
         clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
         SDL_SetClipRect(screen, &clip);
-
+#endif  // defined (__i386__)
         return true;
     }
 
@@ -87,6 +90,7 @@ namespace Graphics {
     }
 
     void Screen::flush_blits() {
+#ifdef __i386__
         for (int i = 0; i < num_blits && image_lib; ++i) {
             SDL_Surface* image =
                 image_lib->get_image(blits[i].type, blits[i].image_index);
@@ -99,10 +103,13 @@ namespace Graphics {
         }
         num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
+#endif  // defined(__i386__)
     }
 
     void Screen::update() {
+#ifdef __i386__
         SDL_BlitSurface(wave_background, NULL, screen, NULL);
+#endif
         flush_blits();
     }
 }

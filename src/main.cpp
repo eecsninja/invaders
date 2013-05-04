@@ -40,13 +40,17 @@
 const char* datadir;
 
 // a list of image files are loaded into a map and keyed by filename
-static const char* image_list[] = { "ship.png", "shot.png",
+static const char* image_list[] = {
+#ifdef __i386__
+    "ship.png", "shot.png",
     "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
     "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
     "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
     "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
     "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
-    "ui_header.png", "ui_points.png", NULL
+    "ui_header.png", "ui_points.png",
+#endif  // defined(__i386__)
+    NULL
 };
 
 int main(int argc, char* argv[])
@@ -55,6 +59,12 @@ int main(int argc, char* argv[])
 
     Graphics::Images images;
     Graphics::Screen screen;
+
+#ifdef __i386__
+    printf("this is an x86 system.\n");
+#else
+    printf("this is a non-x86 system.\n");
+#endif
 
     // Initialize video screen and image library.
     if (!screen.init())
