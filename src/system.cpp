@@ -89,6 +89,7 @@ static void init_uart() {
     DDRE = (1<<PORTE1);
 
     stdout = &mystdout;  // Required for printf over UART.
+    stderr = &mystdout;  // Required for fprintf(stderr) over UART.
     stdin = &mystdin;    // Required for scanf over UART.
 }
 
