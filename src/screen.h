@@ -38,12 +38,6 @@
 #define screen_w      800
 #define screen_h      600
 #define side_padding    5
-extern SDL_Surface* screen;
-extern SDL_Surface* background;
-extern SDL_Surface* wave_background;
-extern SDL_Surface* ui_header;
-extern SDL_Surface* ui_points;
-extern SDL_Rect clip;
 #define max_updates   360
 
 namespace Graphics {
