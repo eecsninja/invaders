@@ -37,8 +37,79 @@
 #include <string.h>
 
 #ifdef __i386__
+
 #include <SDL/SDL.h>
-#endif
+
+#else
+
+///////////// Begin embedded system definitions ////////////////
+
+#include <avr/io.h>
+
+#define FOSC 8000000
+#define BAUD 9600
+#define MYUBRR 12
+
+static int uart_putchar(char c, FILE *stream);
+static int uart_getchar(FILE *stream);
+
+static void init_fdev(FILE* stream,
+                      int (*put_func)(char, FILE*),
+                      int (*get_func)(FILE*),
+                      int flags) {
+    stream->flags = flags;
+    stream->put = put_func;
+    stream->get = get_func;
+    stream->udata = NULL;
+}
+
+static FILE mystdout;
+static FILE mystdin;
+
+static int uart_putchar(char c, FILE *stream) {
+    if (c == '\n')
+        uart_putchar('\r', stream);
+    loop_until_bit_is_set(UCSR0A, UDRE0);
+    UDR0 = c;
+
+    return 0;
+}
+
+static int uart_getchar(FILE *stream) {
+    while( !(UCSR0A & (1<<RXC0)) );
+    return(UDR0);
+}
+
+// Initializes AVR UART.
+static void init_uart() {
+    UBRR0H = MYUBRR >> 8;
+    UBRR0L = MYUBRR;
+    UCSR0B = (1<<TXEN0);
+    UCSR0C = (1<<UCSZ00)|(1<<UCSZ01);
+    DDRE = (1<<PORTE1);
+
+    stdout = &mystdout;  // Required for printf over UART.
+    stdin = &mystdin;    // Required for scanf over UART.
+}
+
+// Initializes AVR external memory.
+static void init_external_memory() {
+    MCUCR = (1<<SRE);
+    XMCRB = (1<<XMBK) | (1<<XMM0);
+    DDRC = 0xff;
+    PORTC = 0;
+}
+
+static void system_init() {
+    init_fdev(&mystdout, uart_putchar, NULL, _FDEV_SETUP_WRITE);
+    init_fdev(&mystdin, NULL, uart_getchar, _FDEV_SETUP_READ);
+    init_uart();
+    init_external_memory();
+}
+
+#endif  // defined(__i386__)
+
+///////////// End embedded system definitions ////////////////
 
 namespace System {
 
@@ -49,6 +120,8 @@ namespace System {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
             return false;
         }
+#else
+        system_init();
 #endif
         return true;
     }
