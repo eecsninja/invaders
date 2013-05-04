@@ -47,6 +47,9 @@ namespace System {
         int right  :1;
     };
 
+    // Initializes system resources.
+    bool init();
+
     // Returns the current key state.
     KeyState get_key_state();
 

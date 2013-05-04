@@ -70,11 +70,6 @@ namespace Graphics {
 
     public:
         Screen();
-        ~Screen() {
-#ifdef __i386__
-            SDL_Quit();
-#endif
-        }
 
         // Initialize video screen.  Returns true on success.
         bool init();

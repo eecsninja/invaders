@@ -36,6 +36,7 @@
 #include "game.h"
 #include "images.h"
 #include "screen.h"
+#include "system.h"
 
 const char* datadir;
 
@@ -57,6 +58,9 @@ int main(int argc, char* argv[])
 {
     datadir = "data/";
 
+    if (!System::init())
+        return -1;
+
     Graphics::Images images;
     Graphics::Screen screen;
 
@@ -68,8 +72,6 @@ int main(int argc, char* argv[])
 
     // Initialize video screen and image library.
     if (!screen.init())
-        return -1;
-    if (!screen.set_video_mode(false))
         return -2;
     if (!images.load_images(image_list))
         return -3;

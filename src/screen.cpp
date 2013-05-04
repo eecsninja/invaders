@@ -42,19 +42,7 @@ namespace Graphics {
 
     bool Screen::init() {
 #ifdef __i386__
-        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
-            fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
-            return false;
-        }
-#endif
-        return true;
-    }
-
-    bool Screen::set_video_mode(bool fullscreen) {
-#ifdef __i386__
         int flags = SDL_SWSURFACE;
-        if (fullscreen)
-            flags |= SDL_FULLSCREEN;
         screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
         if (screen == NULL) {
             fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());

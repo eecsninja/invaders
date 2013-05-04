@@ -32,6 +32,8 @@
 
 #include "system.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #ifdef __i386__
@@ -39,6 +41,17 @@
 #endif
 
 namespace System {
+
+    bool init() {
+#ifdef __i386__
+        atexit(SDL_Quit);
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
+            fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+            return false;
+        }
+#endif
+        return true;
+    }
 
     KeyState get_key_state() {
         KeyState key_state;
