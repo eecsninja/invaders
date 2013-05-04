@@ -70,11 +70,13 @@ namespace Graphics {
             return;
         }
 
+#ifdef __i386__
         blit* update = &blits[num_blits++];
         update->type = type;
         update->image_index = image_index;
         update->x = x;
         update->y = y;
+#endif
     }
 
     void Screen::flush_blits() {

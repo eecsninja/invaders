@@ -52,10 +52,12 @@ namespace Graphics {
     private:
         // A list of scheduled blits.
         struct blit {
+#ifdef __i386__
             int type;
             int image_index;
             int x;
             int y;
+#endif
         } blits[max_updates];
         int num_blits;
         Images* image_lib;
