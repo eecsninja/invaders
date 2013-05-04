@@ -148,6 +148,11 @@ namespace {
     }
 }
 
+// Define this as a static variable for now, because on AVR, defining it in
+// game_control() causes problems.
+// Eventually this needs to be passed in somehow.
+static GameData data;
+
 namespace Game {
 
     void Game::game_control()
@@ -157,9 +162,6 @@ namespace Game {
                sizeof(GameEntity));
         printf("Memory needed for game entity type properties: %u bytes\n",
                sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
-
-        // Define arrays statically, so they can be freed when the game loop exits.
-        GameData data;
 
         // Populate the game data pointers.
         aliens = data.alien_array;
