@@ -85,5 +85,12 @@ int main(int argc, char* argv[])
     Game::Game game(&screen);
     game.game_control();
 
+#ifdef __AVR__
+    // Don't let the program exit on an embedded system, as there is no
+    // operating system beyond the return statement.
+    printf("End of program.\n");
+    while (1);
+#endif
+
     return 0;
 }
