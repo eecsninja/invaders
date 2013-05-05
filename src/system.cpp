@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __i386__
+#ifndef __AVR__
 
 #include <SDL/SDL.h>
 
@@ -131,14 +131,14 @@ static void system_init() {
     init_external_memory();
 }
 
-#endif  // defined(__i386__)
+#endif  // !defined(__AVR__)
 
 ///////////// End embedded system definitions ////////////////
 
 namespace System {
 
     bool init() {
-#ifdef __i386__
+#ifndef __AVR__
         atexit(SDL_Quit);
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
             fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
@@ -154,7 +154,7 @@ namespace System {
         KeyState key_state;
         memset(&key_state, 0, sizeof(key_state));
 
-#ifdef __i386__
+#ifndef __AVR__
         // Get the current keys from SDL.  Call SDL_PollEvent() to update the
         // key array with the latest values.
         Uint8* keys = SDL_GetKeyState(NULL);
@@ -171,14 +171,14 @@ namespace System {
             key_state.right = 1;
         if (keys[SDLK_SPACE])
             key_state.fire = 1;
-#endif  // defined(__i386__)
+#endif  // !defined(__AVR__)
         return key_state;
     }
 
     // This is just a wrapper around SDL_GetTicks.  As part of the embedded port,
     // its contents will eventually be replaced with something else.
     uint32_t get_ticks() {
-#ifdef __i386__
+#ifndef __AVR__
         return SDL_GetTicks();
 #else
         return ms_counter;

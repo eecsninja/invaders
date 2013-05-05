@@ -33,10 +33,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#ifdef __i386__
+#ifndef __AVR__
 #include <SDL/SDL.h>
-#else
-struct SDL_Surface;
 #endif
 
 #define screen_w      800
@@ -52,7 +50,7 @@ namespace Graphics {
     private:
         // A list of scheduled blits.
         struct blit {
-#ifdef __i386__
+#ifndef __AVR__
             int type;
             int image_index;
             int x;
@@ -62,11 +60,11 @@ namespace Graphics {
         int num_blits;
         Images* image_lib;
 
+#ifndef __AVR__
         SDL_Surface *screen;       // Video screen
         // Background/UI images
         SDL_Surface *background, *wave_background, *ui_header, *ui_points;
 
-#ifdef __i386__
         SDL_Rect clip;   // Clipping rectangle.
 #endif
 

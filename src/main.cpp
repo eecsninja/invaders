@@ -42,7 +42,7 @@ const char* datadir;
 
 // a list of image files are loaded into a map and keyed by filename
 static const char* image_list[] = {
-#ifdef __i386__
+#ifndef __AVR__
     "ship.png", "shot.png",
     "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
     "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
@@ -50,7 +50,7 @@ static const char* image_list[] = {
     "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
     "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
     "ui_header.png", "ui_points.png",
-#endif  // defined(__i386__)
+#endif
     NULL
 };
 
@@ -64,10 +64,14 @@ int main(int argc, char* argv[])
     Graphics::Images images;
     Graphics::Screen screen;
 
-#ifdef __i386__
-    printf("this is an x86 system.\n");
+#if defined(__i386__)
+    printf("This is a 32-bit x86 system.\n");
+#elif defined(__amd64__) || defined(__x86_64__)
+    printf("This is a 64-bit x86 system.\n");
+#elif defined(__AVR__)
+    printf("This is an AVR system.\n");
 #else
-    printf("this is a non-x86 system.\n");
+    #error "Architecture type not supported."
 #endif
 
     // Initialize video screen and image library.

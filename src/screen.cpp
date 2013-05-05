@@ -41,7 +41,7 @@ namespace Graphics {
                        image_lib(NULL) {}
 
     bool Screen::init() {
-#ifdef __i386__
+#ifndef __AVR__
         int flags = SDL_SWSURFACE;
         screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
         if (screen == NULL) {
@@ -51,17 +51,19 @@ namespace Graphics {
 
         clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
         SDL_SetClipRect(screen, &clip);
-#endif  // defined (__i386__)
+#endif
         return true;
     }
 
     void Screen::set_image_lib(Images* images) {
         image_lib = images;
 
+#ifndef __AVR__
         wave_background = images->get_image("wave_background.png");
         background = images->get_image("background.png");
         ui_header = images->get_image("ui_header.png");
         ui_points = images->get_image("ui_points.png");
+#endif
     }
 
     void Screen::schedule_blit(int type, int image_index, int x, int y) {
@@ -70,7 +72,7 @@ namespace Graphics {
             return;
         }
 
-#ifdef __i386__
+#ifndef __AVR__
         blit* update = &blits[num_blits++];
         update->type = type;
         update->image_index = image_index;
@@ -80,7 +82,7 @@ namespace Graphics {
     }
 
     void Screen::flush_blits() {
-#ifdef __i386__
+#ifndef __AVR__
         for (int i = 0; i < num_blits && image_lib; ++i) {
             SDL_Surface* image =
                 image_lib->get_image(blits[i].type, blits[i].image_index);
@@ -93,11 +95,11 @@ namespace Graphics {
         }
         num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
-#endif  // defined(__i386__)
+#endif
     }
 
     void Screen::update() {
-#ifdef __i386__
+#ifndef __AVR__
         SDL_BlitSurface(wave_background, NULL, screen, NULL);
 #endif
         flush_blits();
