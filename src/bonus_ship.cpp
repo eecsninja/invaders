@@ -36,9 +36,11 @@
 
 namespace GameEntities {
 
-    void GameEntity::BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active)
+    void GameEntity::BonusShip_init(bool is_small, int x, int y, int dx, int dy,
+                                    bool active)
     {
-        init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP, x, y, dx, dy, active);
+        init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP,
+             0, x, y, dx, dy, active);
     }
 
     void GameEntity::BonusShip_movement(int16_t delta)

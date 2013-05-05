@@ -34,9 +34,10 @@
 
 namespace GameEntities {
 
-    void GameEntity::Shot_init(int x, int y, int dx, int dy, bool active)
+    void GameEntity::Shot_init(uint8_t index, int x, int y, int dx, int dy,
+                               bool active)
     {
-        init(GAME_ENTITY_SHOT, x, y, dx, dy, active);
+        init(GAME_ENTITY_SHOT, index, x, y, dx, dy, active);
     }
 
     void GameEntity::Shot_movement(int16_t delta)

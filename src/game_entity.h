@@ -91,9 +91,11 @@ namespace GameEntities {
         int speed;    // speed in pixels/sec and direction, either x or y
                       // depending on |type|.
         uint16_t frame_time_count; // control in place animation speed
-        uint8_t fire_chance;
 
-        uint8_t position:6;   // used by Aliens to determine if and when to fire
+        // Used by Aliens to determine if and when to fire.  Max value is 10.
+        uint8_t fire_chance:4;
+        // The index of entities within their respective arrays.
+        uint8_t index;
 
         // Entity state flags.
         bool alive:1;
@@ -105,7 +107,8 @@ namespace GameEntities {
 
     public:
         GameEntity() : type(GAME_ENTITY_UNKNOWN) {}
-        void init(int type, int x, int y, int dx, int dy, bool active);
+        void init(int type, uint8_t index, int x, int y, int dx, int dy,
+                  bool active);
         void movement(int16_t delta);
         static void set_type_property(int type,
                                       const GameEntityTypeProperties& prop) {
@@ -150,7 +153,7 @@ namespace GameEntities {
         void set_x_velocity(int vel) { speed = vel; }
         // switch direction and move down the screen
         void do_alien_logic() { speed = -speed; y += INT_TO_FIXED(10); }
-        int get_pos() const { return position; }
+        uint8_t get_index() const { return index; }
         int get_fire_chance() const { return fire_chance; }
         // Shot
         void set_hit(bool hit) { this->hit = hit; }
@@ -181,17 +184,22 @@ namespace GameEntities {
         void Player_init(int x, int y, int dx, int dy, bool active);
         void Player_movement(int16_t delta);
 
-        void Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance);
+        void Alien_init(int type, uint8_t index, int x, int y, int dx, int dy,
+                        bool active, int chance);
         void Alien_movement(int16_t delta);
 
-        void BonusShip_init(bool is_small, int x, int y, int dx, int dy, bool active);
+        void BonusShip_init(bool is_small, int x, int y, int dx, int dy,
+                            bool active);
         void BonusShip_movement(int16_t delta);
 
-        void Shot_init(int x, int y, int dx, int dy, bool active);
+        void Shot_init(uint8_t index, int x, int y, int dx, int dy,
+                       bool active);
         void Shot_movement(int16_t delta);
 
-        void Explosion_init(int x, int y, int dx, int dy, bool active);
-        void ShieldPiece_init(int x, int y, int dx, int dy, bool active);
+        void Explosion_init(uint8_t index, int x, int y, int dx, int dy,
+                            bool active);
+        void ShieldPiece_init(uint8_t index, int x, int y, int dx, int dy,
+                              bool active);
     };
 
     // Retain these GameEntity subclass names so dependent code doesn't have to

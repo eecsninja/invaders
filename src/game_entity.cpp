@@ -41,9 +41,11 @@
 
 namespace GameEntities {
 
-    void GameEntity::init(int type, int x, int y, int dx, int dy, bool active)
+    void GameEntity::init(int type, uint8_t index, int x, int y, int dx, int dy,
+                          bool active)
     {
         this->type = type;
+        this->index = index;
         this->x = INT_TO_FIXED(x);
         this->y = INT_TO_FIXED(y);
         if (dx != 0 && dy != 0)
@@ -98,7 +100,7 @@ namespace GameEntities {
             return;
         game->explode(other->x_int(), other->y_int(), short_explosion);
         this->deactivate();
-        game->msg_alien_killed(other->position, other->properties()->points);
+        game->msg_alien_killed(other->index, other->properties()->points);
         other->kill();
         set_hit(true);
     }
@@ -165,14 +167,16 @@ namespace GameEntities {
 #endif
     }
 
-    void GameEntity::Explosion_init(int x, int y, int dx, int dy, bool active)
+    void GameEntity::Explosion_init(uint8_t index, int x, int y, int dx, int dy,
+                                    bool active)
     {
-        init(GAME_ENTITY_EXPLOSION, x, y, dx, dy, active);
+        init(GAME_ENTITY_EXPLOSION, index, x, y, dx, dy, active);
     }
 
-    void GameEntity::ShieldPiece_init(int x, int y, int dx, int dy, bool active)
+    void GameEntity::ShieldPiece_init(uint8_t index, int x, int y, int dx,
+                                      int dy, bool active)
     {
-        init(GAME_ENTITY_SHIELD_PIECE, x, y, dx, dy, active);
+        init(GAME_ENTITY_SHIELD_PIECE, index, x, y, dx, dy, active);
     }
 
     Game::Game* GameEntity::game = NULL;

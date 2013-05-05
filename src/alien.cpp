@@ -36,11 +36,11 @@
 
 namespace GameEntities {
 
-    void GameEntity::Alien_init(int type, int x, int y, int dx, int dy, bool active, int pos, int chance)
+    void GameEntity::Alien_init(int type, uint8_t index, int x, int y, int dx,
+                                int dy, bool active, int chance)
     {
-        init(type, x, y, dx, dy, active);
+        init(type, index, x, y, dx, dy, active);
 
-        position = pos;
         fire_chance = chance;
     }
 

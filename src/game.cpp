@@ -142,7 +142,7 @@ namespace {
                 (i * SHIELD_PIECE_SIZE);
         int y = SHIELD_Y_OFFSET + SHIELD_PIECE_SIZE * k;
 
-        shield->ShieldPiece_init(x, y, 0, 0, true);
+        shield->ShieldPiece_init(index, x, y, 0, 0, true);
         if (!alive)
           shield->kill();
     }
@@ -241,15 +241,15 @@ namespace Game {
                     type = GAME_ENTITY_ALIEN3;
                     break;
                 }
-                aliens[alien_count].Alien_init(type, alien_x, alien_y, -speed,
-                                               0, active, alien_count+1,
+                aliens[alien_count].Alien_init(type, alien_count, alien_x,
+                                               alien_y, -speed, 0, active,
                                                RAND(rand_max));
                 ++alien_count;
             }
         }
         // create alien shots
-        for (int i= 0; i < num_alien_shots; ++i) {
-            alien_shots[i].Shot_init(0, 0, 0, alien_shot_speed, false);
+        for (int i = 0; i < num_alien_shots; ++i) {
+            alien_shots[i].Shot_init(i, 0, 0, 0, alien_shot_speed, false);
         }
     }
     void Game::factory()
@@ -275,7 +275,7 @@ namespace Game {
                 }
             }
 
-            shield_groups[j].init(GAME_ENTITY_SHIELD_GROUP,
+            shield_groups[j].init(GAME_ENTITY_SHIELD_GROUP, j,
                                   j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
                                   SHIELD_Y_OFFSET, 0, 0, true);
         }
@@ -400,11 +400,11 @@ namespace Game {
         }
 
         // create explosions and player shots
-        for (int i= 0; i < num_explosions; ++i) {
-            explosions[i].Explosion_init(0, 0, 0, 0, false);
+        for (int i = 0; i < num_explosions; ++i) {
+            explosions[i].Explosion_init(i, 0, 0, 0, 0, false);
         }
-        for (int i= 0; i < num_player_shots; ++i) {
-            player_shots[i].Shot_init(0, 0, 0, shot_speed, false);
+        for (int i = 0; i < num_player_shots; ++i) {
+            player_shots[i].Shot_init(i, 0, 0, 0, shot_speed, false);
         }
 
         player_shot_delay = 225;
@@ -965,7 +965,7 @@ namespace Game {
         //status.blit_score(score);
         free_guy_check();
     }
-    void Game::msg_alien_killed(int pos, int points)
+    void Game::msg_alien_killed(int index, int points)
     {
         //sound.play_alien_dead();
         score += points;
@@ -980,7 +980,7 @@ namespace Game {
         // speed up all the existing aliens, whenever one is destroyed
         for (int i = 0; i < NUM_ALIENS; ++i) {
             Alien* alien = &aliens[i];
-            if (alien->get_pos() == pos - 12) {
+            if (alien->get_index() == index - ALIEN_ARRAY_WIDTH) {
                 alien->activate();
             }
             alien->increase_x_speed(ALIEN_SPEED_BOOST);

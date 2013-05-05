@@ -36,7 +36,7 @@ namespace GameEntities {
 
     void GameEntity::Player_init (int x, int y, int dx, int dy, bool active)
     {
-        init(GAME_ENTITY_PLAYER, x, y, dx, dy, active);
+        init(GAME_ENTITY_PLAYER, 0, x, y, dx, dy, active);
     }
 
     void GameEntity::Player_movement(int16_t delta)

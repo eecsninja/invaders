@@ -157,7 +157,7 @@ namespace Game {
         void game_control();
         void msg_player_dead();
         void msg_alien_landed();
-        void msg_alien_killed(int pos, int points);
+        void msg_alien_killed(int index, int points);
         void msg_alien_player_collide();
         void msg_bonus_ship_destroyed(int bonus);
         void run_logic() { logic_this_loop = true; }
