@@ -42,6 +42,10 @@
 #define side_padding    5
 #define max_updates   360
 
+namespace GameEntities {
+class GameEntity;
+}  // namespace GameEntities
+
 namespace Graphics {
 
     class Images;
@@ -81,7 +85,7 @@ namespace Graphics {
         void set_image_lib(Images* images);
 
         // Add a blit task to the blit queue.
-        void schedule_blit(int type, int image_index, int x, int y);
+        void schedule_blit(const GameEntities::GameEntity* object);
 
         // Perform all queued blits and reset the blit counter.
         void flush_blits();

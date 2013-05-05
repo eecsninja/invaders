@@ -132,6 +132,10 @@ namespace GameEntities {
         int coll_h() const { return properties()->coll_h; }
         int coll_x_offset() const { return properties()->coll_x_offset; }
         int coll_y_offset() const { return properties()->coll_y_offset; }
+        uint8_t get_type() const { return type; }
+        uint8_t get_current_image() const {
+            return properties()->images[image_num];
+        }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
         void set_frame_duration(uint16_t dur) { properties()->frame_duration = dur; }

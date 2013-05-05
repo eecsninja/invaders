@@ -34,6 +34,7 @@
 
 #include <stdio.h>
 
+#include "game_entity.h"
 #include "images.h"
 
 namespace Graphics {
@@ -66,7 +67,12 @@ namespace Graphics {
 #endif
     }
 
-    void Screen::schedule_blit(int type, int image_index, int x, int y) {
+    void Screen::schedule_blit(const GameEntities::GameEntity* object) {
+        uint8_t type = object->get_type();
+        uint8_t image_index = object->get_current_image();
+        int x = object->get_x();
+        int y = object->get_y();
+
         if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;

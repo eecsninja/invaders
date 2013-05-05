@@ -54,8 +54,7 @@ namespace GameEntities {
 
     void GameEntity::draw()
     {
-        screen->schedule_blit(type, properties()->images[image_num],
-                              x_int(), y_int());
+        screen->schedule_blit(this);
     }
     void GameEntity::cleanup_draw()
     {
