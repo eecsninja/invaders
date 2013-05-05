@@ -88,7 +88,8 @@ namespace GameEntities {
         static Graphics::Screen* screen;  // Common pointer to video screen.
 
         fixed x, y;   // location
-        int dx, dy;   // velocity -- speed in pixels/sec and direction
+        int speed;    // speed in pixels/sec and direction, either x or y
+                      // depending on |type|.
         uint16_t frame_time_count; // control in place animation speed
         uint8_t fire_chance;
 
@@ -143,9 +144,12 @@ namespace GameEntities {
         void set_explosion(uint16_t dur) { activate(); properties()->frame_duration = dur; }
         void duration(int16_t delta);
         // Alien
-        void increase_x_speed(fixed increase) { dx = FIXED_TO_INT(dx * increase); }
-        void set_x_velocity(int vel) { dx = vel; }
-        void do_alien_logic() {  dx = -dx; y += INT_TO_FIXED(10); } // switch direction and move down the screen
+        void increase_x_speed(fixed increase) {
+            speed = FIXED_TO_INT(speed * increase);
+        }
+        void set_x_velocity(int vel) { speed = vel; }
+        // switch direction and move down the screen
+        void do_alien_logic() { speed = -speed; y += INT_TO_FIXED(10); }
         int get_pos() const { return position; }
         int get_fire_chance() const { return fire_chance; }
         // Shot

@@ -41,6 +41,7 @@ namespace GameEntities {
 
     void GameEntity::Player_movement(int16_t delta)
     {
+        int dx = speed;
         // don't move off left hand side of the screen
         if (dx < 0 && x_int() < side_padding) {
             return;

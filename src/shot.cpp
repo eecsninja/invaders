@@ -41,6 +41,7 @@ namespace GameEntities {
 
     void GameEntity::Shot_movement(int16_t delta)
     {
+        int dy = speed;
         y += INT_TO_FIXED(delta * dy) / 1000;
 
         if (y_int() < -100) {

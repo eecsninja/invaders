@@ -58,6 +58,7 @@ namespace GameEntities {
         if (y_int() > properties()->bottom_limit) {
             game->msg_alien_landed();
         }
+        int dx = speed;
         // change direction and move down
         if (dx < 0 && x_int() < side_padding) {
             game->run_logic();

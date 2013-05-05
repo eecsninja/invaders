@@ -51,6 +51,7 @@ namespace GameEntities {
                 image_num = 0;
             }
         }
+        int dx = speed;
         x += INT_TO_FIXED(delta * dx) / 1000;
         if (dx > 0 && x_int() > screen_w) {
             deactivate();

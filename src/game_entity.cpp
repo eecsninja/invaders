@@ -32,6 +32,8 @@
 
 #include "game_entity.h"
 
+#include <stdio.h>
+
 #include "screen.h"
 
 #define short_explosion       50
@@ -44,8 +46,9 @@ namespace GameEntities {
         this->type = type;
         this->x = INT_TO_FIXED(x);
         this->y = INT_TO_FIXED(y);
-        this->dx = dx;
-        this->dy = dy;
+        if (dx != 0 && dy != 0)
+            fprintf(stderr, "Either dx or dy must be zero. type: %d\n", type);
+        this->speed = dx ? dx : dy;
         this->alive = true;
         this->active = active;
         this->frame_time_count = 0;
