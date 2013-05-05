@@ -99,9 +99,9 @@ struct EventCounter {
         if (num_loops == 0)
             return;
         printf("Per-loop stats, averaged over %d loops:\n", num_loops);
-        printf("collision checks: %.2f\n", (float)num_collision_checks / num_loops);
-        printf("duration calls: %.2f\n", (float)num_duration_calls / num_loops);
-        printf("movement calls: %.2f\n", (float)num_movement_calls / num_loops);
+        printf("collision checks: %d\n", num_collision_checks / num_loops);
+        printf("duration calls: %d\n", num_duration_calls / num_loops);
+        printf("movement calls: %d\n", num_movement_calls / num_loops);
     }
 };
 #endif
