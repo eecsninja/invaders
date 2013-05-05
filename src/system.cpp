@@ -45,6 +45,7 @@
 ///////////// Begin embedded system definitions ////////////////
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
 #define FOSC 8000000
 #define BAUD 9600
@@ -93,6 +94,27 @@ static void init_uart() {
     stdin = &mystdin;    // Required for scanf over UART.
 }
 
+// This gets incremented every millisecond by the timer ISR.
+static volatile uint32_t ms_counter;
+
+// AVR timer interrupt handler.
+ISR(TIMER1_COMPA_vect)
+{
+    ++ms_counter;
+}
+
+// Initializes AVR timer.
+static void init_timer() {
+   TCCR1B |= (1 << WGM12); // Configure timer 1 for CTC mode
+   TIMSK |= (1 << OCIE1A); // Enable CTC interrupt
+   sei();                  // Enable global interrupts
+   OCR1A   = 125;          // Set CTC compare value to trigger at 1 kHz given
+                           // an 8-MHz clock with prescaler of 64.
+   TCCR1B |= ((1 << CS11) | (1 << CS10)); // Start timer at Fcpu/64
+
+   ms_counter = 0;        // Reset millisecond counter
+}
+
 // Initializes AVR external memory.
 static void init_external_memory() {
     MCUCR = (1<<SRE);
@@ -105,6 +127,7 @@ static void system_init() {
     init_fdev(&mystdout, uart_putchar, NULL, _FDEV_SETUP_WRITE);
     init_fdev(&mystdin, NULL, uart_getchar, _FDEV_SETUP_READ);
     init_uart();
+    init_timer();
     init_external_memory();
 }
 
@@ -155,11 +178,11 @@ namespace System {
     // This is just a wrapper around SDL_GetTicks.  As part of the embedded port,
     // its contents will eventually be replaced with something else.
     uint32_t get_ticks() {
-        uint32_t ticks = 0;
 #ifdef __i386__
-        ticks = SDL_GetTicks();
+        return SDL_GetTicks();
+#else
+        return ms_counter;
 #endif
-        return ticks;
     }
 
 }
