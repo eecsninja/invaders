@@ -42,6 +42,9 @@ const char* datadir;
 
 #ifdef __AVR__
 
+extern uint8_t __bss_end;
+extern uint8_t __stack;
+
 #include "image_data.h"
 
 using Graphics::ImageListEntry;
@@ -82,6 +85,11 @@ int main(int argc, char* argv[])
 
     if (!System::init())
         return -1;
+
+#ifdef __AVR__
+    printf("Stack ranges from 0x%x (%u) to 0x%x (%u)\n",
+           &__bss_end, &__bss_end, &__stack, &__stack);
+#endif
 
     Graphics::Images images;
     Graphics::Screen screen;
