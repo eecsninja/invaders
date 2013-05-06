@@ -48,8 +48,8 @@
 #include <avr/interrupt.h>
 
 #define FOSC 8000000
-#define BAUD 9600
-#define MYUBRR 12
+#define BAUD   57600
+#define MYUBRR    16
 
 static int uart_putchar(char c, FILE *stream);
 static int uart_getchar(FILE *stream);
@@ -85,6 +85,7 @@ static int uart_getchar(FILE *stream) {
 static void init_uart() {
     UBRR0H = MYUBRR >> 8;
     UBRR0L = MYUBRR;
+    UCSR0A = (1<<U2X0);
     UCSR0B = (1<<TXEN0);
     UCSR0C = (1<<UCSZ00)|(1<<UCSZ01);
     DDRE = (1<<PORTE1);
