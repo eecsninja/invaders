@@ -158,6 +158,27 @@ namespace Game {
         printf("Memory needed for game entity type properties: %u bytes\n",
                sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
 
+        {
+            // Allocate sprites for each type of entity.
+            // Do this in a block of its own so the memory can be freed after.
+            int num_objects_per_type[NUM_GAME_ENTITY_TYPES];
+            memset(num_objects_per_type, 0, sizeof(num_objects_per_type));
+            num_objects_per_type[GAME_ENTITY_PLAYER] = 1;
+            num_objects_per_type[GAME_ENTITY_ALIEN]
+                = 2 * ALIEN_ARRAY_WIDTH;
+            num_objects_per_type[GAME_ENTITY_ALIEN2]
+                = 2 * ALIEN_ARRAY_WIDTH;
+            num_objects_per_type[GAME_ENTITY_ALIEN3]
+                = ALIEN_ARRAY_WIDTH;
+            num_objects_per_type[GAME_ENTITY_BONUS_SHIP] = 1;
+            num_objects_per_type[GAME_ENTITY_SMALL_BONUS_SHIP] = 1;
+            num_objects_per_type[GAME_ENTITY_SHOT]
+                = num_player_shots + MAX_NUM_ALIEN_SHOTS;
+            num_objects_per_type[GAME_ENTITY_SHIELD_PIECE] = 0;
+            num_objects_per_type[GAME_ENTITY_EXPLOSION] = num_explosions;
+            screen.allocate_sprites(num_objects_per_type);
+        }
+
         // Define arrays statically, so they can be freed when the game loop exits.
         GameData data;
 
@@ -251,7 +272,8 @@ namespace Game {
         }
         // create alien shots
         for (int i = 0; i < num_alien_shots; ++i) {
-            alien_shots[i].Shot_init(i, 0, 0, 0, alien_shot_speed, false);
+            alien_shots[i].Shot_init(num_player_shots + i, 0, 0, 0,
+                                     alien_shot_speed, false);
         }
     }
     void Game::factory()

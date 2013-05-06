@@ -33,9 +33,13 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+#include <stdint.h>
+
 #ifndef __AVR__
 #include <SDL/SDL.h>
 #endif
+
+#include "game_entity_types.h"
 
 #define screen_w      800
 #define screen_h      600
@@ -72,6 +76,14 @@ namespace Graphics {
         SDL_Rect clip;   // Clipping rectangle.
 #endif
 
+        // Each entry in the array is the starting sprite index for each type of
+        // game entity.
+        // e.g. for the k-th object of type=N, the sprite index is:
+        //        |sprite_index_bases[type] + k|.
+        uint8_t sprite_index_bases[NUM_GAME_ENTITY_TYPES];
+        // How many sprites are allocated for each type.
+        uint8_t num_sprites_per_type[NUM_GAME_ENTITY_TYPES];
+
     public:
         Screen();
 
@@ -92,6 +104,14 @@ namespace Graphics {
 
         // Redraw the entire screen, including all the scheduled blits.
         void update();
+
+        // Used to initialize the sprite allocation table based on how many
+        // of each type of object will be drawn.
+        void allocate_sprites(const int* num_objects_per_type);
+
+    private:
+        // Updates a sprite in the sprite table given an updated entity object.
+        void update_sprite(const GameEntities::GameEntity* object);
     };
 
 }  // namespace Graphics

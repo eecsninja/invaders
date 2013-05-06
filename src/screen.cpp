@@ -35,17 +35,25 @@
 #include <stdio.h>
 
 #ifdef __AVR__
-    #include "cc_core.h"
+#include "cc_core.h"
+#include "registers.h"
+#include "sprite_registers.h"
 #endif
 
 #include "game_entity.h"
 #include "images.h"
+
+// TODO: This should be included from a ChronoCube library file.
+#define MAX_NUM_SPRITES      128
+
+#define DEFAULT_COLOR_KEY   0xff
 
 namespace Graphics {
     Screen::Screen() : num_blits(0),
                        image_lib(NULL) {}
 
     bool Screen::init() {
+        memset(sprite_index_bases, 0, sizeof(sprite_index_bases));
 #ifdef __AVR__
         CC_Init();
         printf("ChronoCube initialization complete.\n");
@@ -75,23 +83,20 @@ namespace Graphics {
     }
 
     void Screen::schedule_blit(const GameEntities::GameEntity* object) {
-        uint8_t type = object->get_type();
-        uint8_t image_index = object->get_current_image();
-        int x = object->get_x();
-        int y = object->get_y();
-
+#ifdef __AVR__
+        update_sprite(object);
+#else
         if (num_blits >= max_updates) {
             fprintf(stderr, "Exceeded max number of blits (%d).\n", max_updates);
             return;
         }
 
-#ifndef __AVR__
         blit* update = &blits[num_blits++];
-        update->type = type;
-        update->image_index = image_index;
-        update->x = x;
-        update->y = y;
-#endif
+        update->type = object->get_type();
+        update->image_index = object->get_current_image();
+        update->x = object->get_x();
+        update->y = object->get_y();
+#endif  // defined (__AVR__)
     }
 
     void Screen::flush_blits() {
@@ -108,7 +113,7 @@ namespace Graphics {
         }
         num_blits = 0;
         SDL_UpdateRect(screen, clip.x, clip.y, clip.w, clip.h);
-#endif
+#endif  // !defined (__AVR__)
     }
 
     void Screen::update() {
@@ -117,4 +122,39 @@ namespace Graphics {
 #endif
         flush_blits();
     }
+
+    void Screen::allocate_sprites(const int* num_objects_per_type) {
+#ifdef __AVR__
+        uint16_t sprite_index = 0;
+        for (int type = 0;
+             type < NUM_GAME_ENTITY_TYPES && sprite_index < MAX_NUM_SPRITES;
+             ++type) {
+            // Store the number of sprites and first sprite index for each type.
+            int num_objects_of_type = num_objects_per_type[type];
+            num_sprites_per_type[type] = num_objects_of_type;
+            sprite_index_bases[type] = sprite_index;
+            printf("Allocated %u sprites starting at %u for object type %d\n",
+                   num_objects_of_type, sprite_index, type);
+
+            // Initialize each sprite's color key and data offset.
+            for (int i = 0; i < num_objects_of_type; ++i) {
+                CC_Sprite_SetRegister(sprite_index + i, SPRITE_COLOR_KEY,
+                                      DEFAULT_COLOR_KEY);
+                CC_Sprite_SetRegister(sprite_index + i, SPRITE_DATA_OFFSET,
+                                      image_lib->get_image_offset(type, 0));
+            }
+
+            sprite_index += num_objects_of_type;
+        }
+        if (sprite_index == MAX_NUM_SPRITES) {
+            fprintf(stderr, "Attempted to allocate too many sprites: %d\n",
+                    sprite_index);
+        }
+#endif  // defined (__AVR__)
+    }
+
+    void Screen::update_sprite(const GameEntities::GameEntity* object) {
+        // TODO: add code here.
+    }
+
 }
