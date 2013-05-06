@@ -161,8 +161,6 @@ namespace Game {
         // Define arrays statically, so they can be freed when the game loop exits.
         GameData data;
 
-        printf("Game data allocated at 0x%x (%u bytes)\n", &data, &data);
-
         // Populate the game data pointers.
         aliens = data.alien_array;
         shields = data.shield_array;

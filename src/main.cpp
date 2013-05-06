@@ -86,6 +86,11 @@ int main(int argc, char* argv[])
     Graphics::Images images;
     Graphics::Screen screen;
 
+    printf("Allocated image library: %u bytes at 0x%x (%u bytes)\n",
+           sizeof(images), &images, &images);
+    printf("Allocated screen controller: %u bytes at 0x%x (%u bytes)\n",
+           sizeof(screen), &screen, &screen);
+
 #if defined(__i386__)
     printf("This is a 32-bit x86 system.\n");
 #elif defined(__amd64__) || defined(__x86_64__)
