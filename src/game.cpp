@@ -108,7 +108,7 @@ using GameEntities::Shot;
 #define SHOT_HEIGHT              16
 
 #ifdef EVENT_COUNTER
-#define EVENT_COUNTER_LOOP_LIMIT        1000
+#define EVENT_COUNTER_LOOP_LIMIT        100
 EventCounter event_counter;
 #endif
 

@@ -66,10 +66,10 @@ namespace GameEntities {
 // To improve performance, count the number of various calls per game cycle.
 // This should reveal the bottlenecks where optimization could help.
 struct EventCounter {
-    int num_collision_checks;
-    int num_duration_calls;
-    int num_movement_calls;
-    int num_loops;
+    uint32_t num_collision_checks;
+    uint32_t num_duration_calls;
+    uint32_t num_movement_calls;
+    uint32_t num_loops;
 
     ~EventCounter() {
       report();
