@@ -32,10 +32,18 @@
 
 #include "images.h"
 
-#ifndef __AVR__
+#ifdef __AVR__
+
+#include <avr/pgmspace.h>
+
+#include "cc_core.h"
+
+#else
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#endif
+
+#endif  // defined __AVR__
 
 #include <stdio.h>
 #include <string.h>
@@ -84,14 +92,67 @@ namespace Graphics {
         return true;
     }
 
+    // Load image list specified by an array of <addr, size> pairs. The
+    // array is terminated by addr=0 and size=0.
+    bool Images::load_images(const ImageListEntry* image_list) {
+#ifdef __AVR__
+#define BUFFER_SIZE       32
+        uint32_t total_data_copied = 0;
+
+        for (int i = 0;
+             i < MAX_NUM_IMAGES &&
+                (image_list[i].addr || image_list[i].size);
+             ++i) {
+            const ImageListEntry& entry = image_list[i];
+
+            images[i].addr = total_data_copied;
+            images[i].size = entry.size;
+
+            if (entry.size % sizeof(uint32_t) != 0) {
+                fprintf(stderr, "Image size is not aligned to 32-bit blocks, "
+                        "may not be completely copied.  entry index: %d\n", i);
+            }
+
+            const uint32_t* src_ptr = (const uint32_t*) entry.ptr;
+            uint16_t size_copied = 0;   // Counts bytes of data copied to VRAM.
+            uint16_t offset = 0;
+            uint32_t buffer[BUFFER_SIZE];      // Used to read from PGM memory.
+            while (size_copied + offset < entry.size) {
+                buffer[offset] =
+                    pgm_read_dword_far(src_ptr + size_copied + offset);
+                ++offset;
+                // If the buffer fills up, copy it to VRAM.
+                if (offset == BUFFER_SIZE) {
+                    CC_SetVRAMData(buffer,
+                                   total_data_copied + size_copied,
+                                   sizeof(buffer));
+                    size_copied += sizeof(buffer);
+                    offset = 0;
+                }
+            }
+
+            printf("Copied %u bytes from 0x%lx in PGM to 0x%lx in VRAM.\n",
+                   entry.size, entry.addr, total_data_copied);
+            total_data_copied += entry.size;
+        }
+#undef BUFFER_SIZE
+        return true;
+#endif  // defined(__AVR__)
+    }
+
+
     SDL_Surface *Images::get_image(const char* filename)
     {
+#ifdef __AVR__
+        return NULL;
+#else
         int index = get_image_index(filename);
         if (index < 0 || index >= MAX_NUM_IMAGES) {
             fprintf(stderr, "Could not find image file %s.\n", filename);
             return NULL;
         }
         return images[index];
+#endif
     }
 
     SDL_Surface *Images::get_image(int type, int index)

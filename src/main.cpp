@@ -40,19 +40,41 @@
 
 const char* datadir;
 
+#ifdef __AVR__
+
+#include "image_data.h"
+
+using Graphics::ImageListEntry;
+
+static const ImageListEntry image_list[] = {
+    // The order here must match the order of corresponding GameEntity type
+    // enumerations.
+    ImageListEntry(ship_bmp_raw_data8, SHIP_BMP_RAW_DATA_SIZE),
+    ImageListEntry(alien_1_bmp_raw_data8, ALIEN_1_BMP_RAW_DATA_SIZE),
+    ImageListEntry(alien_2_bmp_raw_data8, ALIEN_2_BMP_RAW_DATA_SIZE),
+    ImageListEntry(alien_3_bmp_raw_data8, ALIEN_3_BMP_RAW_DATA_SIZE),
+    ImageListEntry(bonus_bmp_raw_data8, BONUS_BMP_RAW_DATA_SIZE),
+    ImageListEntry(bonus_small_bmp_raw_data8, BONUS_SMALL_BMP_RAW_DATA_SIZE),
+    ImageListEntry(shield_bmp_raw_data8, SHIELD_BMP_RAW_DATA_SIZE),
+    ImageListEntry(shot_bmp_raw_data8, SHOT_BMP_RAW_DATA_SIZE),
+    ImageListEntry(explosion_bmp_raw_data8, EXPLOSION_BMP_RAW_DATA_SIZE),
+    ImageListEntry(0, 0),       // Terminate the list with NULL.
+};
+
+#else
+
 // a list of image files are loaded into a map and keyed by filename
 static const char* image_list[] = {
-#ifndef __AVR__
     "ship.png", "shot.png",
     "alien-1-1.png",  "alien-1-2.png",  "alien-1-3.png",  "alien-1-4.png",
     "alien-2-1.png",  "alien-2-2.png",  "alien-2-3.png",  "alien-2-4.png",
     "alien-3-1.png",  "alien-3-2.png",  "alien-3-3.png",  "alien-3-4.png",
     "bonus-1-1.png",  "bonus-1-2.png",  "wave_background.png", "background.png",
     "explosion.png", "shield_piece.png", "bonus-2-1.png", "bonus-2-2.png",
-    "ui_header.png", "ui_points.png",
-#endif
-    NULL
+    "ui_header.png", "ui_points.png", NULL
 };
+
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -79,7 +101,6 @@ int main(int argc, char* argv[])
         return -2;
     if (!images.load_images(image_list))
         return -3;
-
     screen.set_image_lib(&images);
 
     Game::Game game(&screen);

@@ -34,6 +34,10 @@
 
 #include <stdio.h>
 
+#ifdef __AVR__
+    #include "cc_core.h"
+#endif
+
 #include "game_entity.h"
 #include "images.h"
 
@@ -42,7 +46,10 @@ namespace Graphics {
                        image_lib(NULL) {}
 
     bool Screen::init() {
-#ifndef __AVR__
+#ifdef __AVR__
+        CC_Init();
+        printf("ChronoCube initialization complete.\n");
+#else
         int flags = SDL_SWSURFACE;
         screen = SDL_SetVideoMode(screen_w, screen_h, 16, flags);
         if (screen == NULL) {
@@ -52,7 +59,7 @@ namespace Graphics {
 
         clip.x = 0; clip.y = 50; clip.w = screen_w; clip.h = 515;
         SDL_SetClipRect(screen, &clip);
-#endif
+#endif  // defined(__AVR__)
         return true;
     }
 

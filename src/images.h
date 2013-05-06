@@ -33,22 +33,45 @@
 #ifndef _IMAGES_H_
 #define _IMAGES_H_
 
+#include <stdint.h>
+
 struct SDL_Surface;
 
-#define MAX_NUM_IMAGES         32
-
-#ifndef __AVR__
-#define MAX_STRING_LENGTH     256
+#ifdef __AVR__
+#define MAX_NUM_IMAGES         16
 #else
-#define MAX_STRING_LENGTH       1
+#define MAX_NUM_IMAGES         32
 #endif
+
+#define MAX_STRING_LENGTH     256
 
 namespace Graphics {
 
+      struct ImageListEntry {
+#ifdef __AVR__
+          union {
+              const void*         ptr;
+              uint32_t           addr;
+          };
+          uint16_t      size;
+          ImageListEntry() : addr(0), size(0) {
+          }
+          ImageListEntry(const void* ptr, uint16_t size) {
+              this->ptr = ptr;
+              this->size = size;
+          }
+#endif
+      };
+
       class Images {
       private:
+#ifdef __AVR__
+          struct ImageListEntry images[MAX_NUM_IMAGES];
+#else
           SDL_Surface* images[MAX_NUM_IMAGES];
           char filenames[MAX_STRING_LENGTH][MAX_NUM_IMAGES];
+#endif
+
           int num_images;
       public:
           Images();
@@ -58,6 +81,10 @@ namespace Graphics {
           // with the end of the array indicated by a null pointer.  Returns
           // true on success.
           bool load_images(const char** filenames);
+
+          // Load image list specified by an array of <addr, size> pairs. The
+          // array is terminated by addr=0 and size=0.
+          bool load_images(const ImageListEntry* image_list);
 
           // Image lookup by filename.
           SDL_Surface *get_image(const char* filename);

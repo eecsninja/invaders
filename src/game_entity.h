@@ -41,7 +41,6 @@
 extern EventCounter event_counter;
 
 enum GameEntityTypes {
-    GAME_ENTITY_UNKNOWN,
     GAME_ENTITY_PLAYER,
     GAME_ENTITY_ALIEN,
     GAME_ENTITY_ALIEN2,
@@ -52,6 +51,7 @@ enum GameEntityTypes {
     GAME_ENTITY_SHIELD_PIECE,
     GAME_ENTITY_EXPLOSION,
     GAME_ENTITY_SHIELD_GROUP,
+    GAME_ENTITY_UNKNOWN,
     NUM_GAME_ENTITY_TYPES,
 };
 
