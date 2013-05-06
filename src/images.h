@@ -90,6 +90,10 @@ namespace Graphics {
           SDL_Surface *get_image(const char* filename);
 
           // Image lookup by index and type.
+
+          // Returns offset in VRAM.
+          uint16_t get_image_offset(int type, int index);
+          // Returns SDL surface containing image.
           SDL_Surface *get_image(int type, int index);
 
           // Get index of image with file name.  Returns -1 if not found.

@@ -155,6 +155,15 @@ namespace Graphics {
 #endif
     }
 
+    uint16_t Images::get_image_offset(int type, int index) {
+#ifdef __AVR__
+        // TODO: use |index| to get the correct image frame.
+        return images[type].addr;
+#else
+        return 0;
+#endif
+    }
+
     SDL_Surface *Images::get_image(int type, int index)
     {
         char base_name[100];
