@@ -36,24 +36,10 @@
 #include <assert.h>
 
 #include "game.h"
+#include "game_entity_types.h"
 #include "screen.h"
 
 extern EventCounter event_counter;
-
-enum GameEntityTypes {
-    GAME_ENTITY_PLAYER,
-    GAME_ENTITY_ALIEN,
-    GAME_ENTITY_ALIEN2,
-    GAME_ENTITY_ALIEN3,
-    GAME_ENTITY_BONUS_SHIP,
-    GAME_ENTITY_SMALL_BONUS_SHIP,
-    GAME_ENTITY_SHOT,
-    GAME_ENTITY_SHIELD_PIECE,
-    GAME_ENTITY_EXPLOSION,
-    GAME_ENTITY_SHIELD_GROUP,
-    GAME_ENTITY_UNKNOWN,
-    NUM_GAME_ENTITY_TYPES,
-};
 
 #define NUM_GAME_ENTITY_IMAGES     8
 
