@@ -53,14 +53,14 @@ namespace Graphics {
     class Screen {
     private:
         // A list of scheduled blits.
-        struct blit {
 #ifndef __AVR__
+        struct blit {
             int type;
             int image_index;
             int x;
             int y;
-#endif
         } blits[max_updates];
+#endif
         int num_blits;
         Images* image_lib;
 
