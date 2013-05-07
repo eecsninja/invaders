@@ -108,7 +108,8 @@ namespace Game {
 
     void Game::game_control()
     {
-        printf("Memory needed for game data: %u bytes\n", sizeof(GameData));
+        printf("Memory needed for game data: %u bytes\n",
+               sizeof(GameData) + sizeof(Game));
         printf("Memory needed for one game entity: %u bytes\n",
                sizeof(GameEntity));
         printf("Memory needed for game entity type properties: %u bytes\n",
