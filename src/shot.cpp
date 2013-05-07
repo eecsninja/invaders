@@ -45,10 +45,10 @@ namespace GameEntities {
         int dy = speed;
         y += INT_TO_FIXED(delta * dy) / 1000;
 
-        if (y_int() < -100) {
+        if (y_int() < -properties()->h) {
             deactivate();
         }
-        if (y_int() > 575) {
+        if (y_int() > screen_h) {
             deactivate();
         }
     }
