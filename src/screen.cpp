@@ -138,8 +138,17 @@ namespace Graphics {
             printf("Allocated %u sprites starting at %u for object type %d\n",
                    num_objects_of_type, sprite_index, type);
 
-            // Initialize each sprite's color key and data offset.
+            if (num_objects_of_type == 0)
+                continue;
+
+            const GameEntities::GameEntityTypeProperties* properties =
+                GameEntities::GameEntity::get_type_property(type);
+
+            // Initialize each sprite's dimensions, color key, and data offset.
             for (int i = 0; i < num_objects_of_type; ++i) {
+                CC_Sprite_SetRegister(sprite_index + i, SPRITE_CTRL1,
+                                      (properties->sprite_w << SPRITE_HSIZE_0) |
+                                      (properties->sprite_h << SPRITE_VSIZE_0));
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_COLOR_KEY,
                                       DEFAULT_COLOR_KEY);
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_DATA_OFFSET,

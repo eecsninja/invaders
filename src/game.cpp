@@ -110,27 +110,6 @@ namespace Game {
         printf("Memory needed for game entity type properties: %u bytes\n",
                sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
 
-        {
-            // Allocate sprites for each type of entity.
-            // Do this in a block of its own so the memory can be freed after.
-            int num_objects_per_type[NUM_GAME_ENTITY_TYPES];
-            memset(num_objects_per_type, 0, sizeof(num_objects_per_type));
-            num_objects_per_type[GAME_ENTITY_PLAYER] = 1;
-            num_objects_per_type[GAME_ENTITY_ALIEN]
-                = 2 * ALIEN_ARRAY_WIDTH;
-            num_objects_per_type[GAME_ENTITY_ALIEN2]
-                = 2 * ALIEN_ARRAY_WIDTH;
-            num_objects_per_type[GAME_ENTITY_ALIEN3]
-                = ALIEN_ARRAY_WIDTH;
-            num_objects_per_type[GAME_ENTITY_BONUS_SHIP] = 1;
-            num_objects_per_type[GAME_ENTITY_SMALL_BONUS_SHIP] = 1;
-            num_objects_per_type[GAME_ENTITY_SHOT]
-                = num_player_shots + MAX_NUM_ALIEN_SHOTS;
-            num_objects_per_type[GAME_ENTITY_SHIELD_PIECE] = 0;
-            num_objects_per_type[GAME_ENTITY_EXPLOSION] = num_explosions;
-            screen.allocate_sprites(num_objects_per_type);
-        }
-
         // Define arrays statically, so they can be freed when the game loop exits.
         GameData data;
 
@@ -268,6 +247,9 @@ namespace Game {
                 prop.coll_w = int (PLAYER_WIDTH * 0.9);
                 prop.coll_h = int (PLAYER_HEIGHT * 0.8);
                 prop.right_limit = screen_w - PLAYER_WIDTH;
+
+                prop.sprite_w = PLAYER_SPRITE_WIDTH;
+                prop.sprite_h = PLAYER_SPRITE_HEIGHT;
                 break;
 
             case GAME_ENTITY_ALIEN:
@@ -286,6 +268,9 @@ namespace Game {
                 prop.h = ALIEN_HEIGHT;
                 prop.coll_w = ALIEN_WIDTH;
                 prop.coll_h = int (ALIEN_HEIGHT * 0.8);
+
+                prop.sprite_w = ALIEN_SPRITE_WIDTH;
+                prop.sprite_h = ALIEN_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_ALIEN2:
                 prop.images[0] = 0;
@@ -303,6 +288,9 @@ namespace Game {
                 prop.h = ALIEN_HEIGHT;
                 prop.coll_w = ALIEN_WIDTH;
                 prop.coll_h = int (ALIEN_HEIGHT * 0.8);
+
+                prop.sprite_w = ALIEN_SPRITE_WIDTH;
+                prop.sprite_h = ALIEN_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_ALIEN3:
                 prop.images[0] = 0;
@@ -322,6 +310,8 @@ namespace Game {
                 prop.coll_w = int (ALIEN_WIDTH * 0.8);
                 prop.coll_h = int (ALIEN_HEIGHT * 0.8);
 
+                prop.sprite_w = ALIEN_SPRITE_WIDTH;
+                prop.sprite_h = ALIEN_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_BONUS_SHIP:
                 prop.images[0] = 0;
@@ -332,6 +322,9 @@ namespace Game {
                 prop.w = BONUS_SHIP_WIDTH;
                 prop.coll_w = int (BONUS_SHIP_WIDTH * 0.9);
                 prop.coll_h = prop.h = BONUS_SHIP_HEIGHT;
+
+                prop.sprite_w = BONUS_SHIP_SPRITE_WIDTH;
+                prop.sprite_h = BONUS_SHIP_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_SMALL_BONUS_SHIP:
                 prop.images[0] = 0;
@@ -342,6 +335,9 @@ namespace Game {
                 prop.w = SMALL_BONUS_SHIP_WIDTH;
                 prop.coll_w = int (SMALL_BONUS_SHIP_WIDTH * 0.9);
                 prop.coll_h = prop.h = SMALL_BONUS_SHIP_HEIGHT;
+
+                prop.sprite_w = SMALL_BONUS_SHIP_SPRITE_WIDTH;
+                prop.sprite_h = SMALL_BONUS_SHIP_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_SHOT:
                 prop.images[0] = 0;
@@ -350,6 +346,8 @@ namespace Game {
                 prop.h = SHOT_HEIGHT;
                 prop.coll_h = int (SHOT_HEIGHT * 0.7);
 
+                prop.sprite_w = SHOT_SPRITE_WIDTH;
+                prop.sprite_h = SHOT_SPRITE_HEIGHT;
                 break;
             case GAME_ENTITY_SHIELD_PIECE:
                 prop.images[0] = 0;
@@ -360,6 +358,8 @@ namespace Game {
                 break;
             case GAME_ENTITY_EXPLOSION:
                 prop.images[0] = 0;
+                prop.sprite_w = EXPLOSION_SPRITE_SIZE;
+                prop.sprite_h = EXPLOSION_SPRITE_SIZE;
                 break;
             case GAME_ENTITY_SHIELD_GROUP:
                 prop.w = prop.coll_w = SHIELD_GROUP_WIDTH * SHIELD_PIECE_SIZE;
@@ -374,6 +374,21 @@ namespace Game {
 
             GameEntity::set_type_property(type, prop);
         }
+
+        // Allocate sprites for each type of entity.
+        int num_objects_per_type[NUM_GAME_ENTITY_TYPES];
+        memset(num_objects_per_type, 0, sizeof(num_objects_per_type));
+        num_objects_per_type[GAME_ENTITY_PLAYER] = 1;
+        num_objects_per_type[GAME_ENTITY_ALIEN] = 2 * ALIEN_ARRAY_WIDTH;
+        num_objects_per_type[GAME_ENTITY_ALIEN2] = 2 * ALIEN_ARRAY_WIDTH;
+        num_objects_per_type[GAME_ENTITY_ALIEN3] = ALIEN_ARRAY_WIDTH;
+        num_objects_per_type[GAME_ENTITY_BONUS_SHIP] = 1;
+        num_objects_per_type[GAME_ENTITY_SMALL_BONUS_SHIP] = 1;
+        num_objects_per_type[GAME_ENTITY_SHOT]
+            = num_player_shots + MAX_NUM_ALIEN_SHOTS;
+        num_objects_per_type[GAME_ENTITY_SHIELD_PIECE] = 0;
+        num_objects_per_type[GAME_ENTITY_EXPLOSION] = num_explosions;
+        screen.allocate_sprites(num_objects_per_type);
 
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
