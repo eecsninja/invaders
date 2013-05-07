@@ -142,7 +142,7 @@ namespace Game {
         wave = score = 0;
         next_free_guy = free_guy_val;
         aliens_landed = false;
-        current_alien_speed = 80;
+        current_alien_speed = ALIEN_BASE_SPEED;
         player_life = 3;
 
         init_wave();
@@ -428,7 +428,7 @@ namespace Game {
                 launch_delay[i] = (gen1_4());
             }
             alien_shot_delay = 375;
-            current_alien_speed += 5;
+            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
             num_alien_shots = 17;
             alien_odd_range = 9;
             break;
@@ -439,7 +439,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 350;
-            current_alien_speed += 5;
+            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -450,7 +450,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 325;
-            current_alien_speed += 5;
+            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -461,7 +461,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            current_alien_speed += 5;
+            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
             num_alien_shots = 21;
             alien_odd_range = 7;
             break;
@@ -472,7 +472,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            current_alien_speed += 5;
+            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
             num_alien_shots = 22;
             alien_odd_range = 6;
             break;
@@ -488,7 +488,7 @@ namespace Game {
                 if (num_alien_shots > MAX_NUM_ALIEN_SHOTS)
                     num_alien_shots = MAX_NUM_ALIEN_SHOTS;
             }
-            current_alien_speed += 3;
+            current_alien_speed += ALIEN_HIGH_WAVE_SPEED_INCREASE;
             alien_odd_range = 6;
             break;
         }

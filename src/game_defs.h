@@ -156,11 +156,17 @@
     #define bonus_speed                                80
     #define shot_speed                               -120
     #define alien_shot_speed                           80
+    #define ALIEN_BASE_SPEED                           32
+    #define ALIEN_WAVE_SPEED_INCREASE                   2
+    #define ALIEN_HIGH_WAVE_SPEED_INCREASE              1
 #else
     #define player_speed                              300
     #define bonus_speed                               200
     #define shot_speed                               -300
     #define alien_shot_speed                          200
+    #define ALIEN_BASE_SPEED                           80
+    #define ALIEN_WAVE_SPEED_INCREASE                   5
+    #define ALIEN_HIGH_WAVE_SPEED_INCREASE              3
 #endif  // defined (__AVR__)
 
 // Initial bonus ship delay in ms.
