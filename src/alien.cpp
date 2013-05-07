@@ -30,7 +30,7 @@
 
 */
 
-#include "alien.h"
+#include "game_entity.h"
 
 #define NUM_ALIEN_IMAGES     6
 

@@ -30,7 +30,7 @@
 
 */
 
-#include "bonus_ship.h"
+#include "game_entity.h"
 
 #define NUM_BONUS_SHIP_IMAGES     2
 

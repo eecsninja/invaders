@@ -30,7 +30,7 @@
 
 */
 
-#include "shot.h"
+#include "game_entity.h"
 
 namespace GameEntities {
 

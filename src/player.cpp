@@ -30,7 +30,7 @@
 
 */
 
-#include "player.h"
+#include "game_entity.h"
 
 namespace GameEntities {
 

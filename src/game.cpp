@@ -32,15 +32,10 @@
 
 #include "game.h"
 
-#include "alien.h"
-#include "bonus_ship.h"
-#include "explosion.h"
 #include "game_defs.h"
-#include "player.h"
+#include "game_entity.h"
 #include "rand_num_gen.h"
 #include "screen.h"
-#include "shield_piece.h"
-#include "shot.h"
 #include "system.h"
 
 extern const char* datadir;
