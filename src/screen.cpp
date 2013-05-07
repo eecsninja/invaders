@@ -191,7 +191,9 @@ namespace Graphics {
 
         uint16_t offset = image_lib->get_image_offset(type, image_index);
         uint16_t sprite_index = sprite_index_bases[type] + index;
-        CC_Sprite_SetRegister(sprite_index, SPRITE_CTRL0, object->is_alive());
+        CC_Sprite_SetRegister(sprite_index, SPRITE_CTRL0,
+                              object->is_alive() |
+                              (1 << SPRITE_ENABLE_TRANSP));
         CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_X, x);
         CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_Y, y);
 #endif  // defined (__AVR__)
