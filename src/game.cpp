@@ -95,8 +95,16 @@ namespace {
     }
 
     int increase_speed(int speed, fixed increase) {
-        return FIXED_TO_INT(speed * increase);
-    }
+        int new_speed = FIXED_TO_INT(speed * increase);
+        if (new_speed != speed || speed == 0)
+            return new_speed;
+        // If the increase was so small that speed was not updated, inc/dec the
+        // speed by 1 so it is still updated.
+        if (speed > 0)
+            return speed + 1;
+        else
+            return speed - 1;
+     }
 }
 
 namespace Game {
