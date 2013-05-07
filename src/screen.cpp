@@ -177,7 +177,22 @@ namespace Graphics {
     }
 
     void Screen::update_sprite(const GameEntities::GameEntity* object) {
-        // TODO: add code here.
+#ifdef __AVR__
+        uint8_t type = object->get_type();
+        if (num_sprites_per_type[type] == 0)
+            return;
+        uint8_t index = object->get_index();
+
+        uint8_t image_index = object->get_current_image();
+        int x = object->get_x();
+        int y = object->get_y();
+
+        uint16_t offset = image_lib->get_image_offset(type, image_index);
+        uint16_t sprite_index = sprite_index_bases[type] + index;
+        CC_Sprite_SetRegister(sprite_index, SPRITE_CTRL0, object->is_alive());
+        CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_X, x);
+        CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_Y, y);
+#endif  // defined (__AVR__)
     }
 
 }
