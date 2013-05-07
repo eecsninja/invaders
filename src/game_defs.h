@@ -67,13 +67,13 @@
 #define NUM_SHIELDS   (NUM_SHIELD_GROUPS * SHIELD_GROUP_WIDTH * SHIELD_GROUP_HEIGHT)
 
 #ifdef __AVR__
-    #define SHIELD_X_OFFSET             44
+    #define SHIELD_X_OFFSET             40
     #define SHIELD_Y_OFFSET            166
-    #define SHIELD_GROUP_X_SPACING      92
+    #define SHIELD_GROUP_X_SPACING      96
 #else
-    #define SHIELD_X_OFFSET            110
+    #define SHIELD_X_OFFSET            100
     #define SHIELD_Y_OFFSET            415
-    #define SHIELD_GROUP_X_SPACING     230
+    #define SHIELD_GROUP_X_SPACING     240
 #endif
 
 
