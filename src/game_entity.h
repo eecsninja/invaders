@@ -36,6 +36,7 @@
 #include <assert.h>
 
 #include "game.h"
+#include "game_defs.h"
 #include "game_entity_types.h"
 #include "screen.h"
 
@@ -146,7 +147,10 @@ namespace GameEntities {
         }
         void set_x_velocity(int vel) { speed = vel; }
         // switch direction and move down the screen
-        void do_alien_logic() { speed = -speed; y += INT_TO_FIXED(10); }
+        void do_alien_logic() {
+            speed = -speed;
+            y += INT_TO_FIXED(ALIEN_Y_MOVEMENT);
+        }
         uint8_t get_index() const { return index; }
         int get_fire_chance() const { return fire_chance; }
         // Shot

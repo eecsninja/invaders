@@ -48,11 +48,13 @@
     #define ALIEN_BASE_Y         36
     #define ALIEN_STEP_X         20
     #define ALIEN_STEP_Y         14
+    #define ALIEN_Y_MOVEMENT      4
 #else
     #define ALIEN_BASE_X        100
     #define ALIEN_BASE_Y         90
     #define ALIEN_STEP_X         50
     #define ALIEN_STEP_Y         35
+    #define ALIEN_Y_MOVEMENT     10
 #endif
 
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
