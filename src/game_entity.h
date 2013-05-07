@@ -82,15 +82,17 @@ namespace GameEntities {
         fixed x, y;   // location
         uint16_t frame_time_count; // control in place animation speed
 
-        // Used by Aliens to determine if and when to fire.  Max value is 10.
-        uint8_t fire_chance:4;
         // The index of entities within their respective arrays.
         uint8_t index;
+
+        // Used by Aliens to determine if and when to fire.  Max value is 10.
+        uint8_t fire_chance:4;
 
         // Entity state flags.
         bool alive:1;
         bool active:1;
         bool hit:1;       // used by Shot to avoid hitting more than one object
+        bool padding:1;
 
         uint8_t image_num:3;  // Index of the current animation image.
         uint8_t type:4;       // Must have enough bits for NUM_GAME_ENTITY_TYPES-1.
