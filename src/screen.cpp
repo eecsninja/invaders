@@ -55,6 +55,7 @@ namespace Graphics {
                        image_lib(NULL) {}
 
     bool Screen::init() {
+        memset(num_sprites_per_type, 0, sizeof(num_sprites_per_type));
         memset(sprite_index_bases, 0, sizeof(sprite_index_bases));
 #ifdef __AVR__
         CC_Init();
