@@ -123,11 +123,20 @@ namespace Graphics {
                                        size_copied / sizeof(uint32_t) + offset);
                 ++offset;
                 // If the buffer fills up, copy it to VRAM.
+                bool do_copy = false;
+                uint16_t copy_size;
                 if (offset == BUFFER_SIZE) {
-                    CC_SetVRAMData(buffer,
-                                   total_data_copied + size_copied,
-                                   sizeof(buffer));
-                    size_copied += sizeof(buffer);
+                    do_copy = true;
+                    copy_size = sizeof(buffer);
+                } else if (size_copied + offset * sizeof(uint32_t) >=
+                           entry.size) {
+                    do_copy = true;
+                    copy_size = offset * sizeof(uint32_t);
+                }
+                if (do_copy) {
+                    CC_SetVRAMData(buffer, total_data_copied + size_copied,
+                                   copy_size);
+                    size_copied += copy_size;
                     offset = 0;
                 }
             }
