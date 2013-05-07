@@ -109,6 +109,10 @@ namespace Graphics {
         // of each type of object will be drawn.
         void allocate_sprites(const int* num_objects_per_type);
 
+        // Loads palette data.
+        // TODO: support multiple palettes.
+        void set_palette_data(const void* palette_data, uint16_t size);
+
     private:
         // Updates a sprite in the sprite table given an updated entity object.
         void update_sprite(const GameEntities::GameEntity* object);

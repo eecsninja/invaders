@@ -35,6 +35,8 @@
 #include <stdio.h>
 
 #ifdef __AVR__
+#include <avr/pgmspace.h>
+
 #include "cc_core.h"
 #include "registers.h"
 #include "sprite_registers.h"
@@ -150,6 +152,27 @@ namespace Graphics {
             fprintf(stderr, "Attempted to allocate too many sprites: %d\n",
                     sprite_index);
         }
+#endif  // defined (__AVR__)
+    }
+
+    void Screen::set_palette_data(const void* palette_data, uint16_t size) {
+#ifdef __AVR__
+#define BUFFER_SIZE       32
+        uint32_t buffer[BUFFER_SIZE];
+        const uint32_t* data32 = (const uint32_t*) palette_data;
+        uint16_t size_copied = 0;
+        uint16_t offset = 0;
+        while (size_copied + offset < size) {
+            buffer[offset] = pgm_read_dword_far(data32 + size_copied + offset);
+            ++offset;
+            // If the buffer fills up, copy it to VRAM.
+            if (offset == BUFFER_SIZE) {
+                CC_SetPaletteData(buffer, 0, size_copied, sizeof(buffer));
+                size_copied += sizeof(buffer);
+                offset = 0;
+            }
+        }
+#undef BUFFER_SIZE
 #endif  // defined (__AVR__)
     }
 

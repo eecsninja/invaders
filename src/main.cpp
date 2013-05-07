@@ -64,6 +64,10 @@ static const ImageListEntry image_list[] = {
     ImageListEntry(0, 0),       // Terminate the list with NULL.
 };
 
+// Palette data stored in program memory.
+static const void* palette_base = palette_data32;
+static const uint16_t palette_size = PALETTE_DATA_SIZE;
+
 #else
 
 // a list of image files are loaded into a map and keyed by filename
@@ -115,6 +119,10 @@ int main(int argc, char* argv[])
     if (!images.load_images(image_list))
         return -3;
     screen.set_image_lib(&images);
+
+#ifdef __AVR__
+    screen.set_palette_data(palette_base, palette_size);
+#endif
 
     Game::Game game(&screen);
     game.game_control();
