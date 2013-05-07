@@ -752,6 +752,7 @@ namespace Game {
             }
 
             // draw everything
+            screen.begin_update();
             if (player->is_active())
                 player->draw();
             if (bonus->is_active())
@@ -799,6 +800,8 @@ namespace Game {
         player->init_y(player_top);
         player->activate();
         player_shot_delay = 225;
+
+        screen.begin_update();
         player->cleanup_draw();
         if (bonus->is_active()) {
             bonus->cleanup_draw();
@@ -817,6 +820,7 @@ namespace Game {
     }
     void Game::wave_cleanup()
     {
+        screen.begin_update();
         // redraw all that should remain
         if (player->is_active())
             player->cleanup_draw();

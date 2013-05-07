@@ -109,6 +109,9 @@ namespace Graphics {
         // Perform all queued blits and reset the blit counter.
         void flush_blits();
 
+        // Wait for the screen to be ready for updates.
+        void begin_update();
+
         // Redraw the entire screen, including all the scheduled blits.
         void update();
 
