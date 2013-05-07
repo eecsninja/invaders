@@ -41,9 +41,16 @@
 
 #include "game_entity_types.h"
 
-#define screen_w      800
-#define screen_h      600
-#define side_padding    5
+#ifdef __AVR__
+    #define screen_w      320
+    #define screen_h      240
+    #define side_padding    2
+#else
+    #define screen_w      800
+    #define screen_h      600
+    #define side_padding    5
+#endif
+
 #define max_updates   360
 
 namespace GameEntities {
