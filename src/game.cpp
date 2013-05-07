@@ -507,9 +507,6 @@ namespace Game {
         event_counter.reset();
 #endif
         while (1) {
-#ifdef EVENT_COUNTER
-            event_counter.new_loop();
-#endif
             // used to calculate how far the entities should move this loop
             // delta is the number of milliseconds the last loop iteration took
             // movement is a function of delta
@@ -800,6 +797,7 @@ namespace Game {
                 event_counter.num_loops % EVENT_COUNTER_LOOP_LIMIT == 0) {
                 event_counter.report();
             }
+            event_counter.new_loop();
 #endif
         }
     }

@@ -41,6 +41,7 @@
 #include "screen.h"
 #include "sound.h"
 #include "status.h"
+#include "system.h"
 #include "ui.h"
 
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
@@ -70,6 +71,8 @@ struct EventCounter {
     uint32_t num_duration_calls;
     uint32_t num_movement_calls;
     uint32_t num_loops;
+    uint32_t start_time;
+    uint32_t latest_time;
 
     ~EventCounter() {
       report();
@@ -77,6 +80,7 @@ struct EventCounter {
 
     void reset() {
         memset(this, 0, sizeof(*this));
+        latest_time = start_time = System::get_ticks();
     }
 
     void do_collision_check() {
@@ -93,6 +97,7 @@ struct EventCounter {
 
     void new_loop() {
         ++num_loops;
+        latest_time = System::get_ticks();
     }
 
     void report() {
@@ -102,6 +107,8 @@ struct EventCounter {
         printf("collision checks: %d\n", num_collision_checks / num_loops);
         printf("duration calls: %d\n", num_duration_calls / num_loops);
         printf("movement calls: %d\n", num_movement_calls / num_loops);
+        printf("loop time in ticks: %d\n",
+               (latest_time - start_time) / num_loops);
     }
 };
 #endif
