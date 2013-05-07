@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <avr/pgmspace.h>
-const uint32_t alien_1_bmp_pal_data32[] PROGMEM = {
+const uint32_t palette_data32[] PROGMEM = {
 	0x0000,0x40003,0x0500,0x0005,0x70106,0x0406,0x80000,0xf0000,
 	0x80107,0x0d00,0x0008,0x060a,0x1000d,0xa0208,0xe020c,0x080c,
 	0x100000,0x140000,0x1f0000,0x10030e,0x1000,0x1500,0x1800,0x1e00,
@@ -34,6 +34,6 @@ const uint32_t alien_1_bmp_pal_data32[] PROGMEM = {
 	0xc528a6,0xca28aa,0xcd29ad,0xd02aaf,0xd12ab0,0xd42bb2,0xd62bb4,0xd92cb6,
 	0xdc2cb9,0xe12dbe,0xe72ec2,0xe82fc3,0xea2fc4,0xec30c6,0xef30c9,0xffff00,
 };
-uint8_t* alien_1_bmp_pal_data8 = (uint8_t*) alien_1_bmp_pal_data32;
-uint16_t* alien_1_bmp_pal_data16 = (uint16_t*) alien_1_bmp_pal_data32;
-const int ALIEN_1_BMP_PAL_DATA_SIZE = 1024;
+uint8_t* palette_data8 = (uint8_t*) palette_data32;
+uint16_t* palette_data16 = (uint16_t*) palette_data32;
+const int PALETTE_DATA_SIZE = 1024;
