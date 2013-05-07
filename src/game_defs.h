@@ -33,6 +33,10 @@
 #ifndef GAME_DEFS_H
 #define GAME_DEFS_H
 
+#ifdef __AVR__
+#include "cc_base.h"
+#endif
+
 #include "screen.h"
 
 // The formation of aliens.
@@ -84,6 +88,21 @@
     #define SHOT_WIDTH                3
     #define SHOT_HEIGHT               8
     #define SHIELD_PIECE_SIZE         8
+
+    // These sprite dimensions are powers of two that contain the above image
+    // size definitions.
+    // TODO: use a function or macro to compute these from the image sizes.
+    #define PLAYER_SPRITE_WIDTH                CC_DIMENSION_32
+    #define PLAYER_SPRITE_HEIGHT               CC_DIMENSION_16
+    #define ALIEN_SPRITE_WIDTH                 CC_DIMENSION_32
+    #define ALIEN_SPRITE_HEIGHT                CC_DIMENSION_16
+    #define BONUS_SHIP_SPRITE_WIDTH            CC_DIMENSION_32
+    #define BONUS_SHIP_SPRITE_HEIGHT           CC_DIMENSION_16
+    #define SMALL_BONUS_SHIP_SPRITE_WIDTH      CC_DIMENSION_32
+    #define SMALL_BONUS_SHIP_SPRITE_HEIGHT      CC_DIMENSION_8
+    #define SHOT_SPRITE_WIDTH                   CC_DIMENSION_8
+    #define SHOT_SPRITE_HEIGHT                  CC_DIMENSION_8
+    #define EXPLOSION_SPRITE_SIZE              CC_DIMENSION_16
 #else
     // Taken from original image file dimensions.
     #define PLAYER_WIDTH             43
@@ -97,6 +116,19 @@
     #define SHOT_WIDTH                5
     #define SHOT_HEIGHT              16
     #define SHIELD_PIECE_SIZE        20
+
+    // Placeholder definitions so we don't have to litter game.cpp with #ifdefs
+    #define PLAYER_SPRITE_WIDTH                0
+    #define PLAYER_SPRITE_HEIGHT               0
+    #define ALIEN_SPRITE_WIDTH                 0
+    #define ALIEN_SPRITE_HEIGHT                0
+    #define BONUS_SHIP_SPRITE_WIDTH            0
+    #define BONUS_SHIP_SPRITE_HEIGHT           0
+    #define SMALL_BONUS_SHIP_SPRITE_WIDTH      0
+    #define SMALL_BONUS_SHIP_SPRITE_HEIGHT     0
+    #define SHOT_SPRITE_WIDTH                  0
+    #define SHOT_SPRITE_HEIGHT                 0
+    #define EXPLOSION_SPRITE_SIZE              0
 #endif  // defined (__AVR__)
 
 // Position definitions.

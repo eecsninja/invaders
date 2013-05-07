@@ -55,6 +55,11 @@ namespace GameEntities {
         // These should be <= 255.
         uint8_t w, h;
 
+        // Sprite dimensions.  Not actual dimension values, but enums as defined
+        // in cc_base.h.
+        uint8_t sprite_w:2;
+        uint8_t sprite_h:2;
+
         // heights, widths, and coords used for reduced bounding box collision detection
         // These should be <= 255 and nonnegative.
         uint8_t coll_w, coll_h, coll_x_offset, coll_y_offset;
@@ -99,6 +104,9 @@ namespace GameEntities {
         static void set_type_property(int type,
                                       const GameEntityTypeProperties& prop) {
             type_properties[type] = prop;
+        }
+        static const GameEntityTypeProperties* get_type_property(int type) {
+            return &type_properties[type];
         }
         GameEntityTypeProperties* properties() const {
             return &type_properties[type];
