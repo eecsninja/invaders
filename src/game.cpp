@@ -94,9 +94,13 @@ namespace {
                 (i * SHIELD_PIECE_SIZE);
         int y = SHIELD_Y_OFFSET + SHIELD_PIECE_SIZE * k;
 
-        shield->ShieldPiece_init(index, x, y, 0, 0, true);
+        shield->ShieldPiece_init(index, x, y, true);
         if (!alive)
           shield->kill();
+    }
+
+    int increase_speed(int speed, fixed increase) {
+        return FIXED_TO_INT(speed * increase);
     }
 }
 
@@ -142,7 +146,7 @@ namespace Game {
         wave = score = 0;
         next_free_guy = free_guy_val;
         aliens_landed = false;
-        alien_speed = 80;
+        current_alien_speed = 80;
         player_life = 3;
 
         init_wave();
@@ -164,7 +168,7 @@ namespace Game {
         //status.blit_lives(player_life);
         //status.blit_player_ships(player_life, images.get_image_index("ship.png"));
     }
-    void Game::init_aliens(int rand_max, int speed)
+    void Game::init_aliens(int rand_max)
     {
         alien_count = 0;
         // create a block of aliens (5 rows, by 12 columns), 800x600 res
@@ -196,25 +200,25 @@ namespace Game {
                     break;
                 }
                 aliens[alien_count].Alien_init(type, alien_count, alien_x,
-                                               alien_y, -speed, 0, active,
-                                               RAND(rand_max));
+                                               alien_y, active, RAND(rand_max));
                 ++alien_count;
             }
         }
         // create alien shots
         for (int i = 0; i < num_alien_shots; ++i) {
-            alien_shots[i].Shot_init(num_player_shots + i, 0, 0, 0,
-                                     alien_shot_speed, false);
+            alien_shots[i].Shot_init(num_player_shots + i, 0, 0, false);
         }
     }
     void Game::factory()
     {
         // create the player ship and place it in the center of the screen
-        player->Player_init(player_center, player_top, 0, 0, true);
+        player->Player_init(player_center, player_top, true);
+        current_player_speed = 0;
 
         // create bonus ship and small bonus ship
-        bonus->BonusShip_init(false, 0, 0, 0, 0, false);
-        sbonus->BonusShip_init(true, 0, 0, 0, 0, false);
+        bonus->BonusShip_init(false, 0, 0, false);
+        sbonus->BonusShip_init(true, 0, 0, false);
+        current_bonus_speed = 0;
 
         // create the shields
         int num_shields = 0;
@@ -232,7 +236,7 @@ namespace Game {
 
             shield_groups[j].init(GAME_ENTITY_SHIELD_GROUP, j,
                                   j * SHIELD_GROUP_X_SPACING + SHIELD_X_OFFSET,
-                                  SHIELD_Y_OFFSET, 0, 0, true);
+                                  SHIELD_Y_OFFSET, true);
         }
         for (int type = 0; type < NUM_GAME_ENTITY_TYPES; ++type) {
             GameEntities::GameEntityTypeProperties prop;
@@ -392,10 +396,10 @@ namespace Game {
 
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
-            explosions[i].Explosion_init(i, 0, 0, 0, 0, false);
+            explosions[i].Explosion_init(i, 0, 0, false);
         }
         for (int i = 0; i < num_player_shots; ++i) {
-            player_shots[i].Shot_init(i, 0, 0, 0, shot_speed, false);
+            player_shots[i].Shot_init(i, 0, 0, false);
         }
 
         player_shot_delay = 225;
@@ -419,7 +423,7 @@ namespace Game {
                 launch_delay[i] = (gen1_4());
             }
             alien_shot_delay = 375;
-            alien_speed += 5;
+            current_alien_speed += 5;
             num_alien_shots = 17;
             alien_odd_range = 9;
             break;
@@ -430,7 +434,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 350;
-            alien_speed += 5;
+            current_alien_speed += 5;
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -441,7 +445,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 325;
-            alien_speed += 5;
+            current_alien_speed += 5;
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -452,7 +456,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            alien_speed += 5;
+            current_alien_speed += 5;
             num_alien_shots = 21;
             alien_odd_range = 7;
             break;
@@ -463,7 +467,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            alien_speed += 5;
+            current_alien_speed += 5;
             num_alien_shots = 22;
             alien_odd_range = 6;
             break;
@@ -479,11 +483,11 @@ namespace Game {
                 if (num_alien_shots > MAX_NUM_ALIEN_SHOTS)
                     num_alien_shots = MAX_NUM_ALIEN_SHOTS;
             }
-            alien_speed += 3;
+            current_alien_speed += 3;
             alien_odd_range = 6;
             break;
         }
-        init_aliens(alien_odd_range, alien_speed);
+        init_aliens(alien_odd_range);
 #ifdef FRAME_COUNTER
         printf("wave %d\n", wave + 1);
 #endif
@@ -546,12 +550,12 @@ namespace Game {
 
 
             // set player direction based on key input
-            player->set_x_velocity(0);
+            current_player_speed = 0;
             if (keys.left && !keys.right) {
-                player->set_x_velocity(-player_speed);
+                current_player_speed = -player_speed;
             }
             if (keys.right && !keys.left) {
-                player->set_x_velocity(player_speed);
+                current_player_speed = player_speed;
             }
 
             // alien behavior
@@ -560,31 +564,31 @@ namespace Game {
 
             // move everything
             if (player->is_active())
-                player->movement(delta);
+                player->movement(delta, current_player_speed);
             if (bonus->is_active()) {
                 //sound.play_bonus();
-                bonus->movement(delta);
+                bonus->movement(delta, current_bonus_speed);
             } else {
                 //sound.halt_bonus();
             }
             for (int i = 0; i < NUM_ALIENS; ++i) {
                 if (aliens[i].is_alive())
-                    aliens[i].movement(delta);
+                    aliens[i].movement(delta, current_alien_speed);
             }
             for (int i = 0; i < num_player_shots; ++i) {
                 if (player_shots[i].is_active()) {
-                    player_shots[i].movement(delta);
+                    player_shots[i].movement(delta, shot_speed);
                 }
             }
             for (int i = 0; i < num_alien_shots; ++i) {
                 if (alien_shots[i].is_active()) {
-                    alien_shots[i].movement(delta);
+                    alien_shots[i].movement(delta, alien_shot_speed);
                 }
             }
             // explosion duration
             for (int i = 0; i < num_explosions; ++i) {
                 if (explosions[i].is_active()) {
-                    explosions[i].duration(delta);
+                    explosions[i].duration(delta, 0);
                 }
             }
 
@@ -745,6 +749,7 @@ namespace Game {
 
             // run alien logic if neccessary
             if (logic_this_loop) {
+                current_alien_speed = -current_alien_speed;
                 for (int i = 0; i < NUM_ALIENS; ++i) {
                     aliens[i].do_alien_logic();
                 }
@@ -881,12 +886,12 @@ namespace Game {
         if (direction[rand_list_count] == 1) {
             bonus->init_x(0);
             bonus->init_y(top);
-            bonus->set_x_velocity(bonus_speed);
+            current_bonus_speed = bonus_speed;
             bonus->activate();
         } else {
             bonus->init_x(screen_w);
             bonus->init_y(top);
-            bonus->set_x_velocity(-bonus_speed);
+            current_bonus_speed = -bonus_speed;
             bonus->activate();
         }
         //sound.play_bonus();
@@ -978,21 +983,28 @@ namespace Game {
             if (alien->get_index() == index - ALIEN_ARRAY_WIDTH) {
                 alien->activate();
             }
-            alien->increase_x_speed(ALIEN_SPEED_BOOST);
+            current_alien_speed =
+               increase_speed(current_alien_speed, ALIEN_SPEED_BOOST);
             switch (alien_count) {
                 case 4:
-                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
+                    current_alien_speed =
+                        increase_speed(current_alien_speed,
+                                       ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 case 3:
                     //sound.halt_bg(alien_count);
                     break;
                 case 2:
-                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
+                    current_alien_speed =
+                        increase_speed(current_alien_speed,
+                                       ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 case 1:
-                    alien->increase_x_speed(ALIEN_SPEED_BOOST_EXTRA);
+                    current_alien_speed =
+                        increase_speed(current_alien_speed,
+                                       ALIEN_SPEED_BOOST_EXTRA);
                     //sound.halt_bg(alien_count);
                     break;
                 default:

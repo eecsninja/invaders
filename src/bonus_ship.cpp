@@ -36,14 +36,13 @@
 
 namespace GameEntities {
 
-    void GameEntity::BonusShip_init(bool is_small, int x, int y, int dx, int dy,
-                                    bool active)
+    void GameEntity::BonusShip_init(bool is_small, int x, int y, bool active)
     {
         init(is_small ? GAME_ENTITY_SMALL_BONUS_SHIP : GAME_ENTITY_BONUS_SHIP,
-             0, x, y, dx, dy, active);
+             0, x, y, active);
     }
 
-    void GameEntity::BonusShip_movement(int16_t delta)
+    void GameEntity::BonusShip_movement(int16_t delta, int speed)
     {
         // control in place animation
         frame_time_count += delta;

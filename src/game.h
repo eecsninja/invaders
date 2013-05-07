@@ -130,13 +130,14 @@ namespace Game {
         int* direction;
         int* bonus_select;
         int* launch_delay;
-        int alien_count, wave, player_life, alien_speed, alien_odd_range, num_alien_shots, num_entities_removed;
+        int alien_count, wave, player_life, alien_odd_range, num_alien_shots, num_entities_removed;
+        int current_player_speed, current_alien_speed, current_bonus_speed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
         uint32_t last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
         uint32_t player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;
         bool logic_this_loop, player_dead, wave_over, aliens_landed;
         void free_guy_check();
-        void init_aliens(int rand_max, int speed);
+        void init_aliens(int rand_max);
         void pause();
         bool collides_with_shield_group(GameEntities::GameEntity* object);
         bool no_player_shots_active();

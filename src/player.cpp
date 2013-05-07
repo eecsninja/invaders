@@ -34,12 +34,12 @@
 
 namespace GameEntities {
 
-    void GameEntity::Player_init (int x, int y, int dx, int dy, bool active)
+    void GameEntity::Player_init (int x, int y, bool active)
     {
-        init(GAME_ENTITY_PLAYER, 0, x, y, dx, dy, active);
+        init(GAME_ENTITY_PLAYER, 0, x, y, active);
     }
 
-    void GameEntity::Player_movement(int16_t delta)
+    void GameEntity::Player_movement(int16_t delta, int speed)
     {
         int dx = speed;
         // don't move off left hand side of the screen

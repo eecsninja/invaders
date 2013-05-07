@@ -41,16 +41,12 @@
 
 namespace GameEntities {
 
-    void GameEntity::init(int type, uint8_t index, int x, int y, int dx, int dy,
-                          bool active)
+    void GameEntity::init(int type, uint8_t index, int x, int y, bool active)
     {
         this->type = type;
         this->index = index;
         this->x = INT_TO_FIXED(x);
         this->y = INT_TO_FIXED(y);
-        if (dx != 0 && dy != 0)
-            fprintf(stderr, "Either dx or dy must be zero. type: %d\n", type);
-        this->speed = dx ? dx : dy;
         this->alive = true;
         this->active = active;
         this->frame_time_count = 0;
@@ -125,7 +121,7 @@ namespace GameEntities {
         other->deactivate();
         game->msg_bonus_ship_destroyed(this->properties()->points);
     }
-    void GameEntity::duration(int16_t delta)
+    void GameEntity::duration(int16_t delta, int speed)
     {
         // control explosion duration
         frame_time_count += delta;
@@ -137,23 +133,23 @@ namespace GameEntities {
         event_counter.do_duration_call();
 #endif
     }
-    void GameEntity::movement(int16_t delta)
+    void GameEntity::movement(int16_t delta, int speed)
     {
         switch(type) {
         case GAME_ENTITY_PLAYER:
-            Player_movement(delta);
+            Player_movement(delta, speed);
             break;
         case GAME_ENTITY_ALIEN:
         case GAME_ENTITY_ALIEN2:
         case GAME_ENTITY_ALIEN3:
-            Alien_movement(delta);
+            Alien_movement(delta, speed);
             break;
         case GAME_ENTITY_BONUS_SHIP:
         case GAME_ENTITY_SMALL_BONUS_SHIP:
-            BonusShip_movement(delta);
+            BonusShip_movement(delta, speed);
             break;
         case GAME_ENTITY_SHOT:
-            Shot_movement(delta);
+            Shot_movement(delta, speed);
             break;
         case GAME_ENTITY_UNKNOWN:
         case GAME_ENTITY_SHIELD_PIECE:
@@ -167,16 +163,14 @@ namespace GameEntities {
 #endif
     }
 
-    void GameEntity::Explosion_init(uint8_t index, int x, int y, int dx, int dy,
-                                    bool active)
+    void GameEntity::Explosion_init(uint8_t index, int x, int y, bool active)
     {
-        init(GAME_ENTITY_EXPLOSION, index, x, y, dx, dy, active);
+        init(GAME_ENTITY_EXPLOSION, index, x, y, active);
     }
 
-    void GameEntity::ShieldPiece_init(uint8_t index, int x, int y, int dx,
-                                      int dy, bool active)
+    void GameEntity::ShieldPiece_init(uint8_t index, int x, int y, bool active)
     {
-        init(GAME_ENTITY_SHIELD_PIECE, index, x, y, dx, dy, active);
+        init(GAME_ENTITY_SHIELD_PIECE, index, x, y, active);
     }
 
     Game::Game* GameEntity::game = NULL;

@@ -36,15 +36,15 @@
 
 namespace GameEntities {
 
-    void GameEntity::Alien_init(int type, uint8_t index, int x, int y, int dx,
-                                int dy, bool active, int chance)
+    void GameEntity::Alien_init(int type, uint8_t index, int x, int y,
+                                bool active, int chance)
     {
-        init(type, index, x, y, dx, dy, active);
+        init(type, index, x, y, active);
 
         fire_chance = chance;
     }
 
-    void GameEntity::Alien_movement(int16_t delta)
+    void GameEntity::Alien_movement(int16_t delta, int speed)
     {
         // control in place animation
         frame_time_count += delta;
