@@ -196,6 +196,7 @@ namespace Game {
                     active = false;
                     type = GAME_ENTITY_ALIEN2;
                     index = j;
+                    break;
                 case 1:
                     active = false;
                     type = GAME_ENTITY_ALIEN2;
@@ -881,7 +882,6 @@ namespace Game {
     }
     void Game::launch_bonus_ship()
     {
-#define top 60
         if (System::get_ticks() - last_bonus_launch < bonus_launch_delay) {
             return;
         }
@@ -894,12 +894,12 @@ namespace Game {
         }
         if (direction[rand_list_count] == 1) {
             bonus->init_x(0);
-            bonus->init_y(top);
+            bonus->init_y(BONUS_TOP);
             current_bonus_speed = bonus_speed;
             bonus->activate();
         } else {
             bonus->init_x(screen_w);
-            bonus->init_y(top);
+            bonus->init_y(BONUS_TOP);
             current_bonus_speed = -bonus_speed;
             bonus->activate();
         }
@@ -908,7 +908,6 @@ namespace Game {
         if (++rand_list_count == random_list_len) {
             rand_list_count = 0;
         }
-#undef top
     }
     void Game::alien_fire()
     {

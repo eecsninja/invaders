@@ -137,9 +137,11 @@
 #ifdef __AVR__
     #define PLAYER_BOTTOM_GAP                          14
     #define ALIEN_SHOT_GAP                              2
+    #define BONUS_TOP                                  24
 #else
     #define PLAYER_BOTTOM_GAP                          35
     #define ALIEN_SHOT_GAP                              5
+#define BONUS_TOP                                      60
 #endif
 #define player_center         ((screen_w - PLAYER_WIDTH) / 2)
 #define player_top            (screen_h - (PLAYER_HEIGHT + PLAYER_BOTTOM_GAP))
