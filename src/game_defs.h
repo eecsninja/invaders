@@ -39,10 +39,17 @@
 #define ALIEN_ARRAY_WIDTH    12
 #define ALIEN_ARRAY_HEIGHT    5
 #define NUM_ALIENS      (ALIEN_ARRAY_WIDTH * ALIEN_ARRAY_HEIGHT)
-#define ALIEN_BASE_X        100
-#define ALIEN_BASE_Y         90
-#define ALIEN_STEP_X         50
-#define ALIEN_STEP_Y         35
+#ifdef __AVR__
+    #define ALIEN_BASE_X         40
+    #define ALIEN_BASE_Y         36
+    #define ALIEN_STEP_X         20
+    #define ALIEN_STEP_Y         14
+#else
+    #define ALIEN_BASE_X        100
+    #define ALIEN_BASE_Y         90
+    #define ALIEN_STEP_X         50
+    #define ALIEN_STEP_Y         35
+#endif
 
 #define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
 #define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
@@ -51,37 +58,74 @@
 #define NUM_SHIELD_GROUPS            3
 #define SHIELD_GROUP_WIDTH           6
 #define SHIELD_GROUP_HEIGHT          4
-#define SHIELD_X_OFFSET            110
-#define SHIELD_Y_OFFSET            415
-#define SHIELD_GROUP_X_SPACING     230
-#define SHIELD_PIECE_SIZE           20  // shield height and width
 #define NUM_SHIELDS   (NUM_SHIELD_GROUPS * SHIELD_GROUP_WIDTH * SHIELD_GROUP_HEIGHT)
 
-// Taken from image file dimensions.
-#define PLAYER_WIDTH             43
-#define PLAYER_HEIGHT            25
-#define ALIEN_WIDTH              45
-#define ALIEN_HEIGHT             30
-#define BONUS_SHIP_WIDTH         60
-#define BONUS_SHIP_HEIGHT        26
-#define SMALL_BONUS_SHIP_WIDTH   45
-#define SMALL_BONUS_SHIP_HEIGHT  20
-#define SHOT_WIDTH                5
-#define SHOT_HEIGHT              16
+#ifdef __AVR__
+    #define SHIELD_X_OFFSET             44
+    #define SHIELD_Y_OFFSET            166
+    #define SHIELD_GROUP_X_SPACING      92
+#else
+    #define SHIELD_X_OFFSET            110
+    #define SHIELD_Y_OFFSET            415
+    #define SHIELD_GROUP_X_SPACING     230
+#endif
+
+
+#ifdef __AVR__
+    // Image dimensions scaled for embedded port.
+    #define PLAYER_WIDTH             18
+    #define PLAYER_HEIGHT            10
+    #define ALIEN_WIDTH              18
+    #define ALIEN_HEIGHT             12
+    #define BONUS_SHIP_WIDTH         24
+    #define BONUS_SHIP_HEIGHT        11
+    #define SMALL_BONUS_SHIP_WIDTH   18
+    #define SMALL_BONUS_SHIP_HEIGHT   8
+    #define SHOT_WIDTH                3
+    #define SHOT_HEIGHT               8
+    #define SHIELD_PIECE_SIZE         8
+#else
+    // Taken from original image file dimensions.
+    #define PLAYER_WIDTH             43
+    #define PLAYER_HEIGHT            25
+    #define ALIEN_WIDTH              45
+    #define ALIEN_HEIGHT             30
+    #define BONUS_SHIP_WIDTH         60
+    #define BONUS_SHIP_HEIGHT        26
+    #define SMALL_BONUS_SHIP_WIDTH   45
+    #define SMALL_BONUS_SHIP_HEIGHT  20
+    #define SHOT_WIDTH                5
+    #define SHOT_HEIGHT              16
+    #define SHIELD_PIECE_SIZE        20
+#endif  // defined (__AVR__)
 
 // Position definitions.
-#define player_center               ((screen_w - 43) / 2)
-#define player_top                 (screen_h - (25 + 35))
-#define player_init_x_shot_pos            ((43 - 5)  / 2)
-#define player_init_y_shot_pos                         16
-#define alien_init_x_shot_pos             ((45 - 5)  / 2)
-#define alien_init_y_shot_pos                          25
+#ifdef __AVR__
+    #define PLAYER_BOTTOM_GAP                          14
+    #define ALIEN_SHOT_GAP                              2
+#else
+    #define PLAYER_BOTTOM_GAP                          35
+    #define ALIEN_SHOT_GAP                              5
+#endif
+#define player_center         ((screen_w - PLAYER_WIDTH) / 2)
+#define player_top            (screen_h - (PLAYER_HEIGHT + PLAYER_BOTTOM_GAP))
+#define player_init_x_shot_pos        ((PLAYER_WIDTH - SHOT_WIDTH) / 2)
+#define player_init_y_shot_pos                SHOT_HEIGHT
+#define alien_init_x_shot_pos         ((ALIEN_WIDTH - SHOT_WIDTH)  / 2)
+#define alien_init_y_shot_pos         (ALIEN_HEIGHT - ALIEN_SHOT_GAP)
 
 // Speed definitions in pixels/sec.
-#define player_speed                                  300
-#define bonus_speed                                   200
-#define shot_speed                                   -300
-#define alien_shot_speed                              200
+#ifdef __AVR__
+    #define player_speed                              120
+    #define bonus_speed                                80
+    #define shot_speed                               -120
+    #define alien_shot_speed                           80
+#else
+    #define player_speed                              300
+    #define bonus_speed                               200
+    #define shot_speed                               -300
+    #define alien_shot_speed                          200
+#endif  // defined (__AVR__)
 
 // Initial bonus ship delay in ms.
 #define base_launch_delay                            6000
