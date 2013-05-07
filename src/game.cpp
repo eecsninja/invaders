@@ -172,6 +172,7 @@ namespace Game {
     void Game::init_aliens(int rand_max)
     {
         alien_count = 0;
+        int index = 0;
         // create a block of aliens (5 rows, by 12 columns), 800x600 res
         for (int i = 0; i < ALIEN_ARRAY_HEIGHT; ++i) {
             for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j) {
@@ -184,23 +185,30 @@ namespace Game {
                     // initialize the bottom row of aliens to fire
                     active = true;
                     type = GAME_ENTITY_ALIEN;
+                    index = j;
                     break;
                 case 3:
                     active = false;
                     type = GAME_ENTITY_ALIEN;
+                    index = j + ALIEN_ARRAY_WIDTH;
                     break;
                 case 2:
+                    active = false;
+                    type = GAME_ENTITY_ALIEN2;
+                    index = j;
                 case 1:
                     active = false;
                     type = GAME_ENTITY_ALIEN2;
+                    index = j + ALIEN_ARRAY_WIDTH;
                     break;
                 case 0:
                 default:
                     active = false;
                     type = GAME_ENTITY_ALIEN3;
+                    index = j;
                     break;
                 }
-                aliens[alien_count].Alien_init(type, alien_count, alien_x,
+                aliens[alien_count].Alien_init(type, index, alien_x,
                                                alien_y, active, RAND(rand_max));
                 ++alien_count;
             }
@@ -981,7 +989,7 @@ namespace Game {
         // speed up all the existing aliens, whenever one is destroyed
         for (int i = 0; i < NUM_ALIENS; ++i) {
             Alien* alien = &aliens[i];
-            if (alien->get_index() == index - ALIEN_ARRAY_WIDTH) {
+            if (i == index - ALIEN_ARRAY_WIDTH) {
                 alien->activate();
             }
             current_alien_speed =
