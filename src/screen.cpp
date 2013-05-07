@@ -162,8 +162,10 @@ namespace Graphics {
         const uint32_t* data32 = (const uint32_t*) palette_data;
         uint16_t size_copied = 0;
         uint16_t offset = 0;
-        while (size_copied + offset < size) {
-            buffer[offset] = pgm_read_dword_far(data32 + size_copied + offset);
+        while (size_copied + offset * sizeof(uint32_t) < size) {
+            buffer[offset] =
+                pgm_read_dword_far(data32 + size_copied / sizeof(uint32_t) +
+                                   offset);
             ++offset;
             // If the buffer fills up, copy it to VRAM.
             if (offset == BUFFER_SIZE) {

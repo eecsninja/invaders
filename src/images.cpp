@@ -117,9 +117,10 @@ namespace Graphics {
             uint16_t size_copied = 0;   // Counts bytes of data copied to VRAM.
             uint16_t offset = 0;
             uint32_t buffer[BUFFER_SIZE];      // Used to read from PGM memory.
-            while (size_copied + offset < entry.size) {
+            while (size_copied + offset * sizeof(uint32_t) < entry.size) {
                 buffer[offset] =
-                    pgm_read_dword_far(src_ptr + size_copied + offset);
+                    pgm_read_dword_far(src_ptr +
+                                       size_copied / sizeof(uint32_t) + offset);
                 ++offset;
                 // If the buffer fills up, copy it to VRAM.
                 if (offset == BUFFER_SIZE) {
