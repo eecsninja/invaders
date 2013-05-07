@@ -118,11 +118,23 @@ namespace Graphics {
 #endif  // !defined (__AVR__)
     }
 
-    void Screen::update() {
-#ifndef __AVR__
-        SDL_BlitSurface(wave_background, NULL, screen, NULL);
+    void Screen::begin_update() {
+#ifdef __AVR__
+        // Wait for the start of vertical blank, at which point it is safe to
+        // modify the contents of the video controller.
+        while(!(CC_GetRegister(CC_REG_OUTPUT_STATUS) & (1 << CC_REG_VBLANK)));
 #endif
+    }
+
+    void Screen::update() {
+#ifdef __AVR__
+        // Wait for the end of vertical blank.  This is when the drawing
+        // actually begins.
+        while((CC_GetRegister(CC_REG_OUTPUT_STATUS) & (1 << CC_REG_VBLANK)));
+#else
+        SDL_BlitSurface(wave_background, NULL, screen, NULL);
         flush_blits();
+#endif
     }
 
     void Screen::allocate_sprites(const int* num_objects_per_type) {
