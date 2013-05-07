@@ -130,7 +130,7 @@ namespace Game {
         int* direction;
         int* bonus_select;
         int* launch_delay;
-        int alien_count, wave, player_life, alien_odd_range, num_alien_shots, num_entities_removed;
+        int alien_count, wave, player_life, alien_odd_range, num_alien_shots;
         int current_player_speed, current_alien_speed, current_bonus_speed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
         uint32_t last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;

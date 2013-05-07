@@ -594,7 +594,7 @@ namespace Game {
             }
 
             // collision handling
-            num_entities_removed = 0;
+
             // alien shots with player and shields
             for (int i = 0; i < num_alien_shots; ++i) {
                 Shot* shot = &alien_shots[i];
