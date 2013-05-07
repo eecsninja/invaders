@@ -58,8 +58,8 @@ static const ImageListEntry image_list[] = {
     ImageListEntry(alien_3_bmp_raw_data8, ALIEN_3_BMP_RAW_DATA_SIZE),
     ImageListEntry(bonus_bmp_raw_data8, BONUS_BMP_RAW_DATA_SIZE),
     ImageListEntry(bonus_small_bmp_raw_data8, BONUS_SMALL_BMP_RAW_DATA_SIZE),
-    ImageListEntry(shield_bmp_raw_data8, SHIELD_BMP_RAW_DATA_SIZE),
     ImageListEntry(shot_bmp_raw_data8, SHOT_BMP_RAW_DATA_SIZE),
+    ImageListEntry(shield_bmp_raw_data8, SHIELD_BMP_RAW_DATA_SIZE),
     ImageListEntry(explosion_bmp_raw_data8, EXPLOSION_BMP_RAW_DATA_SIZE),
     ImageListEntry(0, 0),       // Terminate the list with NULL.
 };
