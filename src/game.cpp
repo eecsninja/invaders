@@ -979,38 +979,24 @@ namespace Game {
         }
         // set the alien above the one just killed to active
         // speed up all the existing aliens, whenever one is destroyed
-        for (int i = 0; i < NUM_ALIENS; ++i) {
-            Alien* alien = &aliens[i];
-            if (i == index - ALIEN_ARRAY_WIDTH) {
-                alien->activate();
-            }
+        if (index >= ALIEN_ARRAY_WIDTH)
+            aliens[index - ALIEN_ARRAY_WIDTH].activate();
+        current_alien_speed =
+           increase_speed(current_alien_speed, ALIEN_SPEED_BOOST);
+        switch (alien_count) {
+        case 4:
+        case 2:
+        case 1:
             current_alien_speed =
-               increase_speed(current_alien_speed, ALIEN_SPEED_BOOST);
-            switch (alien_count) {
-                case 4:
-                    current_alien_speed =
-                        increase_speed(current_alien_speed,
-                                       ALIEN_SPEED_BOOST_EXTRA);
-                    //sound.halt_bg(alien_count);
-                    break;
-                case 3:
-                    //sound.halt_bg(alien_count);
-                    break;
-                case 2:
-                    current_alien_speed =
-                        increase_speed(current_alien_speed,
-                                       ALIEN_SPEED_BOOST_EXTRA);
-                    //sound.halt_bg(alien_count);
-                    break;
-                case 1:
-                    current_alien_speed =
-                        increase_speed(current_alien_speed,
-                                       ALIEN_SPEED_BOOST_EXTRA);
-                    //sound.halt_bg(alien_count);
-                    break;
-                default:
-                    break;
-            }
+                increase_speed(current_alien_speed,
+                               ALIEN_SPEED_BOOST_EXTRA);
+            //sound.halt_bg(alien_count);
+            break;
+        case 3:
+            //sound.halt_bg(alien_count);
+            break;
+        default:
+            break;
         }
     }
     bool Game::collides_with_shield_group(GameEntity* object) {
