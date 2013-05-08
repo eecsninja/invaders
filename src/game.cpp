@@ -402,6 +402,11 @@ namespace Game {
         num_objects_per_type[GAME_ENTITY_EXPLOSION] = num_explosions;
         screen.allocate_sprites(num_objects_per_type);
 
+        // Set up tile layer for drawing shield pieces.
+        uint16_t shield_image_offset =
+                screen.get_image_offset(GAME_ENTITY_SHIELD_PIECE, 0);
+        screen.setup_tile_layer(0, true, shield_image_offset);
+
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
             explosions[i].Explosion_init(i, 0, 0, false);
