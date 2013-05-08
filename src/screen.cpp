@@ -40,6 +40,7 @@
 #include "cc_core.h"
 #include "registers.h"
 #include "sprite_registers.h"
+#include "tile_registers.h"
 #endif
 
 #include "game_entity.h"
@@ -198,6 +199,38 @@ namespace Graphics {
         }
 #undef BUFFER_SIZE
 #endif  // defined (__AVR__)
+    }
+
+    void Screen::setup_tile_layer(uint8_t layer, bool enabled,
+                                  uint16_t data_offset) {
+#ifdef __AVR__
+        uint16_t tile_ctrl0_value =
+            ((enabled ? 1 : 0) << TILE_LAYER_ENABLED) |
+            (1 << TILE_ENABLE_NOP) |
+            (1 << TILE_ENABLE_TRANSP) |
+            (1 << TILE_ENABLE_FLIP);
+        CC_TileLayer_SetRegister(layer, TILE_CTRL0, tile_ctrl0_value);
+        CC_TileLayer_SetRegister(layer, TILE_DATA_OFFSET, data_offset);
+        CC_TileLayer_SetRegister(layer, TILE_NOP_VALUE, 0);
+        CC_TileLayer_SetRegister(layer, TILE_COLOR_KEY, DEFAULT_COLOR_KEY);
+#endif  // defined (__AVR__)
+    }
+
+    void Screen::scroll_tile_layer(uint8_t layer, int16_t x, int16_t y) {
+#ifdef __AVR__
+        CC_TileLayer_SetRegister(layer, TILE_OFFSET_X, x);
+        CC_TileLayer_SetRegister(layer, TILE_OFFSET_Y, y);
+#endif  // defined (__AVR__)
+    }
+
+    void Screen::set_tilemap_data(uint8_t layer, uint8_t x, uint8_t y,
+                                  const void* tilemap_data, uint16_t size) {
+#ifdef __AVR__
+#define TILEMAP_WIDTH     32
+        uint16_t offset = (x + y * TILEMAP_WIDTH) * sizeof(uint16_t);
+        CC_TileLayer_SetData(tilemap_data, layer, offset, size);
+#undef TILEMAP_WIDTH;
+#endif // defined (__AVR__)
     }
 
     void Screen::update_sprite(const GameEntities::GameEntity* object) {

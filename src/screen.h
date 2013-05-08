@@ -123,6 +123,17 @@ namespace Graphics {
         // TODO: support multiple palettes.
         void set_palette_data(const void* palette_data, uint16_t size);
 
+        // Initializes a tile layer.
+        void setup_tile_layer(uint8_t layer, bool enabled,
+                              uint16_t data_offset);
+
+        // Sets the scroll offset of a tile layer.
+        void scroll_tile_layer(uint8_t layer, int16_t x, int16_t y);
+
+        // Copies tilemap data into tilemap memory, indicated by |layer|, |x|,
+        // and |y|.
+        void set_tilemap_data(uint8_t layer, uint8_t x, uint8_t y,
+                              const void* tilemap_data, uint16_t size);
     private:
         // Updates a sprite in the sprite table given an updated entity object.
         void update_sprite(const GameEntities::GameEntity* object);
