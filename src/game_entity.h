@@ -35,12 +35,17 @@
 
 #include <assert.h>
 
+#include "event_counter.h"
 #include "game.h"
 #include "game_defs.h"
 #include "game_entity_types.h"
 #include "screen.h"
 
+#define EVENT_COUNTER
+
+#ifdef EVENT_COUNTER
 extern EventCounter event_counter;
+#endif
 
 #define NUM_GAME_ENTITY_IMAGES     8
 

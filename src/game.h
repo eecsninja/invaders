@@ -61,58 +61,6 @@ namespace GameEntities {
     typedef GameEntity Shot;
 }
 
-#define EVENT_COUNTER
-
-#ifdef EVENT_COUNTER
-// To improve performance, count the number of various calls per game cycle.
-// This should reveal the bottlenecks where optimization could help.
-struct EventCounter {
-    uint32_t num_collision_checks;
-    uint32_t num_duration_calls;
-    uint32_t num_movement_calls;
-    uint32_t num_loops;
-    uint32_t start_time;
-    uint32_t latest_time;
-
-    ~EventCounter() {
-      report();
-    }
-
-    void reset() {
-        memset(this, 0, sizeof(*this));
-        latest_time = start_time = System::get_ticks();
-    }
-
-    void do_collision_check() {
-        ++num_collision_checks;
-    }
-
-    void do_duration_call() {
-        ++num_duration_calls;
-    }
-
-    void do_movement_call() {
-        ++num_movement_calls;
-    }
-
-    void new_loop() {
-        ++num_loops;
-        latest_time = System::get_ticks();
-    }
-
-    void report() {
-        if (num_loops == 0)
-            return;
-        printf("Per-loop stats, averaged over %d loops:\n", num_loops);
-        printf("collision checks: %d\n", num_collision_checks / num_loops);
-        printf("duration calls: %d\n", num_duration_calls / num_loops);
-        printf("movement calls: %d\n", num_movement_calls / num_loops);
-        printf("loop time in ticks: %d\n",
-               (latest_time - start_time) / num_loops);
-    }
-};
-#endif
-
 #define MAX_NUM_IMAGES    32
 
 namespace Game {

@@ -55,7 +55,6 @@ using GameEntities::ShieldPiece;
 using GameEntities::Shot;
 
 #ifdef EVENT_COUNTER
-#define EVENT_COUNTER_LOOP_LIMIT        100
 EventCounter event_counter;
 #endif
 
@@ -801,10 +800,6 @@ namespace Game {
             screen.update();
 
 #ifdef EVENT_COUNTER
-            if (event_counter.num_loops > 0 &&
-                event_counter.num_loops % EVENT_COUNTER_LOOP_LIMIT == 0) {
-                event_counter.report();
-            }
             event_counter.new_loop();
 #endif
         }
