@@ -44,7 +44,7 @@ namespace GameEntities {
         fire_chance = chance;
     }
 
-    void GameEntity::Alien_movement(int16_t delta, int speed)
+    void GameEntity::Alien_movement(int16_t delta, fixed displacement)
     {
         // control in place animation
         frame_time_count += delta;
@@ -58,7 +58,7 @@ namespace GameEntities {
         if (y_int() > properties()->bottom_limit) {
             game->msg_alien_landed();
         }
-        int dx = speed;
+        int dx = displacement;
         // change direction and move down
         if (dx < 0 && x_int() < side_padding) {
             game->run_logic();
@@ -67,6 +67,6 @@ namespace GameEntities {
             game->run_logic();
         }
 
-        x += INT_TO_FIXED(delta * dx) / 1000;
+        x += displacement;
     }
 }

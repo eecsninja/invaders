@@ -181,7 +181,7 @@ namespace GameEntities {
 
         void Alien_init(int type, uint8_t index, int x, int y, bool active,
                         int chance);
-        void Alien_movement(int16_t delta, int speed);
+        void Alien_movement(int16_t delta, fixed displacement);
 
         void BonusShip_init(bool is_small, int x, int y, bool active);
         void BonusShip_movement(int16_t delta, int speed);

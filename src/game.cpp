@@ -583,9 +583,11 @@ namespace Game {
             } else {
                 //sound.halt_bonus();
             }
+            fixed alien_movement =
+                INT_TO_FIXED(delta * current_alien_speed) / 1000;
             for (int i = 0; i < NUM_ALIENS; ++i) {
                 if (aliens[i].is_alive())
-                    aliens[i].movement(delta, current_alien_speed);
+                    aliens[i].movement(delta, alien_movement);
             }
 #ifdef EVENT_COUNTER
         event_counter.end_game_logic_section(1);
