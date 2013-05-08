@@ -40,6 +40,7 @@
 #include "system.h"
 
 #define EVENT_COUNTER_LOOP_LIMIT        100
+#define MAX_GAME_LOGIC_SECTIONS           8
 
 // To improve performance, count the number of various calls per game cycle.
 // This should reveal the bottlenecks where optimization could help.
@@ -57,9 +58,9 @@ class EventCounter {
     uint32_t latest_time;              // Last time a game loop completed.
 
     // Total time executing game logic.  Does not include hardware waits.
-    uint32_t game_logic_time;
+    uint32_t game_logic_times[MAX_GAME_LOGIC_SECTIONS];
     // Used by start_game_logic_section() and end_game_logic_section().
-    uint32_t game_logic_section_start_time;
+    uint32_t game_logic_section_start_times[MAX_GAME_LOGIC_SECTIONS];
 
   public:
     EventCounter() {
@@ -87,12 +88,17 @@ class EventCounter {
         ++num_movement_calls;
     }
 
-    void start_game_logic_section() {
-        game_logic_section_start_time = System::get_ticks();
+    void start_game_logic_section(int section) {
+        if (section >= MAX_GAME_LOGIC_SECTIONS)
+            return;
+        game_logic_section_start_times[section] = System::get_ticks();
     }
 
-    void end_game_logic_section() {
-        game_logic_time += System::get_ticks() - game_logic_section_start_time;
+    void end_game_logic_section(int section) {
+        if (section >= MAX_GAME_LOGIC_SECTIONS)
+            return;
+        game_logic_times[section] +=
+                System::get_ticks() - game_logic_section_start_times[section];
     }
 
     void new_loop() {
@@ -113,7 +119,16 @@ class EventCounter {
         printf("- Movement calls: %d\n", num_movement_calls / num_loops);
         printf("- Loop time in ticks: %d\n",
                (latest_time - game_loop_start_time) / num_loops);
-        printf("- Game logic time in ticks: %d\n", game_logic_time / num_loops);
+        uint32_t total_game_logic_time = 0;
+        for (int i = 0; i < MAX_GAME_LOGIC_SECTIONS; ++i) {
+            if (game_logic_times[i] == 0)
+                continue;
+            printf("- Game logic section %d, time in ticks: %d\n", i,
+                   game_logic_times[i] / num_loops);
+            total_game_logic_time += game_logic_times[i];
+        }
+        printf("- Total game logic time in ticks: %d\n",
+               total_game_logic_time / num_loops);
     }
 };
 

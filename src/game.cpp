@@ -567,10 +567,17 @@ namespace Game {
                 current_player_speed = player_speed;
             }
 
+#ifdef EVENT_COUNTER
+        event_counter.start_game_logic_section(0);
+#endif
             // alien behavior
             alien_fire();
             launch_bonus_ship();
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(0);
 
+        event_counter.start_game_logic_section(1);
+#endif
             // move everything
             if (player->is_active())
                 player->movement(delta, current_player_speed);
@@ -584,6 +591,10 @@ namespace Game {
                 if (aliens[i].is_alive())
                     aliens[i].movement(delta, current_alien_speed);
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(1);
+        event_counter.start_game_logic_section(2);
+#endif
             for (int i = 0; i < num_player_shots; ++i) {
                 if (player_shots[i].is_active()) {
                     player_shots[i].movement(delta, shot_speed);
@@ -600,6 +611,10 @@ namespace Game {
                     explosions[i].duration(delta, 0);
                 }
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(2);
+        event_counter.start_game_logic_section(3);
+#endif
 
             // collision handling
 
@@ -628,6 +643,10 @@ namespace Game {
                     }
                 }
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(3);
+        event_counter.start_game_logic_section(4);
+#endif
             // shots with shots
             for (int j = 0; j < num_player_shots; ++j) {
                 Shot* shot = &player_shots[j];
@@ -646,6 +665,10 @@ namespace Game {
                       }
                   }
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(4);
+        event_counter.start_game_logic_section(5);
+#endif
             // player shots with aliens, bonus, and shields
             for (int j = 0; j < num_player_shots; ++j) {
                 Shot* shot = &player_shots[j];
@@ -676,6 +699,10 @@ namespace Game {
                     }
                 }
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(5);
+        event_counter.start_game_logic_section(6);
+#endif
             // aliens with shields and player
             for (int j = 0; j < NUM_ALIENS; ++j) {
                 Alien* alien = &aliens[j];
@@ -696,6 +723,9 @@ namespace Game {
                         continue;
                 }
             }
+#ifdef EVENT_COUNTER
+        event_counter.end_game_logic_section(6);
+#endif
 
             // the conditions to break out of the game loop
             // the order of these matters
@@ -767,6 +797,9 @@ namespace Game {
 
             // draw everything
             screen.begin_update();
+#ifdef EVENT_COUNTER
+            event_counter.start_game_logic_section(7);
+#endif
             if (player->is_active())
                 player->draw();
             if (bonus->is_active())
@@ -797,6 +830,9 @@ namespace Game {
                 if (shields[i])
                     shield.draw();
             }
+#ifdef EVENT_COUNTER
+            event_counter.end_game_logic_section(7);
+#endif
             screen.update();
 
 #ifdef EVENT_COUNTER
