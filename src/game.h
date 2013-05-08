@@ -49,9 +49,10 @@
 
 typedef int16_t fixed;    // Used for fixed point math on embedded systems.
 #define FIXED_POINT_FACTOR                              16
+#define FIXED_POINT_SHIFT                                4
 // Convert to 32-bit int for multiplication, to avoid losing precision.
-#define INT_TO_FIXED(x)           (((int32_t)x) * FIXED_POINT_FACTOR)
-#define FIXED_TO_INT(x)           (x / FIXED_POINT_FACTOR)
+#define INT_TO_FIXED(x)           (((int32_t)x) << FIXED_POINT_SHIFT)
+#define FIXED_TO_INT(x)           (x >> FIXED_POINT_SHIFT)
 
 namespace GameEntities {
     class GameEntity;
