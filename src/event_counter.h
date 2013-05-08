@@ -55,6 +55,12 @@ class EventCounter {
 
     uint32_t game_loop_start_time;     // Time entered into game loop.
     uint32_t latest_time;              // Last time a game loop completed.
+
+    // Total time executing game logic.  Does not include hardware waits.
+    uint32_t game_logic_time;
+    // Used by start_game_logic_section() and end_game_logic_section().
+    uint32_t game_logic_section_start_time;
+
   public:
     EventCounter() {
         reset();
@@ -81,6 +87,14 @@ class EventCounter {
         ++num_movement_calls;
     }
 
+    void start_game_logic_section() {
+        game_logic_section_start_time = System::get_ticks();
+    }
+
+    void end_game_logic_section() {
+        game_logic_time += System::get_ticks() - game_logic_section_start_time;
+    }
+
     void new_loop() {
         ++num_loops;
         latest_time = System::get_ticks();
@@ -99,6 +113,7 @@ class EventCounter {
         printf("- Movement calls: %d\n", num_movement_calls / num_loops);
         printf("- Loop time in ticks: %d\n",
                (latest_time - game_loop_start_time) / num_loops);
+        printf("- Game logic time in ticks: %d\n", game_logic_time / num_loops);
     }
 };
 
