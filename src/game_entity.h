@@ -97,7 +97,7 @@ namespace GameEntities {
         bool alive:1;
         bool active:1;
         bool hit:1;       // used by Shot to avoid hitting more than one object
-        bool padding:1;
+        bool dirty:1;   // Used to determine if object should be redrawn.
 
         uint8_t image_num:3;  // Index of the current animation image.
         uint8_t type:4;       // Must have enough bits for NUM_GAME_ENTITY_TYPES-1.
@@ -121,10 +121,11 @@ namespace GameEntities {
         bool is_active() const {
             return active && is_alive();
         }
-        void deactivate() { active = false; }
-        void activate() { active = true; }
+        void deactivate() { active = false; dirty = true; }
+        void activate() { active = true; dirty = true; }
         bool is_alive() const { return alive; }
-        void kill() { alive = false; }
+        bool is_dirty() const { return dirty; }
+        void kill() { alive = false; dirty = true; }
         void init_x(int init) { x = INT_TO_FIXED(init); }
         void init_y(int init) { y = INT_TO_FIXED(init); }
         int get_x() const { return x_int(); }

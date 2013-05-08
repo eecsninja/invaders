@@ -49,6 +49,7 @@ namespace GameEntities {
         this->y = INT_TO_FIXED(y);
         this->alive = true;
         this->active = active;
+        this->dirty = true;
         this->frame_time_count = 0;
         this->image_num = 0;
     }
@@ -56,6 +57,7 @@ namespace GameEntities {
     void GameEntity::draw()
     {
         screen->schedule_blit(this);
+        dirty = false;
     }
     void GameEntity::cleanup_draw()
     {
@@ -135,6 +137,7 @@ namespace GameEntities {
     }
     void GameEntity::movement(int16_t delta, int speed)
     {
+        bool do_movement = true;
         switch(type) {
         case GAME_ENTITY_PLAYER:
             Player_movement(delta, speed);
@@ -156,8 +159,11 @@ namespace GameEntities {
         case GAME_ENTITY_EXPLOSION:
         case GAME_ENTITY_SHIELD_GROUP:
         default:
+            do_movement = false;
             break;
         }
+        // No movement, no redraw.
+        dirty = do_movement;
 #ifdef EVENT_COUNTER
         event_counter.do_movement_call();
 #endif

@@ -814,27 +814,27 @@ namespace Game {
 #ifdef EVENT_COUNTER
             event_counter.start_game_logic_section(7);
 #endif
-            if (player->is_active())
+            if (player->is_dirty())
                 player->draw();
-            if (bonus->is_active())
+            if (bonus->is_dirty())
                 bonus->draw();
 
             for (int i = 0; i < NUM_ALIENS; ++i) {
-                if (aliens[i].is_alive())
+                if (aliens[i].is_dirty())
                   aliens[i].draw();
             }
             for (int i = 0; i < num_player_shots; ++i) {
-                if (player_shots[i].is_active()) {
+                if (player_shots[i].is_dirty()) {
                     player_shots[i].draw();
                 }
             }
             for (int i = 0; i < num_alien_shots; ++i) {
-                if (alien_shots[i].is_active()) {
+                if (alien_shots[i].is_dirty()) {
                     alien_shots[i].draw();
                 }
             }
             for (int i = 0; i < num_explosions; ++i) {
-                if (explosions[i].is_active()) {
+                if (explosions[i].is_dirty()) {
                     explosions[i].draw();
                 }
             }
@@ -868,9 +868,7 @@ namespace Game {
 
         screen.begin_update();
         player->cleanup_draw();
-        if (bonus->is_active()) {
-            bonus->cleanup_draw();
-        }
+        bonus->cleanup_draw();
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             GameEntity shield;
             make_shield(shields[i], &shield);
