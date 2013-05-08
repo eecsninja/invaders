@@ -57,7 +57,6 @@ namespace GameEntities {
     class GameEntity;
     typedef GameEntity Alien;
     typedef GameEntity Explosion;
-    typedef GameEntity ShieldPiece;
     typedef GameEntity Shot;
 }
 
@@ -67,6 +66,13 @@ namespace Game {
 
     int get_image_index(const char* filename);
 
+    struct ShieldPiece {
+        uint8_t x:3;        // x-index of shield piece in shield group (0-5)
+        uint8_t y:2;        // x-index of shield piece in shield group (0-3)
+        uint8_t group:2;    // Shield group number (0-2)
+        bool intact:1;   // Status of shield.
+    };
+
     class Game {
         typedef GameEntities::GameEntity* GameEntityPtr;
         // Sound::Sound sound;
@@ -75,7 +81,7 @@ namespace Game {
         Graphics::Screen& screen;
         GameEntityPtr player, rbonus, sbonus, bonus;
         GameEntities::Alien* aliens;
-        bool* shields;  // Points to an array of shield states. 1=alive, 0=dead
+        ShieldPiece* shields;  // Points to an array of shield states.
         GameEntities::Shot* player_shots, *alien_shots;
         GameEntities::Explosion* explosions;
         // For coarse collision detection with multiple shield pieces.
