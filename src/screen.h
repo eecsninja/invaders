@@ -134,6 +134,10 @@ namespace Graphics {
         // and |y|.
         void set_tilemap_data(uint8_t layer, uint8_t x, uint8_t y,
                               const void* tilemap_data, uint16_t size);
+
+        // A wrapper around image offset lookup.
+        uint16_t get_image_offset(int type, uint8_t index);
+
     private:
         // Updates a sprite in the sprite table given an updated entity object.
         void update_sprite(const GameEntities::GameEntity* object);
