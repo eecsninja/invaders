@@ -36,6 +36,7 @@
 #include "game_entity.h"
 #include "rand_num_gen.h"
 #include "screen.h"
+#include "shields.h"
 #include "system.h"
 
 extern const char* datadir;
@@ -54,6 +55,7 @@ using GameEntities::Explosion;
 using GameEntities::Shot;
 
 using Game::ShieldPiece;
+using Game::ShieldGroupTiles;
 
 #ifdef EVENT_COUNTER
 EventCounter event_counter;
@@ -75,6 +77,7 @@ namespace {
         int launch_delay_array[random_list_len];
 
         GameEntity shield_group_array[NUM_SHIELD_GROUPS];
+        ShieldGroupTiles shield_group_tiles_array[NUM_SHIELD_GROUPS];
     };
 
     // Initializes a shield piece entity given its index and state.
@@ -128,6 +131,7 @@ namespace Game {
         launch_delay = data.launch_delay_array;
 
         shield_groups = data.shield_group_array;
+        shield_group_tiles = data.shield_group_tiles_array;
 
         // Instantiate these here, instead of allocating from heap.
         Player player_obj;

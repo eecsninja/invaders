@@ -74,6 +74,8 @@ namespace Game {
         bool intact:1;   // Status of shield.
     };
 
+    struct ShieldGroupTiles;
+
     class Game {
         typedef GameEntities::GameEntity* GameEntityPtr;
         // Sound::Sound sound;
@@ -89,6 +91,8 @@ namespace Game {
         // Greatly reduces the number of shield collision checks when there's
         // no collision.
         GameEntities::GameEntity* shield_groups;
+        // For drawing shield groups.
+        ShieldGroupTiles* shield_group_tiles;
         int* direction;
         int* bonus_select;
         int* launch_delay;
