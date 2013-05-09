@@ -52,6 +52,7 @@
 #endif
 
 #define max_updates   360
+#define SCREEN_TILE_SIZE           16
 
 namespace GameEntities {
 class GameEntity;
