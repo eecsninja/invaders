@@ -410,6 +410,7 @@ namespace Game {
         uint16_t shield_image_offset =
                 screen.get_image_offset(GAME_ENTITY_SHIELD_PIECE, 0);
         screen.setup_tile_layer(0, true, shield_image_offset);
+        screen.scroll_tile_layer(0, SHIELD_X_OFFSET, SHIELD_Y_OFFSET);
 
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
