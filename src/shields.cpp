@@ -35,6 +35,7 @@
 #include <string.h>
 
 #include "game.h"
+#include "screen.h"
 
 namespace Game {
 
@@ -76,6 +77,19 @@ namespace Game {
             tile &= ~(1 << bit_offset);
 
         row.dirty = true;   // Indicate that the row needs to be redrawn.
+    }
+
+    void ShieldGroupTiles::draw(Graphics::Screen* screen, uint8_t layer,
+                                uint8_t x, uint8_t y) {
+        for (uint8_t i = 0; i < SHIELD_GROUP_HEIGHT / 2; ++i) {
+            ShieldDoubleRow& row = rows[i];
+            if (!row.dirty)
+                continue;
+            screen->set_tilemap_data(layer, x, y + i, row.map_buffer,
+                                     sizeof(row.map_buffer));
+            // Clear the dirty bit so it doesn't get redrawn again.
+            row.dirty = false;
+        }
     }
 
 }  // namespace Game

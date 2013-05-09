@@ -37,9 +37,14 @@
 
 #include "game_defs.h"
 
+namespace Graphics {
+    class Screen;
+}
+
 namespace Game {
 
     struct ShieldPiece;
+    using Graphics::Screen;
 
     // For drawing a shield group.
     class ShieldGroupTiles {
@@ -64,6 +69,12 @@ namespace Game {
 
         // Updates the corresponding buffer tile bit for a shield piece.
         void update_shield_piece(const ShieldPiece& shield);
+
+        // Copies the tilemap buffers to the actual tilemap memory.
+        // |x| and |y| are the location in the destination tilemap corresponding
+        // to the top left of the shield group.  They are in tile coordinates,
+        // not screen pixel coordinates.
+        void draw(Screen* screen, uint8_t layer, uint8_t x, uint8_t y);
     };
 
 }  // namespace Game
