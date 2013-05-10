@@ -81,8 +81,8 @@
     #define ALIEN_HEIGHT             12
     #define BONUS_SHIP_WIDTH         24
     #define BONUS_SHIP_HEIGHT        11
-    #define SMALL_BONUS_SHIP_WIDTH   18
-    #define SMALL_BONUS_SHIP_HEIGHT   8
+    #define SMALL_BONUS_SHIP_WIDTH   16
+    #define SMALL_BONUS_SHIP_HEIGHT   7
     #define SHOT_WIDTH                3
     #define SHOT_HEIGHT               8
     #define SHIELD_PIECE_SIZE         8
@@ -96,7 +96,7 @@
     #define ALIEN_SPRITE_HEIGHT                16
     #define BONUS_SHIP_SPRITE_WIDTH            32
     #define BONUS_SHIP_SPRITE_HEIGHT           16
-    #define SMALL_BONUS_SHIP_SPRITE_WIDTH      32
+    #define SMALL_BONUS_SHIP_SPRITE_WIDTH      16
     #define SMALL_BONUS_SHIP_SPRITE_HEIGHT      8
     #define SHOT_SPRITE_WIDTH                   8
     #define SHOT_SPRITE_HEIGHT                  8
