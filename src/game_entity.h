@@ -121,8 +121,8 @@ namespace GameEntities {
         bool is_active() const {
             return active && is_alive();
         }
-        void deactivate() { active = false; dirty = true; }
-        void activate() { active = true; dirty = true; }
+        void deactivate() { alive = false; active = false; dirty = true; }
+        void activate() { alive = true; active = true; dirty = true; }
         bool is_alive() const { return alive; }
         bool is_dirty() const { return dirty; }
         void kill() { alive = false; dirty = true; }

@@ -42,6 +42,8 @@ namespace GameEntities {
         init(type, index, x, y, active);
 
         fire_chance = chance;
+        alive = true;   // Special case where |alive| and |active| are
+                        // independent.
     }
 
     void GameEntity::Alien_movement(int16_t delta, fixed displacement)

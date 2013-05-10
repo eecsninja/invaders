@@ -47,7 +47,7 @@ namespace GameEntities {
         this->index = index;
         this->x = INT_TO_FIXED(x);
         this->y = INT_TO_FIXED(y);
-        this->alive = true;
+        this->alive = active;
         this->active = active;
         this->dirty = true;
         this->frame_time_count = 0;
