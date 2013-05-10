@@ -48,7 +48,6 @@ class EventCounter {
   private:
     // Total number of various types of game loop operations.
     uint32_t num_collision_checks;
-    uint32_t num_duration_calls;
     uint32_t num_movement_calls;
 
     // Total number of game loops elapsed.
@@ -78,10 +77,6 @@ class EventCounter {
 
     void do_collision_check() {
         ++num_collision_checks;
-    }
-
-    void do_duration_call() {
-        ++num_duration_calls;
     }
 
     void do_movement_call() {

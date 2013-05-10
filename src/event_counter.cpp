@@ -38,7 +38,6 @@ void EventCounter::report()
         return;
     printf("Per-loop stats, averaged over %d loops:\n", num_loops);
     printf("- Collision checks: %d\n", num_collision_checks / num_loops);
-    printf("- Duration calls: %d\n", num_duration_calls / num_loops);
     printf("- Movement calls: %d\n", num_movement_calls / num_loops);
     printf("- Loop time in ticks: %d\n",
            (latest_time - game_loop_start_time) / num_loops);

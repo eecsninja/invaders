@@ -131,9 +131,6 @@ namespace GameEntities {
             frame_time_count = 0;
             deactivate();
         }
-#ifdef EVENT_COUNTER
-        event_counter.do_duration_call();
-#endif
     }
     void GameEntity::movement(int16_t delta, int speed)
     {
