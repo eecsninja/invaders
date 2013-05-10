@@ -37,6 +37,7 @@
 #ifdef __AVR__
 #include <avr/pgmspace.h>
 
+#include "cc_base.h"
 #include "cc_core.h"
 #include "registers.h"
 #include "sprite_registers.h"
@@ -50,6 +51,29 @@
 #define MAX_NUM_SPRITES      128
 
 #define DEFAULT_COLOR_KEY   0xff
+
+namespace {
+
+#ifdef __AVR__
+    // Gets the sprite dimension code for a given dimension that is one of:
+    // 8, 16, 32, 64.
+    // If it doesn't match any of these, returns the code for 8.
+    uint8_t get_sprite_dimension(uint8_t size) {
+        switch(size) {
+        case 64:
+            return CC_DIMENSION_64;
+        case 32:
+            return CC_DIMENSION_32;
+        case 16:
+            return CC_DIMENSION_16;
+        case 8:
+        default:
+            return CC_DIMENSION_8;
+        }
+    }
+#endif  // defined (__AVR__)
+
+}
 
 namespace Graphics {
     Screen::Screen() : num_blits(0),
@@ -158,11 +182,13 @@ namespace Graphics {
             const GameEntities::GameEntityTypeProperties* properties =
                 GameEntities::GameEntity::get_type_property(type);
 
+            uint8_t sprite_w = get_sprite_dimension(properties->sprite_w);
+            uint8_t sprite_h = get_sprite_dimension(properties->sprite_h);
             // Initialize each sprite's dimensions, color key, and data offset.
             for (int i = 0; i < num_objects_of_type; ++i) {
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_CTRL1,
-                                      (properties->sprite_w << SPRITE_HSIZE_0) |
-                                      (properties->sprite_h << SPRITE_VSIZE_0));
+                                      (sprite_w << SPRITE_HSIZE_0) |
+                                      (sprite_h << SPRITE_VSIZE_0));
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_COLOR_KEY,
                                       DEFAULT_COLOR_KEY);
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_DATA_OFFSET,

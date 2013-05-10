@@ -61,10 +61,9 @@ namespace GameEntities {
         // These should be <= 255.
         uint8_t w, h;
 
-        // Sprite dimensions.  Not actual dimension values, but enums as defined
-        // in cc_base.h.
-        uint8_t sprite_w:2;
-        uint8_t sprite_h:2;
+        // Sprite dimensions.
+        uint8_t sprite_w;
+        uint8_t sprite_h;
 
         // heights, widths, and coords used for reduced bounding box collision detection
         // These should be <= 255 and nonnegative.
