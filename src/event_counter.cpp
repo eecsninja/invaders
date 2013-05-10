@@ -42,13 +42,15 @@ void EventCounter::report()
     printf("- Loop time in ticks: %d\n",
            (latest_time - game_loop_start_time) / num_loops);
     uint32_t total_game_logic_time = 0;
+    printf("- Per-section game logic times: ");
     for (int i = 0; i < MAX_GAME_LOGIC_SECTIONS; ++i) {
-        if (game_logic_times[i] == 0)
-            continue;
-        printf("- Game logic section %d, time in ticks: %d\n", i,
-               game_logic_times[i] / num_loops);
         total_game_logic_time += game_logic_times[i];
+        if (game_logic_times[i] >= num_loops)
+            printf("%lu ", game_logic_times[i] / num_loops);
+        else    // If the rounded-down value is zero, don't bother printing it.
+            printf("_ ");   // Just print a placeholder.
     }
+    printf("\n");
     printf("- Total game logic time in ticks: %d\n",
            total_game_logic_time / num_loops);
 }
