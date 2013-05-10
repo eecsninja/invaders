@@ -865,20 +865,20 @@ namespace Game {
         player_shot_delay = 225;
 
         screen.begin_update();
-        player->cleanup_draw();
-        bonus->cleanup_draw();
+        player->draw();
+        bonus->draw();
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             GameEntity shield;
             make_shield(shields[i], &shield);
             if (shields[i].intact)
-                shield.cleanup_draw();
+                shield.draw();
         }
         for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
             uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
             shield_group_tiles[i].draw(&screen, 0, x, 0);
         }
         for (int i = 0; i < NUM_ALIENS; ++i) {
-            aliens[i].cleanup_draw();
+            aliens[i].draw();
         }
         screen.update();
         //sound.play_player_rebirth();
@@ -888,12 +888,12 @@ namespace Game {
         screen.begin_update();
         // redraw all that should remain
         if (player->is_active())
-            player->cleanup_draw();
+            player->draw();
         for (int i = 0; i < NUM_SHIELDS; ++i) {
             GameEntity shield;
             make_shield(shields[i], &shield);
             if (shields[i].intact)
-                shield.cleanup_draw();
+                shield.draw();
         }
         for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
             uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;

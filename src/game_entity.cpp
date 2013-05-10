@@ -59,10 +59,6 @@ namespace GameEntities {
         screen->schedule_blit(this);
         dirty = false;
     }
-    void GameEntity::cleanup_draw()
-    {
-        draw();
-    }
     bool GameEntity::collides_with(GameEntity* other)
     {
 #ifdef EVENT_COUNTER

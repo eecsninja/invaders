@@ -116,7 +116,6 @@ namespace GameEntities {
             return &type_properties[type];
         }
         void draw();
-        void cleanup_draw();
         bool is_active() const {
             return active && is_alive();
         }
