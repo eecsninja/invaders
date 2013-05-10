@@ -98,6 +98,9 @@ namespace Graphics {
         // Initialize video screen.  Returns true on success.
         bool init();
 
+        // Returns true if tile layer capability is available.
+        bool tile_layers_supported();
+
         // Set the operating video mode.  Returns true on success.
         bool set_video_mode(bool fullscreen);
 

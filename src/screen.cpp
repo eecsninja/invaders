@@ -99,6 +99,14 @@ namespace Graphics {
         return true;
     }
 
+    bool Screen::tile_layers_supported() {
+#ifdef __AVR__
+        return true;
+#else
+        return false;
+#endif
+    }
+
     void Screen::set_image_lib(Images* images) {
         image_lib = images;
 

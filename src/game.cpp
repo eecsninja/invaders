@@ -836,15 +836,18 @@ namespace Game {
                     explosions[i].draw();
                 }
             }
-            for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
-                uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-                shield_group_tiles[i].draw(&screen, 0, x, 0);
-            }
-            for (int i = 0; i < NUM_SHIELDS; ++i) {
-                GameEntity shield;
-                make_shield(shields[i], &shield);
-                if (shields[i].intact)
-                    shield.draw();
+            if (screen.tile_layers_supported()) {
+                for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
+                    uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
+                    shield_group_tiles[i].draw(&screen, 0, x, 0);
+                }
+            } else {
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                    GameEntity shield;
+                    make_shield(shields[i], &shield);
+                    if (shields[i].intact)
+                        shield.draw();
+                }
             }
 #ifdef EVENT_COUNTER
             event_counter.end_game_logic_section(7);
@@ -867,15 +870,18 @@ namespace Game {
         screen.begin_update();
         player->draw();
         bonus->draw();
-        for (int i = 0; i < NUM_SHIELDS; ++i) {
-            GameEntity shield;
-            make_shield(shields[i], &shield);
-            if (shields[i].intact)
-                shield.draw();
-        }
-        for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
-            uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-            shield_group_tiles[i].draw(&screen, 0, x, 0);
+        if (screen.tile_layers_supported()) {
+            for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
+                uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
+                shield_group_tiles[i].draw(&screen, 0, x, 0);
+            }
+        } else {
+            for (int i = 0; i < NUM_SHIELDS; ++i) {
+                GameEntity shield;
+                make_shield(shields[i], &shield);
+                if (shields[i].intact)
+                    shield.draw();
+            }
         }
         for (int i = 0; i < NUM_ALIENS; ++i) {
             aliens[i].draw();
@@ -889,15 +895,18 @@ namespace Game {
         // redraw all that should remain
         if (player->is_active())
             player->draw();
-        for (int i = 0; i < NUM_SHIELDS; ++i) {
-            GameEntity shield;
-            make_shield(shields[i], &shield);
-            if (shields[i].intact)
-                shield.draw();
-        }
-        for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
-            uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-            shield_group_tiles[i].draw(&screen, 0, x, 0);
+        if (screen.tile_layers_supported()) {
+            for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
+                uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
+                shield_group_tiles[i].draw(&screen, 0, x, 0);
+            }
+        } else {
+            for (int i = 0; i < NUM_SHIELDS; ++i) {
+                GameEntity shield;
+                make_shield(shields[i], &shield);
+                if (shields[i].intact)
+                    shield.draw();
+            }
         }
         screen.update();
     }
