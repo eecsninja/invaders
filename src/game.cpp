@@ -637,7 +637,9 @@ namespace Game {
                     if (!shot->is_active())
                         continue;
                 }
-                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(shot); ++i) {
+                if (!collides_with_shield_group(shot))
+                    continue;
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
                     //ShieldPiece* shield = &shields[i];
                     if (!shields[i].intact)
                       continue;
@@ -696,7 +698,9 @@ namespace Game {
                             continue;
                     }
                 }
-                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(shot); ++i) {
+                if (!collides_with_shield_group(shot))
+                    continue;
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
                     if (!shields[i].intact)
                       continue;
                     GameEntity shield;
@@ -720,7 +724,9 @@ namespace Game {
                 Alien* alien = &aliens[j];
                 if (!alien->is_alive())
                     continue;
-                for (int i = 0; i < NUM_SHIELDS && collides_with_shield_group(alien); ++i) {
+                if (!collides_with_shield_group(alien))
+                    continue;
+                for (int i = 0; i < NUM_SHIELDS; ++i) {
                     GameEntity shield;
                     make_shield(shields[i], &shield);
                     if (shield.is_alive() && shield.collides_with(alien)) {
