@@ -201,9 +201,9 @@ namespace Graphics {
 #endif  // defined (__AVR__)
     }
 
-    void Screen::setup_tile_layer(uint8_t layer, bool enabled,
-                                  uint16_t data_offset) {
+    void Screen::setup_tile_layer(uint8_t layer, bool enabled, int type) {
 #ifdef __AVR__
+        uint16_t data_offset = image_lib->get_image_offset(type, 0);
         uint16_t tile_ctrl0_value =
             ((enabled ? 1 : 0) << TILE_LAYER_ENABLED) |
             (1 << TILE_ENABLE_NOP) |
@@ -233,12 +233,6 @@ namespace Graphics {
 #endif // defined (__AVR__)
     }
 
-    uint16_t Screen::get_image_offset(int type, uint8_t index) {
-        if (!image_lib)
-            return 0;
-        return image_lib->get_image_offset(type, 0);
-    }
-
     void Screen::update_sprite(const GameEntities::GameEntity* object) {
 #ifdef __AVR__
         uint8_t type = object->get_type();
@@ -250,7 +244,7 @@ namespace Graphics {
         int x = object->get_x();
         int y = object->get_y();
 
-        uint16_t offset = image_lib->get_image_offset(type, image_index);
+        uint16_t offset = image_lib->get_image_offset(type);
         uint16_t sprite_index = sprite_index_bases[type] + index;
         CC_Sprite_SetRegister(sprite_index, SPRITE_CTRL0,
                               object->is_alive() |
