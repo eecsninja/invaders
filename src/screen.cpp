@@ -266,15 +266,20 @@ namespace Graphics {
             return;
         uint8_t index = object->get_index();
 
-        uint8_t image_index = object->get_current_image();
         int x = object->get_x();
         int y = object->get_y();
 
-        uint16_t offset = image_lib->get_image_offset(type);
+        const GameEntities::GameEntityTypeProperties* properties =
+            GameEntities::GameEntity::get_type_property(type);
+        uint8_t sprite_w = properties->sprite_w;
+        uint8_t sprite_h = properties->sprite_h;
+        uint16_t offset = image_lib->get_image_offset(type) +
+                (sprite_w * sprite_h) * object->get_current_image();
         uint16_t sprite_index = sprite_index_bases[type] + index;
         CC_Sprite_SetRegister(sprite_index, SPRITE_CTRL0,
                               object->is_alive() |
                               (1 << SPRITE_ENABLE_TRANSP));
+        CC_Sprite_SetRegister(sprite_index, SPRITE_DATA_OFFSET, offset);
         CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_X, x);
         CC_Sprite_SetRegister(sprite_index, SPRITE_OFFSET_Y, y);
 #endif  // defined (__AVR__)
