@@ -166,7 +166,7 @@ namespace Graphics {
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_COLOR_KEY,
                                       DEFAULT_COLOR_KEY);
                 CC_Sprite_SetRegister(sprite_index + i, SPRITE_DATA_OFFSET,
-                                      image_lib->get_image_offset(type, 0));
+                                      image_lib->get_image_offset(type));
             }
 
             sprite_index += num_objects_of_type;
@@ -203,7 +203,7 @@ namespace Graphics {
 
     void Screen::setup_tile_layer(uint8_t layer, bool enabled, int type) {
 #ifdef __AVR__
-        uint16_t data_offset = image_lib->get_image_offset(type, 0);
+        uint16_t data_offset = image_lib->get_image_offset(type);
         uint16_t tile_ctrl0_value =
             ((enabled ? 1 : 0) << TILE_LAYER_ENABLED) |
             (1 << TILE_ENABLE_NOP) |

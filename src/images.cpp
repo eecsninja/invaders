@@ -165,7 +165,7 @@ namespace Graphics {
 #endif
     }
 
-    uint16_t Images::get_image_offset(int type, int index) {
+    uint16_t Images::get_image_offset(int type) {
 #ifdef __AVR__
         // TODO: use |index| to get the correct image frame.
         return images[type].addr;
