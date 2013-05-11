@@ -178,4 +178,8 @@
 #define num_explosions                                  5
 #define MAX_NUM_ALIEN_SHOTS                            32
 
+#define NUM_STARFIELD_TILES                            16
+#define STARFIELD_DENSITY                               8
+#define STARFIELD_SPEED                                40
+
 #endif  // GAME_DEFS_H

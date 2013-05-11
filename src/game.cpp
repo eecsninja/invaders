@@ -37,6 +37,7 @@
 #include "rand_num_gen.h"
 #include "screen.h"
 #include "shields.h"
+#include "starfield.h"
 #include "system.h"
 
 extern const char* datadir;
@@ -66,7 +67,9 @@ EventCounter event_counter;
 #define max(a, b)   ( ((a)>=(b)) ? (a) : (b) )
 #define min(a, b)   ( ((b)>=(a)) ? (a) : (b) )
 
-#define SHIELD_LAYER_INDEX       0
+#define STARFIELD_LAYER_INDEX    0
+#define STARFIELD2_LAYER_INDEX   1
+#define SHIELD_LAYER_INDEX       3
 
 namespace {
     // Put all the data arrays needed by Game into a separate struct, so the
@@ -426,6 +429,17 @@ namespace Game {
         screen.scroll_tile_layer(SHIELD_LAYER_INDEX, SHIELD_X_OFFSET,
                                  SHIELD_Y_OFFSET);
 
+        // Create starfield layers.
+        generate_starfield(&screen, STARFIELD_LAYER_INDEX, 1,
+                           SCREEN_TILE_SIZE, SCREEN_TILE_SIZE,
+                           NUM_STARFIELD_TILES, STARFIELD_DENSITY / 2, 32, 128);
+        generate_starfield(&screen, STARFIELD2_LAYER_INDEX, 2,
+                           SCREEN_TILE_SIZE, SCREEN_TILE_SIZE,
+                           NUM_STARFIELD_TILES, STARFIELD_DENSITY, 16, 64);
+        starfield_y_offset = 0;
+        screen.scroll_tile_layer(STARFIELD_LAYER_INDEX, 0, 0);
+        screen.scroll_tile_layer(STARFIELD2_LAYER_INDEX, 0, 0);
+
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
             explosions[i].Explosion_init(i, 0, 0, false);
@@ -636,6 +650,9 @@ namespace Game {
                     explosions[i].duration(delta, 0);
                 }
             }
+
+            // Move starfields.
+            starfield_y_offset += INT_TO_FIXED(delta * STARFIELD_SPEED) / 1000;
 #ifdef EVENT_COUNTER
         event_counter.end_game_logic_section(2);
         event_counter.start_game_logic_section(3);
@@ -933,6 +950,13 @@ namespace Game {
                         shield.draw();
                 }
             }
+            // Scroll starfields.  One scrolls slower than the other, for a neat
+            // parallax effect.
+            screen.scroll_tile_layer(STARFIELD_LAYER_INDEX, 0,
+                                     FIXED_TO_INT(starfield_y_offset));
+            screen.scroll_tile_layer(STARFIELD2_LAYER_INDEX, 0,
+                                     FIXED_TO_INT(starfield_y_offset) * 3 / 4);
+
 #ifdef EVENT_COUNTER
             event_counter.end_game_logic_section(7);
 #endif
