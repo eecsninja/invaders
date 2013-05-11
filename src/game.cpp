@@ -658,7 +658,7 @@ namespace Game {
                         shield_group_tiles[shields[i].group].
                                 update_shield_piece(shields[i]);
                         if (!shot->is_active())
-                            continue;
+                            break;
                     }
                 }
             }
@@ -680,7 +680,7 @@ namespace Game {
                           //sound.play_shot_collision();
                           shot->shot_shot_collision(alien_shot);
                           if (!shot->is_active())
-                              continue;
+                              break;
                       }
                   }
             }
@@ -696,15 +696,19 @@ namespace Game {
                 if (!bonus->is_active() && shot->collides_with(bonus)) {
                     bonus->bonus_shot_collision(shot);
                     if (!shot->is_active())
-                        continue;
+                        break;
                 }
+                if (!shot->is_active())
+                    continue;
                 for (int i = 0; i < NUM_ALIENS; ++i) {
                     if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
                         shot->shot_alien_collision(&aliens[i]);
                         if (!shot->is_active())
-                            continue;
+                            break;
                     }
                 }
+                if (!shot->is_active())
+                    continue;
                 if (!collides_with_shield_group(shot))
                     continue;
                 for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -718,7 +722,7 @@ namespace Game {
                         shield_group_tiles[shields[i].group].
                                 update_shield_piece(shields[i]);
                         if (!shot->is_active())
-                            continue;
+                            break;
                     }
                 }
             }
