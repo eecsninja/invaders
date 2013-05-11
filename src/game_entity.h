@@ -69,7 +69,7 @@ namespace GameEntities {
         // These should be <= 255 and nonnegative.
         uint8_t coll_w, coll_h, coll_x_offset, coll_y_offset;
 
-        uint16_t right_limit, bottom_limit;
+        int16_t right_limit, bottom_limit;
 
         // All image frames used to draw the entity.  Each image is represented
         // by a unique integer handle.
