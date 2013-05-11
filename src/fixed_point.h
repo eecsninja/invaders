@@ -42,4 +42,11 @@ typedef int16_t fixed;    // Used for fixed point math on embedded systems.
 #define INT_TO_FIXED(x)           (((int32_t)x) << FIXED_POINT_SHIFT)
 #define FIXED_TO_INT(x)           (x >> FIXED_POINT_SHIFT)
 
+typedef int32_t fixed32;    // 32-bit fixed-point value for greater precision.
+#define FIXED_POINT_FACTOR_32               (1 << FIXED_POINT_SHIFT_32)
+#define FIXED_POINT_SHIFT_32                             8
+#define INT_TO_FIXED32(x)           (((int32_t)x) << FIXED_POINT_SHIFT_32)
+#define FIXED32_TO_INT(x)           (x >> FIXED_POINT_SHIFT_32)
+
+
 #endif  // FIXED_POINT_H
