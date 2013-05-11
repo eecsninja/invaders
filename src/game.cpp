@@ -288,7 +288,7 @@ namespace Game {
                 prop.points = 25;
                 prop.frame_duration = 225;
                 prop.right_limit = screen_w - ALIEN_WIDTH;
-                prop.bottom_limit = 530;
+                prop.bottom_limit = player_top - ALIEN_HEIGHT / 3;
                 prop.w = ALIEN_WIDTH;
                 prop.h = ALIEN_HEIGHT;
                 prop.coll_w = ALIEN_WIDTH;
@@ -308,7 +308,7 @@ namespace Game {
                 prop.points = 50;
                 prop.frame_duration = 225;
                 prop.right_limit = screen_w - ALIEN_WIDTH;
-                prop.bottom_limit = 530;
+                prop.bottom_limit = player_top - ALIEN_HEIGHT / 3;
                 prop.w = ALIEN_WIDTH;
                 prop.h = ALIEN_HEIGHT;
                 prop.coll_w = ALIEN_WIDTH;
@@ -328,7 +328,7 @@ namespace Game {
                 prop.points = 100;
                 prop.frame_duration = 225;
                 prop.right_limit = screen_w - ALIEN_WIDTH;
-                prop.bottom_limit = 530;
+                prop.bottom_limit = player_top - ALIEN_HEIGHT / 3;
 
                 prop.w = ALIEN_WIDTH;
                 prop.h = ALIEN_HEIGHT;
