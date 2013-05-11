@@ -48,5 +48,8 @@ typedef int32_t fixed32;    // 32-bit fixed-point value for greater precision.
 #define INT_TO_FIXED32(x)           (((int32_t)x) << FIXED_POINT_SHIFT_32)
 #define FIXED32_TO_INT(x)           (x >> FIXED_POINT_SHIFT_32)
 
+#define FIXED_TO_FIXED32_SHIFT    (FIXED_POINT_SHIFT_32 - FIXED_POINT_SHIFT)
+#define FIXED_TO_FIXED32(x)        (((int32_t)x) << FIXED_TO_FIXED32_SHIFT)
+#define FIXED32_TO_FIXED(x)        ((x) >> FIXED_TO_FIXED32_SHIFT)
 
 #endif  // FIXED_POINT_H
