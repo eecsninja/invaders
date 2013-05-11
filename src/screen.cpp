@@ -245,14 +245,15 @@ namespace Graphics {
 #endif  // defined (__AVR__)
     }
 
-    void Screen::setup_tile_layer(uint8_t layer, bool enabled, int type) {
+    void Screen::setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
+                                  uint16_t data_offset) {
 #ifdef __AVR__
-        uint16_t data_offset = image_lib->get_image_offset(type);
         uint16_t tile_ctrl0_value =
             ((enabled ? 1 : 0) << TILE_LAYER_ENABLED) |
             (1 << TILE_ENABLE_NOP) |
             (1 << TILE_ENABLE_TRANSP) |
-            (1 << TILE_ENABLE_FLIP);
+            (1 << TILE_ENABLE_FLIP) |
+            (palette << TILE_PALETTE_START);
         CC_TileLayer_SetRegister(layer, TILE_CTRL0, tile_ctrl0_value);
         CC_TileLayer_SetRegister(layer, TILE_DATA_OFFSET, data_offset);
         CC_TileLayer_SetRegister(layer, TILE_NOP_VALUE, 0);

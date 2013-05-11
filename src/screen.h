@@ -135,7 +135,8 @@ namespace Graphics {
         void set_palette_data(const void* palette_data, uint16_t size);
 
         // Initializes a tile layer.
-        void setup_tile_layer(uint8_t layer, bool enabled, int type);
+        void setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
+                              uint16_t data_offset);
 
         // Sets the scroll offset of a tile layer.
         void scroll_tile_layer(uint8_t layer, int16_t x, int16_t y);

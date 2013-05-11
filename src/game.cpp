@@ -418,8 +418,10 @@ namespace Game {
         screen.allocate_sprites(num_objects_per_type);
 
         // Set up tile layer for drawing shield pieces.
-        screen.setup_tile_layer(SHIELD_LAYER_INDEX, true,
-                                GAME_ENTITY_SHIELD_PIECE);
+        uint16_t shield_data_offset =
+                screen.get_image_offset(GAME_ENTITY_SHIELD_PIECE);
+        screen.setup_tile_layer(SHIELD_LAYER_INDEX, true, 0,
+                                shield_data_offset);
         screen.scroll_tile_layer(SHIELD_LAYER_INDEX, SHIELD_X_OFFSET,
                                  SHIELD_Y_OFFSET);
 
