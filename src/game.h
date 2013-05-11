@@ -91,7 +91,8 @@ namespace Game {
         int* bonus_select;
         int* launch_delay;
         int alien_count, wave, player_life, alien_odd_range, num_alien_shots;
-        int current_player_speed, current_alien_speed, current_bonus_speed;
+        int current_player_speed, current_bonus_speed;
+        fixed current_alien_speed;
         int player_shot_counter, alien_shot_counter, explosion_counter;
         uint32_t last_shot, last_alien_shot, last_bonus_launch, last_loop_time, delta, score, dead_pause;
         uint32_t player_shot_delay, alien_shot_delay, bonus_launch_delay, next_free_guy;

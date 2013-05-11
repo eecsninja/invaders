@@ -91,8 +91,10 @@ namespace {
         object->ShieldPiece_init(0, x, y, piece.intact);
     }
 
-    int increase_speed(int speed, fixed increase) {
-        int new_speed = FIXED_TO_INT(speed * increase);
+    fixed increase_speed(fixed speed, fixed32 increase) {
+        // Multiplying fixed and fixed32 results in 12 bits after the point.
+        // FIXED32_TO_INT() converts it back into 4-bit post-point precision.
+        fixed new_speed = FIXED32_TO_INT(speed * increase);
         if (new_speed != speed || speed == 0)
             return new_speed;
         // If the increase was so small that speed was not updated, inc/dec the
@@ -148,7 +150,7 @@ namespace Game {
         wave = score = 0;
         next_free_guy = free_guy_val;
         aliens_landed = false;
-        current_alien_speed = ALIEN_BASE_SPEED;
+        current_alien_speed = INT_TO_FIXED(ALIEN_BASE_SPEED);
         player_life = 3;
 
         init_wave();
@@ -443,7 +445,7 @@ namespace Game {
                 launch_delay[i] = (gen1_4());
             }
             alien_shot_delay = 375;
-            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
             num_alien_shots = 17;
             alien_odd_range = 9;
             break;
@@ -454,7 +456,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 350;
-            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -465,7 +467,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 325;
-            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
             num_alien_shots = 20;
             alien_odd_range = 8;
             break;
@@ -476,7 +478,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
             num_alien_shots = 21;
             alien_odd_range = 7;
             break;
@@ -487,7 +489,7 @@ namespace Game {
                 launch_delay[i] = (gen1_3());
             }
             alien_shot_delay = 300;
-            current_alien_speed += ALIEN_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
             num_alien_shots = 22;
             alien_odd_range = 6;
             break;
@@ -503,7 +505,7 @@ namespace Game {
                 if (num_alien_shots > MAX_NUM_ALIEN_SHOTS)
                     num_alien_shots = MAX_NUM_ALIEN_SHOTS;
             }
-            current_alien_speed += ALIEN_HIGH_WAVE_SPEED_INCREASE;
+            current_alien_speed += INT_TO_FIXED(ALIEN_HIGH_WAVE_SPEED_INCREASE);
             alien_odd_range = 6;
             break;
         }
@@ -595,8 +597,11 @@ namespace Game {
             } else {
                 //sound.halt_bonus();
             }
+            // Cast |delta| to a signed value to correctly multiply.  Otherwise
+            // the result is incorrect due to mixing signed and unsigned ints
+            // with different widths.
             fixed alien_movement =
-                INT_TO_FIXED(delta * current_alien_speed) / 1000;
+                (current_alien_speed * (int32_t)delta) / 1000;
             for (int i = 0; i < NUM_ALIENS; ++i) {
                 if (aliens[i].is_alive())
                     aliens[i].movement(delta, alien_movement);

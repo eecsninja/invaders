@@ -53,8 +53,8 @@
     #define ALIEN_Y_MOVEMENT     10
 #endif
 
-#define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR * 1.027)
-#define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR * 1.15)
+#define ALIEN_SPEED_BOOST            (FIXED_POINT_FACTOR_32 * 1.027)
+#define ALIEN_SPEED_BOOST_EXTRA      (FIXED_POINT_FACTOR_32 * 1.15)
 
 // For generating shield pieces.
 #define NUM_SHIELD_GROUPS            3
