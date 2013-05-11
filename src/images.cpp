@@ -99,10 +99,10 @@ namespace Graphics {
 #define BUFFER_SIZE       32
         uint32_t total_data_copied = 0;
 
+        num_images = 0;
         for (int i = 0;
-             i < MAX_NUM_IMAGES &&
-                (image_list[i].addr || image_list[i].size);
-             ++i) {
+             i < MAX_NUM_IMAGES && (image_list[i].addr || image_list[i].size);
+             ++i, ++num_images) {
             const ImageListEntry& entry = image_list[i];
 
             images[i].addr = total_data_copied;
@@ -150,6 +150,14 @@ namespace Graphics {
 #endif  // defined(__AVR__)
     }
 
+    uint16_t Images::get_total_image_size() const {
+        uint16_t size = 0;
+#ifdef __AVR__
+        for (int i = 0; i < num_images; ++i)
+            size += images[i].size;
+#endif  // defined (__AVR__)
+        return size;
+    }
 
     SDL_Surface *Images::get_image(const char* filename)
     {

@@ -86,6 +86,9 @@ namespace Graphics {
           // array is terminated by addr=0 and size=0.
           bool load_images(const ImageListEntry* image_list);
 
+          // Returns the total amount of VRAM used by images.
+          uint16_t get_total_image_size() const;
+
           // Image lookup by filename.
           SDL_Surface *get_image(const char* filename);
 
