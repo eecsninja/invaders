@@ -77,7 +77,8 @@ namespace {
 
 namespace Graphics {
     Screen::Screen() : num_blits(0),
-                       image_lib(NULL) {}
+                       image_lib(NULL),
+                       allocated_vram_size(0) {}
 
     bool Screen::init() {
         memset(num_sprites_per_type, 0, sizeof(num_sprites_per_type));
@@ -109,6 +110,7 @@ namespace Graphics {
 
     void Screen::set_image_lib(Images* images) {
         image_lib = images;
+        allocated_vram_size = images->get_total_image_size();
 
 #ifndef __AVR__
         wave_background = images->get_image("wave_background.png");
@@ -210,6 +212,14 @@ namespace Graphics {
                     sprite_index);
         }
 #endif  // defined (__AVR__)
+    }
+
+    bool Screen::allocate_vram(uint16_t size, uint16_t* vram_offset) {
+        if (allocated_vram_size + size > 0x10000L)
+            return false;
+        *vram_offset = allocated_vram_size;
+        allocated_vram_size += size;
+        return true;
     }
 
     void Screen::set_palette_data(const void* palette_data, uint16_t size) {

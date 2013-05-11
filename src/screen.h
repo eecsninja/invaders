@@ -92,6 +92,9 @@ namespace Graphics {
         // How many sprites are allocated for each type.
         uint8_t num_sprites_per_type[NUM_GAME_ENTITY_TYPES];
 
+        // For VRAM allocation.
+        uint32_t allocated_vram_size;
+
     public:
         Screen();
 
@@ -122,6 +125,10 @@ namespace Graphics {
         // Used to initialize the sprite allocation table based on how many
         // of each type of object will be drawn.
         void allocate_sprites(const int* num_objects_per_type);
+
+        // Attempts to allocate VRAM.  Returns true on success.  Returns the
+        // allocated address in |*vram_offset|.
+        bool allocate_vram(uint16_t size, uint16_t* vram_offset);
 
         // Loads palette data.
         // TODO: support multiple palettes.
