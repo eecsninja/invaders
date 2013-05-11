@@ -131,8 +131,8 @@ namespace Graphics {
         bool allocate_vram(uint16_t size, uint16_t* vram_offset);
 
         // Loads palette data.
-        // TODO: support multiple palettes.
-        void set_palette_data(const void* palette_data, uint16_t size);
+        void set_palette_data(uint8_t palette, const void* palette_data,
+                              uint16_t size);
 
         // Initializes a tile layer.
         void setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,

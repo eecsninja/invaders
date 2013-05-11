@@ -222,7 +222,8 @@ namespace Graphics {
         return true;
     }
 
-    void Screen::set_palette_data(const void* palette_data, uint16_t size) {
+    void Screen::set_palette_data(uint8_t palette, const void* palette_data,
+                                  uint16_t size) {
 #ifdef __AVR__
 #define BUFFER_SIZE       32
         uint32_t buffer[BUFFER_SIZE];
@@ -236,7 +237,7 @@ namespace Graphics {
             ++offset;
             // If the buffer fills up, copy it to VRAM.
             if (offset == BUFFER_SIZE) {
-                CC_SetPaletteData(buffer, 0, size_copied, sizeof(buffer));
+                CC_SetPaletteData(buffer, palette, size_copied, sizeof(buffer));
                 size_copied += sizeof(buffer);
                 offset = 0;
             }

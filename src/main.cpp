@@ -121,7 +121,7 @@ int main(int argc, char* argv[])
     screen.set_image_lib(&images);
 
 #ifdef __AVR__
-    screen.set_palette_data(palette_base, palette_size);
+    screen.set_palette_data(0, palette_base, palette_size);
 #endif
 
     Game::Game game(&screen);
