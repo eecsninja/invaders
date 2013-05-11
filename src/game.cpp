@@ -733,10 +733,18 @@ namespace Game {
                     make_shield(shields[i], &shield);
                     if (shield.is_alive() && shield.collides_with(alien)) {
                         alien->alien_shield_collision(&shield);
+                        // GameEntity shield is only a temporary object.  Update
+                        // |shields[i]|, which is the permanent object.
+                        if (!shield.is_alive())
+                            shields[i].intact = false;
+                        shield_group_tiles[shields[i].group].
+                                update_shield_piece(shields[i]);
                         if (!alien->is_alive())
-                            continue;
+                            break;
                     }
                 }
+                if (!alien->is_alive())
+                    continue;
                 if (player->is_active() && player->collides_with(alien)) {
                     player->player_alien_collision(alien);
                     if (!alien->is_alive())

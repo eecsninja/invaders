@@ -72,6 +72,12 @@ namespace GameEntities {
         }
         return true;
     }
+    void GameEntity::alien_shield_collision(GameEntity* other)
+    {
+        this->kill();
+        other->kill();
+    }
+
     void GameEntity::player_alien_collision(GameEntity* other)
     {
         game->explode(this->x_int(), this->y_int(), long_explosion);

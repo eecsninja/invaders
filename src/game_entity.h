@@ -153,7 +153,7 @@ namespace GameEntities {
         void set_hit(bool hit) { this->hit = hit; }
         bool is_hit() const { return hit; }
         // collision handling
-        void alien_shield_collision(GameEntity* other) { other->kill(); }
+        void alien_shield_collision(GameEntity* other);
         void player_alien_collision(GameEntity* other);
         void player_shot_collision(GameEntity* other);
         void shot_alien_collision(GameEntity* other);
