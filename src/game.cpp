@@ -66,6 +66,8 @@ EventCounter event_counter;
 #define max(a, b)   ( ((a)>=(b)) ? (a) : (b) )
 #define min(a, b)   ( ((b)>=(a)) ? (a) : (b) )
 
+#define SHIELD_LAYER_INDEX       0
+
 namespace {
     // Put all the data arrays needed by Game into a separate struct, so the
     // amount of memory required can be easily obtained using sizeof().
@@ -416,8 +418,10 @@ namespace Game {
         screen.allocate_sprites(num_objects_per_type);
 
         // Set up tile layer for drawing shield pieces.
-        screen.setup_tile_layer(0, true, GAME_ENTITY_SHIELD_PIECE);
-        screen.scroll_tile_layer(0, SHIELD_X_OFFSET, SHIELD_Y_OFFSET);
+        screen.setup_tile_layer(SHIELD_LAYER_INDEX, true,
+                                GAME_ENTITY_SHIELD_PIECE);
+        screen.scroll_tile_layer(SHIELD_LAYER_INDEX, SHIELD_X_OFFSET,
+                                 SHIELD_Y_OFFSET);
 
         // create explosions and player shots
         for (int i = 0; i < num_explosions; ++i) {
@@ -915,7 +919,8 @@ namespace Game {
             if (screen.tile_layers_supported()) {
                 for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
                     uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-                    shield_group_tiles[i].draw(&screen, 0, x, 0);
+                    shield_group_tiles[i].draw(&screen, SHIELD_LAYER_INDEX, x,
+                                               0);
                 }
             } else {
                 for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -949,7 +954,7 @@ namespace Game {
         if (screen.tile_layers_supported()) {
             for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
                 uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-                shield_group_tiles[i].draw(&screen, 0, x, 0);
+                shield_group_tiles[i].draw(&screen, SHIELD_LAYER_INDEX, x, 0);
             }
         } else {
             for (int i = 0; i < NUM_SHIELDS; ++i) {
@@ -974,7 +979,7 @@ namespace Game {
         if (screen.tile_layers_supported()) {
             for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
                 uint8_t x = i * SHIELD_GROUP_X_SPACING / SCREEN_TILE_SIZE;
-                shield_group_tiles[i].draw(&screen, 0, x, 0);
+                shield_group_tiles[i].draw(&screen, SHIELD_LAYER_INDEX, x, 0);
             }
         } else {
             for (int i = 0; i < NUM_SHIELDS; ++i) {
