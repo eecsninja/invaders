@@ -47,6 +47,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#include "spipad.h"
+
 #define FOSC 8000000
 #define BAUD   57600
 #define MYUBRR    16
@@ -147,6 +149,7 @@ namespace System {
         }
 #else
         system_init();
+        spipad_init();
 #endif
         return true;
     }
@@ -171,6 +174,18 @@ namespace System {
         if (keys[SDLK_RIGHT])
             key_state.right = 1;
         if (keys[SDLK_SPACE])
+            key_state.fire = 1;
+#else
+        SpiPadButtons buttons = spipad_read();
+        if (buttons.A)
+            key_state.quit = 1;
+        if (buttons.START)
+            key_state.pause = 1;
+        if (buttons.LEFT)
+            key_state.left = 1;
+        if (buttons.RIGHT)
+            key_state.right = 1;
+        if (buttons.B)
             key_state.fire = 1;
 #endif  // !defined(__AVR__)
         return key_state;

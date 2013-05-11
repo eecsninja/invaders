@@ -918,6 +918,7 @@ namespace Game {
     }
     void Game::pause()
     {
+    printf("pause\n");
         uint32_t begin_pause;
         //sound.halt_bonus();
         //sound.halt_bg(alien_count);
