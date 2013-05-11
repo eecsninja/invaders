@@ -730,7 +730,7 @@ namespace Game {
         event_counter.end_game_logic_section(5);
         event_counter.start_game_logic_section(6);
 #endif
-            // aliens with shields and player
+            // Aliens with shields.
             for (int j = 0; j < NUM_ALIENS; ++j) {
                 Alien* alien = &aliens[j];
                 if (!alien->is_alive())
@@ -752,12 +752,18 @@ namespace Game {
                             break;
                     }
                 }
+            }
+            // Aliens with player.
+            for (int j = 0; j < NUM_ALIENS; ++j) {
+                Alien* alien = &aliens[j];
                 if (!alien->is_alive())
                     continue;
                 if (player->is_active() && player->collides_with(alien)) {
                     player->player_alien_collision(alien);
                     if (!alien->is_alive())
                         continue;
+                    if (!player->is_alive())
+                        break;
                 }
             }
 #ifdef EVENT_COUNTER
