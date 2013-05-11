@@ -61,6 +61,8 @@ using Game::ShieldGroupTiles;
 EventCounter event_counter;
 #endif
 
+#define PAUSE_COOLDOWN_TIME      100
+
 namespace {
     // Put all the data arrays needed by Game into a separate struct, so the
     // amount of memory required can be easily obtained using sizeof().
@@ -918,20 +920,22 @@ namespace Game {
     }
     void Game::pause()
     {
-    printf("pause\n");
         uint32_t begin_pause;
         //sound.halt_bonus();
         //sound.halt_bg(alien_count);
         begin_pause = System::get_ticks();
-        while (1) {
-            System::KeyState keys = System::get_key_state();
-            if (keys.pause) {
-                last_loop_time +=  System::get_ticks() - begin_pause;
-                last_bonus_launch = last_alien_shot = System::get_ticks();
-                //sound.play_bonus();
-                return;
-            }
-        }
+
+        // Wait for the pause key to be released before allowing resume.
+        // This way, holding down the pause key will still pause the game.
+        while (System::get_key_state().pause)
+            System::delay(PAUSE_COOLDOWN_TIME);
+
+        while (!System::get_key_state().pause);
+
+        System::delay(PAUSE_COOLDOWN_TIME);
+        last_loop_time +=  System::get_ticks() - begin_pause;
+        last_bonus_launch = last_alien_shot = System::get_ticks();
+        //sound.play_bonus();
     }
     void Game::fire_shot()
     {
