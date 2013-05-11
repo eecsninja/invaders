@@ -644,9 +644,12 @@ namespace Game {
                     if (!shot->is_active())
                         continue;
                 }
-                if (!collides_with_shield_group(shot))
+                uint8_t group;
+                if (!collides_with_shield_group(shot, &group))
                     continue;
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = group * NUM_SHIELDS_PER_GROUP;
+                     i < (group + 1) * NUM_SHIELDS_PER_GROUP && i < NUM_SHIELDS;
+                     ++i) {
                     //ShieldPiece* shield = &shields[i];
                     if (!shields[i].intact)
                       continue;
@@ -709,9 +712,12 @@ namespace Game {
                 }
                 if (!shot->is_active())
                     continue;
-                if (!collides_with_shield_group(shot))
+                uint8_t group;
+                if (!collides_with_shield_group(shot, &group))
                     continue;
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = group * NUM_SHIELDS_PER_GROUP;
+                     i < (group + 1) * NUM_SHIELDS_PER_GROUP && i < NUM_SHIELDS;
+                     ++i) {
                     if (!shields[i].intact)
                       continue;
                     GameEntity shield;
@@ -735,9 +741,12 @@ namespace Game {
                 Alien* alien = &aliens[j];
                 if (!alien->is_alive())
                     continue;
-                if (!collides_with_shield_group(alien))
+                uint8_t group;
+                if (!collides_with_shield_group(alien, &group))
                     continue;
-                for (int i = 0; i < NUM_SHIELDS; ++i) {
+                for (int i = group * NUM_SHIELDS_PER_GROUP;
+                     i < (group + 1) * NUM_SHIELDS_PER_GROUP && i < NUM_SHIELDS;
+                     ++i) {
                     GameEntity shield;
                     make_shield(shields[i], &shield);
                     if (shield.is_alive() && shield.collides_with(alien)) {
@@ -1111,11 +1120,13 @@ namespace Game {
             break;
         }
     }
-    bool Game::collides_with_shield_group(GameEntity* object) {
+    bool Game::collides_with_shield_group(GameEntity* object, uint8_t* group) {
         for (int i = 0; i < NUM_SHIELD_GROUPS; ++i) {
             GameEntity* shield_group = &shield_groups[i];
-            if (shield_group->collides_with(object))
+            if (shield_group->collides_with(object)) {
+                *group = i;
                 return true;
+            }
         }
         return false;
     }
