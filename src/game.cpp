@@ -1071,10 +1071,18 @@ namespace Game {
             wave_over = true;
             return;
         }
-        // set the alien above the one just killed to active
+        // Set the alien above the one just killed to active.  If the above one
+        // is dead, try the one above that.
+        int next_alien_index = index - ALIEN_ARRAY_WIDTH;
+        while (next_alien_index >= 0) {
+            if (aliens[next_alien_index].is_alive()) {
+                aliens[next_alien_index].activate();
+                break;
+            }
+            next_alien_index -= ALIEN_ARRAY_WIDTH;
+        }
+
         // speed up all the existing aliens, whenever one is destroyed
-        if (index >= ALIEN_ARRAY_WIDTH)
-            aliens[index - ALIEN_ARRAY_WIDTH].activate();
         current_alien_speed =
            increase_speed(current_alien_speed, ALIEN_SPEED_BOOST);
         switch (alien_count) {
