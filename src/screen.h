@@ -147,7 +147,7 @@ namespace Graphics {
                               const void* tilemap_data, uint16_t size);
 
         // A wrapper around image offset lookup.
-        uint16_t get_image_offset(int type, uint8_t index);
+        uint16_t get_image_offset(int type) const;
 
     private:
         // Updates a sprite in the sprite table given an updated entity object.

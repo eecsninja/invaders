@@ -278,6 +278,12 @@ namespace Graphics {
 #endif // defined (__AVR__)
     }
 
+    uint16_t Screen::get_image_offset(int type) const {
+        if (!image_lib)
+            return 0;
+        return image_lib->get_image_offset(type);
+    }
+
     void Screen::update_sprite(const GameEntities::GameEntity* object) {
 #ifdef __AVR__
         uint8_t type = object->get_type();
