@@ -700,7 +700,7 @@ namespace Game {
                 Shot* shot = &player_shots[j];
                 if (!shot->is_active())
                     continue;
-                if (!bonus->is_active() && shot->collides_with(bonus)) {
+                if (bonus->is_active() && shot->collides_with(bonus)) {
                     bonus->bonus_shot_collision(shot);
                     if (!shot->is_active())
                         break;
