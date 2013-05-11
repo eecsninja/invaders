@@ -737,28 +737,39 @@ namespace Game {
         event_counter.start_game_logic_section(6);
 #endif
             // Aliens with shields.
-            for (int j = 0; j < NUM_ALIENS; ++j) {
-                Alien* alien = &aliens[j];
-                if (!alien->is_alive())
-                    continue;
-                uint8_t group;
-                if (!collides_with_shield_group(alien, &group))
-                    continue;
-                for (int i = group * NUM_SHIELDS_PER_GROUP;
-                     i < (group + 1) * NUM_SHIELDS_PER_GROUP && i < NUM_SHIELDS;
-                     ++i) {
-                    GameEntity shield;
-                    make_shield(shields[i], &shield);
-                    if (shield.is_alive() && shield.collides_with(alien)) {
-                        alien->alien_shield_collision(&shield);
-                        // GameEntity shield is only a temporary object.  Update
-                        // |shields[i]|, which is the permanent object.
-                        if (!shield.is_alive())
-                            shields[i].intact = false;
-                        shield_group_tiles[shields[i].group].
-                                update_shield_piece(shields[i]);
-                        if (!alien->is_alive())
-                            break;
+            for (int k = 0; k < ALIEN_ARRAY_HEIGHT; ++k) {
+                uint8_t alien_index = k * ALIEN_ARRAY_WIDTH;
+                for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j, ++alien_index) {
+                    Alien* alien = &aliens[alien_index];
+                    if (!alien->is_alive())
+                        continue;
+
+                    // If the alien is higher than the shield groups, so are all
+                    // other aliens in the row, so skip the rest of the row.
+                    if (alien->get_y() + alien->get_h() < SHIELD_Y_OFFSET)
+                        break;
+
+                    uint8_t group;
+                    if (!collides_with_shield_group(alien, &group))
+                        continue;
+                    for (int i = group * NUM_SHIELDS_PER_GROUP;
+                         i < (group + 1) * NUM_SHIELDS_PER_GROUP &&
+                            i < NUM_SHIELDS;
+                         ++i) {
+                        GameEntity shield;
+                        make_shield(shields[i], &shield);
+                        if (shield.is_alive() && shield.collides_with(alien)) {
+                            alien->alien_shield_collision(&shield);
+                            // GameEntity shield is only a temporary object.
+                            // Update |shields[i]|, which is the permanent
+                            // object.
+                            if (!shield.is_alive())
+                                shields[i].intact = false;
+                            shield_group_tiles[shields[i].group].
+                                    update_shield_piece(shields[i]);
+                            if (!alien->is_alive())
+                                break;
+                        }
                     }
                 }
             }
