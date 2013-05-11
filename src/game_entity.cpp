@@ -74,7 +74,6 @@ namespace GameEntities {
     }
     void GameEntity::alien_shield_collision(GameEntity* other)
     {
-        this->kill();
         other->kill();
     }
 
