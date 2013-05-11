@@ -246,6 +246,24 @@ namespace Graphics {
 #endif  // defined (__AVR__)
     }
 
+    void Screen::set_palette_entry(uint8_t palette, uint8_t entry,
+                                   uint8_t r, uint8_t g, uint8_t b) {
+#ifdef __AVR__
+        struct {
+            uint8_t r;
+            uint8_t g;
+            uint8_t b;
+            uint8_t padding;
+        } palette_entry;
+        palette_entry.r = r;
+        palette_entry.g = g;
+        palette_entry.b = b;
+        palette_entry.padding = 0;
+        CC_SetPaletteData(&palette_entry, palette, entry * sizeof(uint32_t),
+                          sizeof(uint32_t));
+#endif  // defined (__AVR__)
+    }
+
     void Screen::setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
                                   uint16_t data_offset) {
 #ifdef __AVR__

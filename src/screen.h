@@ -134,6 +134,10 @@ namespace Graphics {
         void set_palette_data(uint8_t palette, const void* palette_data,
                               uint16_t size);
 
+        // Sets one entry in a palette.
+        void set_palette_entry(uint8_t palette, uint8_t entry,
+                               uint8_t r, uint8_t g, uint8_t b);
+
         // Initializes a tile layer.
         void setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
                               uint16_t data_offset);
