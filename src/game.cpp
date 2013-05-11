@@ -63,6 +63,9 @@ EventCounter event_counter;
 
 #define PAUSE_COOLDOWN_TIME      100
 
+#define max(a, b)   ( ((a)>=(b)) ? (a) : (b) )
+#define min(a, b)   ( ((b)>=(a)) ? (a) : (b) )
+
 namespace {
     // Put all the data arrays needed by Game into a separate struct, so the
     // amount of memory required can be easily obtained using sizeof().
@@ -647,6 +650,7 @@ namespace Game {
                 uint8_t group;
                 if (!collides_with_shield_group(shot, &group))
                     continue;
+
                 for (int i = group * NUM_SHIELDS_PER_GROUP;
                      i < (group + 1) * NUM_SHIELDS_PER_GROUP && i < NUM_SHIELDS;
                      ++i) {
@@ -752,23 +756,37 @@ namespace Game {
                     uint8_t group;
                     if (!collides_with_shield_group(alien, &group))
                         continue;
-                    for (int i = group * NUM_SHIELDS_PER_GROUP;
-                         i < (group + 1) * NUM_SHIELDS_PER_GROUP &&
-                            i < NUM_SHIELDS;
-                         ++i) {
-                        GameEntity shield;
-                        make_shield(shields[i], &shield);
-                        if (shield.is_alive() && shield.collides_with(alien)) {
-                            alien->alien_shield_collision(&shield);
-                            // GameEntity shield is only a temporary object.
-                            // Update |shields[i]|, which is the permanent
-                            // object.
-                            if (!shield.is_alive())
-                                shields[i].intact = false;
-                            shield_group_tiles[shields[i].group].
-                                    update_shield_piece(shields[i]);
-                            if (!alien->is_alive())
-                                break;
+
+                    // Compute the alien collision edges, relative to the upper
+                    // left corner of the shield group.
+                    int alien_left = alien->get_x() + alien->coll_x_offset() -
+                            shield_groups[group].get_x();
+                    int alien_right = alien_left + alien->coll_w() - 1;
+                    int alien_top = alien->get_y() + alien->coll_y_offset() -
+                            shield_groups[group].get_y();
+                    int alien_bottom = alien_top + alien->coll_h() - 1;
+
+                    // Now compute the range of shield pieces within the group
+                    // that are touching the alien.
+                    int shield_left = max(alien_left / SHIELD_PIECE_SIZE, 0);
+                    int shield_right = min(alien_right / SHIELD_PIECE_SIZE,
+                                           SHIELD_GROUP_WIDTH - 1);
+                    int shield_top = max(alien_top / SHIELD_PIECE_SIZE, 0);
+                    int shield_bottom = min(alien_bottom / SHIELD_PIECE_SIZE,
+                                            SHIELD_GROUP_HEIGHT - 1);
+
+                    uint8_t offset = group * NUM_SHIELDS_PER_GROUP +
+                                     shield_top * SHIELD_GROUP_WIDTH;
+                    for (int y = shield_top; y <= shield_bottom;
+                         ++y, offset += SHIELD_GROUP_WIDTH) {
+                        for (int x = shield_left; x <= shield_right; ++x) {
+                            if (!shields[offset + x].intact)
+                                continue;
+                            // Break all pieces that are still intact.  The
+                            // alien survives.
+                            shields[offset + x].intact = false;
+                            shield_group_tiles[group].
+                                    update_shield_piece(shields[offset + x]);
                         }
                     }
                 }
