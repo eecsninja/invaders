@@ -96,14 +96,8 @@ class EventCounter {
                 System::get_ticks() - game_logic_section_start_times[section];
     }
 
-    void new_loop() {
-        ++num_loops;
-        latest_time = System::get_ticks();
-
-        // Report the latest stats if necessary.
-        if (num_loops > 0 && num_loops % EVENT_COUNTER_LOOP_LIMIT == 0)
-            report();
-    }
+    // Tell EventCounter that a new game loop has started.
+    void new_loop();
 
     // Prints a report of the current stats.
     void report();

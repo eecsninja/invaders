@@ -32,11 +32,23 @@
 
 #include "event_counter.h"
 
+void EventCounter::new_loop()
+{
+    ++num_loops;
+    latest_time = System::get_ticks();
+
+    // Report the latest stats if necessary.
+    if (num_loops > 0 && num_loops == EVENT_COUNTER_LOOP_LIMIT) {
+        report();
+        reset();
+    }
+}
+
 void EventCounter::report()
 {
     if (num_loops == 0)
         return;
-    printf("Per-loop stats, averaged over %d loops:\n", num_loops);
+    printf("Average stats over last %d loops:\n", num_loops);
     printf("- Collision checks: %d\n", num_collision_checks / num_loops);
     printf("- Movement calls: %d\n", num_movement_calls / num_loops);
     printf("- Loop time in ticks: %d\n",
