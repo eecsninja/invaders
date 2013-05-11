@@ -763,16 +763,23 @@ namespace Game {
                 }
             }
             // Aliens with player.
-            for (int j = 0; j < NUM_ALIENS; ++j) {
-                Alien* alien = &aliens[j];
-                if (!alien->is_alive())
-                    continue;
-                if (player->is_active() && player->collides_with(alien)) {
-                    player->player_alien_collision(alien);
-                    if (!alien->is_alive())
+            for (int k = 0; k < ALIEN_ARRAY_HEIGHT && player->is_active(); ++k) {
+                uint8_t alien_index = k * ALIEN_ARRAY_WIDTH;
+                for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j, ++alien_index) {
+                    Alien& alien = aliens[alien_index];
+                    if (!alien.is_alive())
                         continue;
-                    if (!player->is_alive())
+                    // If the alien doesn't overlap with the player along the
+                    // vertical axis, skip the entire row of aliens.
+                    if (alien.get_y() + alien.get_h() < player->get_y() ||
+                        alien.get_y() > player->get_y() + player->get_w()) {
                         break;
+                    }
+                    if (player->collides_with(&alien)) {
+                        player->player_alien_collision(&alien);
+                        if (!player->is_alive())
+                            break;
+                    }
                 }
             }
 #ifdef EVENT_COUNTER
