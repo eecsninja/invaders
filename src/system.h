@@ -55,6 +55,9 @@ namespace System {
 
     // Returns the number of ticks on a system timer.
     uint32_t get_ticks();
+
+    // Waits for number of ticks.
+    void delay(uint16_t num_ticks);
 }
 
 

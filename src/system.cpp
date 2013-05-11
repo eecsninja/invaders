@@ -201,4 +201,12 @@ namespace System {
 #endif
     }
 
+    void delay(uint16_t num_ticks) {
+#ifndef __AVR__
+        SDL_Delay(num_ticks);
+#else
+        uint32_t final_time = get_ticks() + num_ticks;
+        while (get_ticks() != final_time);
+#endif
+    }
 }
