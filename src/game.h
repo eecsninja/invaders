@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "fixed_point.h"
 #include "screen.h"
 #include "sound.h"
 #include "status.h"
@@ -46,13 +47,6 @@
 
 #define dump(x) printf("%s %u: %s = %d\n", __func__, __LINE__, #x, (int)(x))
 #define dumphex(x) printf("%s %u: %s = 0x%x\n", __func__, __LINE__, #x, (int)(x))
-
-typedef int16_t fixed;    // Used for fixed point math on embedded systems.
-#define FIXED_POINT_FACTOR                              16
-#define FIXED_POINT_SHIFT                                4
-// Convert to 32-bit int for multiplication, to avoid losing precision.
-#define INT_TO_FIXED(x)           (((int32_t)x) << FIXED_POINT_SHIFT)
-#define FIXED_TO_INT(x)           (x >> FIXED_POINT_SHIFT)
 
 namespace GameEntities {
     class GameEntity;
