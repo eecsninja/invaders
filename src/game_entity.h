@@ -128,6 +128,8 @@ namespace GameEntities {
         void init_y(int init) { y = INT_TO_FIXED(init); }
         int get_x() const { return x_int(); }
         int get_y() const { return y_int(); }
+        int get_w() const { return properties()->w; }
+        int get_h() const { return properties()->h; }
         int x_int() const { return FIXED_TO_INT(x); }
         int y_int() const { return FIXED_TO_INT(y); }
         int coll_w() const { return properties()->coll_w; }
