@@ -140,7 +140,7 @@ namespace Graphics {
 
         // Initializes a tile layer.
         void setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
-                              uint16_t data_offset);
+                              uint16_t data_offset, uint16_t color_key);
 
         // Sets the scroll offset of a tile layer.
         void scroll_tile_layer(uint8_t layer, int16_t x, int16_t y);

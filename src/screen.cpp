@@ -265,7 +265,7 @@ namespace Graphics {
     }
 
     void Screen::setup_tile_layer(uint8_t layer, bool enabled, uint8_t palette,
-                                  uint16_t data_offset) {
+                                  uint16_t data_offset, uint16_t color_key) {
 #ifdef __AVR__
         uint16_t tile_ctrl0_value =
             ((enabled ? 1 : 0) << TILE_LAYER_ENABLED) |
@@ -276,7 +276,7 @@ namespace Graphics {
         CC_TileLayer_SetRegister(layer, TILE_CTRL0, tile_ctrl0_value);
         CC_TileLayer_SetRegister(layer, TILE_DATA_OFFSET, data_offset);
         CC_TileLayer_SetRegister(layer, TILE_NOP_VALUE, 0);
-        CC_TileLayer_SetRegister(layer, TILE_COLOR_KEY, DEFAULT_COLOR_KEY);
+        CC_TileLayer_SetRegister(layer, TILE_COLOR_KEY, color_key);
 #endif  // defined (__AVR__)
     }
 

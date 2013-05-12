@@ -421,7 +421,8 @@ namespace Game {
         uint16_t shield_data_offset =
                 screen.get_image_offset(GAME_ENTITY_SHIELD_PIECE);
         screen.setup_tile_layer(SHIELD_LAYER_INDEX, true, 0,
-                                shield_data_offset);
+                                shield_data_offset, 0xff);
+
         screen.scroll_tile_layer(SHIELD_LAYER_INDEX, SHIELD_X_OFFSET,
                                  SHIELD_Y_OFFSET);
 
