@@ -52,6 +52,8 @@
 
 #define DEFAULT_COLOR_KEY   0xff
 
+#define SPRITE_LAYER_INDEX     3
+
 namespace {
 
 #ifdef __AVR__
@@ -85,6 +87,7 @@ namespace Graphics {
         memset(sprite_index_bases, 0, sizeof(sprite_index_bases));
 #ifdef __AVR__
         CC_Init();
+        CC_SetRegister(CC_REG_SPRITE_Z, SPRITE_LAYER_INDEX);
         printf("ChronoCube initialization complete.\n");
 #else
         int flags = SDL_SWSURFACE;
