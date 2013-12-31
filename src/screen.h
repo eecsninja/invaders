@@ -35,21 +35,11 @@
 
 #include <stdint.h>
 
-#ifndef __AVR__
-#include <SDL/SDL.h>
-#endif
-
 #include "game_entity_types.h"
 
-#ifdef __AVR__
-    #define screen_w      320
-    #define screen_h      240
-    #define side_padding    2
-#else
-    #define screen_w      800
-    #define screen_h      600
-    #define side_padding    5
-#endif
+#define screen_w      320
+#define screen_h      240
+#define side_padding    2
 
 #define max_updates   360
 #define SCREEN_TILE_SIZE           16
@@ -64,25 +54,7 @@ namespace Graphics {
 
     class Screen {
     private:
-        // A list of scheduled blits.
-#ifndef __AVR__
-        struct blit {
-            int type;
-            int image_index;
-            int x;
-            int y;
-        } blits[max_updates];
-#endif
-        int num_blits;
         Images* image_lib;
-
-#ifndef __AVR__
-        SDL_Surface *screen;       // Video screen
-        // Background/UI images
-        SDL_Surface *background, *wave_background, *ui_header, *ui_points;
-
-        SDL_Rect clip;   // Clipping rectangle.
-#endif
 
         // Each entry in the array is the starting sprite index for each type of
         // game entity.
