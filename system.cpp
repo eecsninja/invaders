@@ -50,15 +50,15 @@ namespace System {
         memset(&key_state, 0, sizeof(key_state));
 
         GamepadState gamepad = DC.Gamepad.readGamepad();
-        if (gamepad.buttons & (1 << GAMEPAD_BUTTON_4)
+        if (gamepad.buttons & (1 << GAMEPAD_BUTTON_4))
             key_state.quit = 1;
-        if (gamepad.buttons & (1 << GAMEPAD_BUTTON_2)
+        if (gamepad.buttons & (1 << GAMEPAD_BUTTON_2))
             key_state.pause = 1;
         if (gamepad.x == 0)
             key_state.left = 1;
         if (gamepad.x == UINT8_MAX)
             key_state.right = 1;
-        if (buttons.buttons & (1 << GAMEPAD_BUTTON_1)
+        if (gamepad.buttons & (1 << GAMEPAD_BUTTON_1))
             key_state.fire = 1;
 
         return key_state;

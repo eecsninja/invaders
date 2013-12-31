@@ -77,9 +77,7 @@ namespace {
 }
 
 namespace Graphics {
-    Screen::Screen() : num_blits(0),
-                       image_lib(NULL),
-                       allocated_vram_size(0) {}
+    Screen::Screen() : allocated_vram_size(0) {}
 
     bool Screen::init() {
         memset(num_sprites_per_type, 0, sizeof(num_sprites_per_type));
@@ -141,7 +139,7 @@ namespace Graphics {
                 DC.Core.writeWord(SPRITE_REG(i, SPRITE_COLOR_KEY),
                                   DEFAULT_COLOR_KEY);
                 DC.Core.writeWord(SPRITE_REG(i, SPRITE_DATA_OFFSET),
-                                  image_lib->get_image_offset(type));
+                                  get_image_offset(type));
             }
 
             sprite_index += num_objects_of_type;
@@ -177,7 +175,7 @@ namespace Graphics {
         palette_entry.g = g;
         palette_entry.b = b;
         palette_entry.padding = 0;
-        DC.core.writeData(PALETTE(palette) + sizeof(palette_entry) * entry,
+        DC.Core.writeData(PALETTE(palette) + sizeof(palette_entry) * entry,
                           &palette_entry, sizeof(palette_entry));
     }
 
@@ -225,7 +223,7 @@ namespace Graphics {
             GameEntities::GameEntity::get_type_property(type);
         uint8_t sprite_w = properties->sprite_w;
         uint8_t sprite_h = properties->sprite_h;
-        uint16_t offset = image_lib->get_image_offset(type) +
+        uint16_t offset = get_image_offset(type) +
                 (sprite_w * sprite_h) * object->get_current_image();
         uint16_t sprite_index = sprite_index_bases[type] + index;
         DC.Core.writeWord(SPRITE_REG(sprite_index, SPRITE_CTRL_0),

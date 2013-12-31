@@ -41,6 +41,7 @@
 #endif  // defined(__AVR_ATmega32U4__)
 
 #include "game.h"
+#include "game_defs.h"
 #include "screen.h"
 #include "system.h"
 
@@ -52,7 +53,7 @@ uint16_t g_vram_offsets[NUM_GAME_ENTITY_TYPES];
 
 namespace {
 
-const char kFilePath = "invaders";
+const char kFilePath[] = "invaders";
 
 struct File {
   const char* filename;
