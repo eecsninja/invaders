@@ -36,10 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __AVR__
-#include "cc_core.h"
-#include "cc_tile_layer.h"
-#endif
+#include <DuinoCube.h>
 
 #include "screen.h"
 
@@ -63,7 +60,6 @@ void generate_starfield(Graphics::Screen* screen,
         return;
     }
 
-#ifdef __AVR__
     // Allocate space in VRAM.
     uint16_t vram_base;
     uint16_t tile_size = tile_width * tile_height;
@@ -72,6 +68,9 @@ void generate_starfield(Graphics::Screen* screen,
                 tile_size * num_tiles);
         return;
     }
+    DC.Core.writeWord(REG_SYS_CTRL, (1 << REG_SYS_CTRL_VRAM_ACCESS));
+    DC.Core.writeWord(REG_MEM_BANK,
+                      VRAM_BANK_BEGIN + vram_base / VRAM_BANK_SIZE);
 
     // Generate the tiles.
     uint16_t offset = 0;
@@ -88,9 +87,14 @@ void generate_starfield(Graphics::Screen* screen,
                         (uint8_t)rand() % (max_brightness - min_brightness + 1);
                 buffer[x] = brightness;
             }
-            CC_SetVRAMData(buffer, vram_base + offset, tile_width);
+            printf("Writing %d bytes of starfield data to 0x%04x\n",
+                   vram_base + offset);
+            DC.Core.writeData(vram_base + offset, buffer, tile_width);
         }
     }
+    DC.Core.writeWord(REG_SYS_CTRL, (0 << REG_SYS_CTRL_VRAM_ACCESS));
+
+    DC.Core.writeWord(REG_MEM_BANK, TILEMAP_BANK);
 
     for (uint8_t y = 0; y < TILEMAP_HEIGHT; ++y) {
         uint16_t buffer[TILEMAP_WIDTH];
@@ -108,5 +112,4 @@ void generate_starfield(Graphics::Screen* screen,
 
     // Set up and enable the tile layer and tile map.
     screen->setup_tile_layer(layer, true, palette, vram_base, 0);
-#endif  // defined (__AVR__)
 }
