@@ -125,4 +125,11 @@
 #define STARFIELD_DENSITY                               8
 #define STARFIELD_SPEED                                40
 
+// Palettes.
+enum {
+  BASE_PALETTE_INDEX,
+  STARFIELD_PALETTE1_INDEX,
+  STARFIELD_PALETTE2_INDEX,
+};
+
 #endif  // GAME_DEFS_H
