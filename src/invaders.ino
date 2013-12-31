@@ -41,12 +41,14 @@
 #endif  // defined(__AVR_ATmega32U4__)
 
 #include "game.h"
-#include "images.h"
 #include "screen.h"
 #include "system.h"
 
 extern uint8_t __bss_end;
 extern uint8_t __stack;
+
+// VRAM offsets of image data.
+uint16_t g_vram_offsets[NUM_GAME_ENTITY_TYPES];
 
 namespace {
 
@@ -59,9 +61,6 @@ struct File {
   uint16_t bank;          // Bank to use for |addr|.
   uint16_t max_size;      // Size checking to avoid overflow.
 };
-
-// VRAM offsets of image data.
-uint16_t g_vram_offsets[NUM_GAME_ENTITY_TYPES];
 
 // Image, palette, and tilemap data.
 const File kFiles[] = {
@@ -161,20 +160,12 @@ void setup() {
     printf("Stack ranges from 0x%x (%u) to 0x%x (%u)\n",
            &__bss_end, &__bss_end, &__stack, &__stack);
 
-    Graphics::Images images;
     Graphics::Screen screen;
-
-    printf("Allocated image library: %u bytes at 0x%x (%u bytes)\n",
-           sizeof(images), &images, &images);
     printf("Allocated screen controller: %u bytes at 0x%x (%u bytes)\n",
            sizeof(screen), &screen, &screen);
 
     // Initialize video screen and image library.
-    if (!screen.init())
-        return -2;
-    if (!images.load_images(image_list))
-        return -3;
-    screen.set_image_lib(&images);
+    screen.init();
 
     Game::Game game(&screen);
     game.game_control();

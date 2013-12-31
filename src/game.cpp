@@ -44,7 +44,6 @@ extern const char* datadir;
 
 //#define FRAME_COUNTER
 
-using Graphics::Images;
 using Graphics::Screen;
 
 using GameEntities::GameEntityTypeProperties;

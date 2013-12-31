@@ -37,7 +37,6 @@
 #include <DuinoCube.h>
 
 #include "game_entity.h"
-#include "images.h"
 
 // TODO: This should be included from a ChronoCube library file.
 #define MAX_NUM_SPRITES      128
@@ -45,6 +44,8 @@
 #define DEFAULT_COLOR_KEY   0xff
 
 #define SPRITE_LAYER_INDEX     3
+
+extern uint16_t g_vram_offsets[];
 
 namespace {
 
@@ -91,11 +92,6 @@ namespace Graphics {
 
     bool Screen::tile_layers_supported() {
         return true;
-    }
-
-    void Screen::set_image_lib(Images* images) {
-        image_lib = images;
-        allocated_vram_size = images->get_total_image_size();
     }
 
     void Screen::schedule_blit(const GameEntities::GameEntity* object) {
@@ -213,9 +209,7 @@ namespace Graphics {
     }
 
     uint16_t Screen::get_image_offset(int type) const {
-        if (!image_lib)
-            return 0;
-        return image_lib->get_image_offset(type);
+        return g_vram_offsets[type];
     }
 
     void Screen::update_sprite(const GameEntities::GameEntity* object) {

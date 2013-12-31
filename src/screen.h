@@ -50,12 +50,8 @@ class GameEntity;
 
 namespace Graphics {
 
-    class Images;
-
     class Screen {
     private:
-        Images* image_lib;
-
         // Each entry in the array is the starting sprite index for each type of
         // game entity.
         // e.g. for the k-th object of type=N, the sprite index is:
@@ -78,9 +74,6 @@ namespace Graphics {
 
         // Set the operating video mode.  Returns true on success.
         bool set_video_mode(bool fullscreen);
-
-        // Provide a pointer to an image library.
-        void set_image_lib(Images* images);
 
         // Add a blit task to the blit queue.
         void schedule_blit(const GameEntities::GameEntity* object);
