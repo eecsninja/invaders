@@ -69,18 +69,6 @@ namespace Graphics {
         // Initialize video screen.  Returns true on success.
         bool init();
 
-        // Returns true if tile layer capability is available.
-        bool tile_layers_supported();
-
-        // Set the operating video mode.  Returns true on success.
-        bool set_video_mode(bool fullscreen);
-
-        // Add a blit task to the blit queue.
-        void schedule_blit(const GameEntities::GameEntity* object);
-
-        // Perform all queued blits and reset the blit counter.
-        void flush_blits();
-
         // Wait for the screen to be ready for updates.
         void begin_update();
 
@@ -118,7 +106,6 @@ namespace Graphics {
         // A wrapper around image offset lookup.
         uint16_t get_image_offset(int type) const;
 
-    private:
         // Updates a sprite in the sprite table given an updated entity object.
         void update_sprite(const GameEntities::GameEntity* object);
     };

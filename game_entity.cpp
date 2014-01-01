@@ -56,7 +56,7 @@ namespace GameEntities {
 
     void GameEntity::draw()
     {
-        screen->schedule_blit(this);
+        screen->update_sprite(this);
         dirty = false;
     }
     bool GameEntity::collides_with(GameEntity* other)

@@ -88,17 +88,6 @@ namespace Graphics {
         return true;
     }
 
-    bool Screen::tile_layers_supported() {
-        return true;
-    }
-
-    void Screen::schedule_blit(const GameEntities::GameEntity* object) {
-        update_sprite(object);
-    }
-
-    void Screen::flush_blits() {
-    }
-
     void Screen::begin_update() {
         // Wait for the start of vertical blank, at which point it is safe to
         // modify the contents of the video controller.
