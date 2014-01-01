@@ -41,7 +41,7 @@
 #include "game_entity_types.h"
 #include "screen.h"
 
-#define EVENT_COUNTER
+//#define EVENT_COUNTER
 
 #ifdef EVENT_COUNTER
 extern EventCounter event_counter;
