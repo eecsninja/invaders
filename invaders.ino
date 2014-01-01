@@ -165,6 +165,8 @@ void setup() {
     printf("Allocated screen controller: %u bytes at 0x%x (%u bytes)\n",
            sizeof(screen), &screen, &screen);
 
+    loadResources();
+
     // Initialize video screen and image library.
     screen.init();
 
