@@ -45,6 +45,8 @@
 #define TILEMAP_WIDTH     32
 #define TILEMAP_HEIGHT    32
 
+static uint16_t g_vram_offset = 0;
+
 // Generates randomized starfield tiles and tilemap.
 void generate_starfield(Graphics::Screen* screen,
                         uint8_t layer, uint8_t palette,
@@ -61,26 +63,19 @@ void generate_starfield(Graphics::Screen* screen,
         return;
     }
 
-    // Allocate space in VRAM.
-    uint16_t vram_base;
-    uint16_t tile_size = tile_width * tile_height;
-    if (!screen->allocate_vram(tile_size * num_tiles, &vram_base)) {
-        printf_P("Could not allocate %u bytes in VRAM\n",
-                 tile_size * num_tiles);
-        return;
-    }
+    // Generate starfield tiles in the second bank of VRAM.
+    uint16_t vram_base = VRAM_BANK_SIZE + g_vram_offset;
     DC.Core.writeWord(REG_SYS_CTRL, (1 << REG_SYS_CTRL_VRAM_ACCESS));
     DC.Core.writeWord(REG_MEM_BANK,
                       VRAM_BANK_BEGIN + vram_base / VRAM_BANK_SIZE);
 
     // Generate the tiles.
-    uint16_t offset = 0;
     for (uint8_t i = 0; i < num_tiles; ++i) {
         printf_P("Writing %d bytes of starfield data to 0x%04x\n",
-                 tile_width * tile_height, vram_base + offset);
+                 tile_width * tile_height, vram_base + g_vram_offset);
 
         uint8_t buffer[MAX_LINE_SIZE];
-        for (uint8_t y = 0; y < tile_height; ++y, offset += tile_width) {
+        for (uint8_t y = 0; y < tile_height; ++y, g_vram_offset += tile_width) {
             memset(buffer, 0, tile_width);
             for (uint8_t x = 0; x < tile_width; ++x) {
                 uint16_t rand_num = rand() % (tile_width * tile_height);
@@ -91,7 +86,7 @@ void generate_starfield(Graphics::Screen* screen,
                         (uint8_t)rand() % (max_brightness - min_brightness + 1);
                 buffer[x] = brightness;
             }
-            DC.Core.writeData(vram_base + offset, buffer, tile_width);
+            DC.Core.writeData(VRAM_BASE + g_vram_offset, buffer, tile_width);
         }
     }
     DC.Core.writeWord(REG_SYS_CTRL, (0 << REG_SYS_CTRL_VRAM_ACCESS));

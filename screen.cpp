@@ -140,14 +140,6 @@ namespace Graphics {
         }
     }
 
-    bool Screen::allocate_vram(uint16_t size, uint16_t* vram_offset) {
-        if (allocated_vram_size + size > 0x10000L)
-            return false;
-        *vram_offset = allocated_vram_size;
-        allocated_vram_size += size;
-        return true;
-    }
-
     void Screen::set_palette_data(uint8_t palette, const void* palette_data,
                                   uint16_t size) {
         DC.Core.writeData(PALETTE(palette), palette_data, size);

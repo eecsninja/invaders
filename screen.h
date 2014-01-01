@@ -79,10 +79,6 @@ namespace Graphics {
         // of each type of object will be drawn.
         void allocate_sprites(const int* num_objects_per_type);
 
-        // Attempts to allocate VRAM.  Returns true on success.  Returns the
-        // allocated address in |*vram_offset|.
-        bool allocate_vram(uint16_t size, uint16_t* vram_offset);
-
         // Loads palette data.
         void set_palette_data(uint8_t palette, const void* palette_data,
                               uint16_t size);
