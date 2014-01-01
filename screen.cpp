@@ -103,11 +103,17 @@ namespace Graphics {
 
     void Screen::allocate_sprites(const int* num_objects_per_type) {
         uint16_t sprite_index = 0;
-        for (int type = 0;
-             type < NUM_GAME_ENTITY_TYPES && sprite_index < MAX_NUM_SPRITES;
-             ++type) {
-            // Store the number of sprites and first sprite index for each type.
+        for (int type = 0; type < NUM_GAME_ENTITY_TYPES; ++type) {
             int num_objects_of_type = num_objects_per_type[type];
+
+            // Make sure there's enough room for these sprites.
+            if (sprite_index + num_objects_of_type >= MAX_NUM_SPRITES) {
+                printf_P("Attempted to allocate too many sprites: %d\n",
+                         sprite_index);
+                break;
+            }
+
+            // Store the number of sprites and first sprite index for each type.
             num_sprites_per_type[type] = num_objects_of_type;
             sprite_index_bases[type] = sprite_index;
             printf_P("Allocated %u sprites starting at %u for object type %d\n",
@@ -122,21 +128,15 @@ namespace Graphics {
             uint8_t sprite_w = get_sprite_dimension(properties->sprite_w);
             uint8_t sprite_h = get_sprite_dimension(properties->sprite_h);
             // Initialize each sprite's dimensions, color key, and data offset.
-            for (int i = 0; i < num_objects_of_type; ++i) {
-                DC.Core.writeWord(SPRITE_REG(i, SPRITE_CTRL_1),
+            for (int i = 0; i < num_objects_of_type; ++i, ++sprite_index) {
+                DC.Core.writeWord(SPRITE_REG(sprite_index, SPRITE_CTRL_1),
                                   (sprite_w << SPRITE_HSIZE_0) |
                                   (sprite_h << SPRITE_VSIZE_0));
-                DC.Core.writeWord(SPRITE_REG(i, SPRITE_COLOR_KEY),
+                DC.Core.writeWord(SPRITE_REG(sprite_index, SPRITE_COLOR_KEY),
                                   DEFAULT_COLOR_KEY);
-                DC.Core.writeWord(SPRITE_REG(i, SPRITE_DATA_OFFSET),
+                DC.Core.writeWord(SPRITE_REG(sprite_index, SPRITE_DATA_OFFSET),
                                   get_image_offset(type));
             }
-
-            sprite_index += num_objects_of_type;
-        }
-        if (sprite_index == MAX_NUM_SPRITES) {
-            printf_P("Attempted to allocate too many sprites: %d\n",
-                     sprite_index);
         }
     }
 
