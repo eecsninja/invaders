@@ -65,44 +65,58 @@ struct File {
   uint16_t max_size;      // Size checking to avoid overflow.
 };
 
+// Filenames.  To avoid cumbersome declarations of multiple strings, these are
+// combined into one long string, delimited by null terminators.
+const char kFilenames[] PROGMEM =
+  "ship.raw\0"
+  "alien1.raw\0"
+  "alien2.raw\0"
+  "alien3.raw\0"
+  "bonus.raw\0"
+  "bonus_sm.raw\0"
+  "shot.raw\0"
+  "shield.raw\0"
+  "explode.raw\0"
+  "palette.pal\0"
+;
+
 // Image, palette, and tilemap data.
 const File kFiles[] PROGMEM = {
   // Image data.
-  { "ship.raw", &g_vram_offsets[GAME_ENTITY_PLAYER], 0, 0, VRAM_BANK_SIZE },
-  { "alien1.raw", &g_vram_offsets[GAME_ENTITY_ALIEN], 0, 0, VRAM_BANK_SIZE },
-  { "alien2.raw", &g_vram_offsets[GAME_ENTITY_ALIEN2], 0, 0, VRAM_BANK_SIZE },
-  { "alien3.raw", &g_vram_offsets[GAME_ENTITY_ALIEN3], 0, 0, VRAM_BANK_SIZE },
-  { "bonus.raw", &g_vram_offsets[GAME_ENTITY_BONUS_SHIP], 0, 0,
-    VRAM_BANK_SIZE },
-  { "bonus_sm.raw", &g_vram_offsets[GAME_ENTITY_SMALL_BONUS_SHIP], 0, 0,
-    VRAM_BANK_SIZE },
-  { "shot.raw", &g_vram_offsets[GAME_ENTITY_SHOT], 0, 0, VRAM_BANK_SIZE },
-  { "shield.raw", &g_vram_offsets[GAME_ENTITY_SHIELD_PIECE], 0, 0,
-    VRAM_BANK_SIZE },
-  { "explode.raw", &g_vram_offsets[GAME_ENTITY_EXPLOSION], 0, 0,
-    VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_PLAYER], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_ALIEN], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_ALIEN2], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_ALIEN3], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_BONUS_SHIP], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_SMALL_BONUS_SHIP], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_SHOT], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_SHIELD_PIECE], 0, 0, VRAM_BANK_SIZE },
+  { NULL, &g_vram_offsets[GAME_ENTITY_EXPLOSION], 0, 0, VRAM_BANK_SIZE },
 
   // Palette data.
-  { "palette.pal", NULL, PALETTE(BASE_PALETTE_INDEX), 0, PALETTE_SIZE },
+  { NULL, NULL, PALETTE(BASE_PALETTE_INDEX), 0, PALETTE_SIZE },
 };
-
 
 // Load image, palette, and tilemap data from file system.
 void loadResources() {
+  uint16_t string_offset = 0;
   uint16_t vram_offset = 0;
   for (int i = 0; i < sizeof(kFiles) / sizeof(kFiles[0]); ++i) {
-    //const File& file = kFiles[i];
+    // Read file info from program memory.
+    File file;
+    memcpy_P(&file, kFiles + i, sizeof(file));
 
-    union {
-      File file;
-      uint8_t file_bytes[0];
-    };
-    for (int offset = 0; offset < sizeof(file); ++offset) {
-      file_bytes[offset] =
-          pgm_read_byte(((const uint8_t*)(&kFiles[i])) + offset);
-    }
     char filename[256];
-    sprintf(filename, "%s/%s", kFilePath, file.filename);
+    sprintf(filename, "%s/", kFilePath);
+    size_t len = strlen(filename);
+    // Append the filename from program memory.
+    size_t filename_len = strlen_P(kFilenames + string_offset);
+    if (filename_len + len + 1 > sizeof(filename)) {
+      printf("Filename is too long.\n");
+      continue;
+    }
+    memcpy_P(filename + len, kFilenames + string_offset, filename_len + 1);
+    string_offset += filename_len + 1;    // Update offset to next filename.
 
     // Open the file.
     uint16_t handle = DC.File.open(filename, FILE_READ_ONLY);
