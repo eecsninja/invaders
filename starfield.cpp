@@ -88,7 +88,7 @@ void generate_starfield(Graphics::Screen* screen,
                 buffer[x] = brightness;
             }
             printf("Writing %d bytes of starfield data to 0x%04x\n",
-                   vram_base + offset);
+                   tile_width, vram_base + offset);
             DC.Core.writeData(vram_base + offset, buffer, tile_width);
         }
     }
