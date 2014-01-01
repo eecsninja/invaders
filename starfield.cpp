@@ -76,6 +76,9 @@ void generate_starfield(Graphics::Screen* screen,
     // Generate the tiles.
     uint16_t offset = 0;
     for (uint8_t i = 0; i < num_tiles; ++i) {
+        printf_P("Writing %d bytes of starfield data to 0x%04x\n",
+                 tile_width * tile_height, vram_base + offset);
+
         uint8_t buffer[MAX_LINE_SIZE];
         for (uint8_t y = 0; y < tile_height; ++y, offset += tile_width) {
             memset(buffer, 0, tile_width);
@@ -88,8 +91,6 @@ void generate_starfield(Graphics::Screen* screen,
                         (uint8_t)rand() % (max_brightness - min_brightness + 1);
                 buffer[x] = brightness;
             }
-            printf_P("Writing %d bytes of starfield data to 0x%04x\n",
-                     tile_width, vram_base + offset);
             DC.Core.writeData(vram_base + offset, buffer, tile_width);
         }
     }
