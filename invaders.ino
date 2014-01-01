@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <avr/pgmspace.h>
+
 #include <DuinoCube.h>
 #include <SPI.h>
 
@@ -64,7 +66,7 @@ struct File {
 };
 
 // Image, palette, and tilemap data.
-const File kFiles[] = {
+const File kFiles[] PROGMEM = {
   // Image data.
   { "ship.raw", &g_vram_offsets[GAME_ENTITY_PLAYER], 0, 0, VRAM_BANK_SIZE },
   { "alien1.raw", &g_vram_offsets[GAME_ENTITY_ALIEN], 0, 0, VRAM_BANK_SIZE },
@@ -89,8 +91,16 @@ const File kFiles[] = {
 void loadResources() {
   uint16_t vram_offset = 0;
   for (int i = 0; i < sizeof(kFiles) / sizeof(kFiles[0]); ++i) {
-    const File& file = kFiles[i];
+    //const File& file = kFiles[i];
 
+    union {
+      File file;
+      uint8_t file_bytes[0];
+    };
+    for (int offset = 0; offset < sizeof(file); ++offset) {
+      file_bytes[offset] =
+          pgm_read_byte(((const uint8_t*)(&kFiles[i])) + offset);
+    }
     char filename[256];
     sprintf(filename, "%s/%s", kFilePath, file.filename);
 
