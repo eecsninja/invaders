@@ -1,5 +1,5 @@
 /*
- event_counter.cpp
+ printf.h
  Classic Invaders
 
  Copyright (c) 2013, Todd Steinackle, Simon Que
@@ -30,41 +30,20 @@
 
 */
 
-#include "event_counter.h"
+// For printf from program memory.
 
-#include "printf.h"
+#include <stdio.h>
 
-void EventCounter::new_loop()
-{
-    ++num_loops;
-    latest_time = System::get_ticks();
+#include <avr/pgmspace.h>
 
-    // Report the latest stats if necessary.
-    if (num_loops > 0 && num_loops == EVENT_COUNTER_LOOP_LIMIT) {
-        report();
-        reset();
-    }
-}
+#define PRINTF_BUFFER_SIZE  128
 
-void EventCounter::report()
-{
-    if (num_loops == 0)
-        return;
-    printf_P("Average stats over last %d loops:\n", num_loops);
-    printf_P("- Collision checks: %d\n", num_collision_checks / num_loops);
-    printf_P("- Movement calls: %d\n", num_movement_calls / num_loops);
-    printf_P("- Loop time in ticks: %d\n",
-             (latest_time - game_loop_start_time) / num_loops);
-    uint32_t total_game_logic_time = 0;
-    printf_P("- Per-section game logic times: ");
-    for (int i = 0; i < MAX_GAME_LOGIC_SECTIONS; ++i) {
-        total_game_logic_time += game_logic_times[i];
-        if (game_logic_times[i] >= num_loops)
-            printf_P("%lu ", game_logic_times[i] / num_loops);
-        else    // If the rounded-down value is zero, don't bother printing it.
-            printf_P("_ ");   // Just print a placeholder.
-    }
-    printf_P("\n");
-    printf_P("- Total game logic time in ticks: %d\n",
-             total_game_logic_time / num_loops);
-}
+// Custom printf and fprintf macros for printing strings from program memory.
+#define fprintf_P(file, str, ...) do { \
+    char buf[PRINTF_BUFFER_SIZE]; \
+    const char* kStr = str; \
+    memcpy_P(buf, kStr, strlen_P(kStr) + 1); \
+    fprintf(file, buf, ##__VA_ARGS__); \
+  } while (0)
+
+#define printf_P(str, ...) fprintf_P(stdout, PSTR(str), ##__VA_ARGS__)

@@ -37,6 +37,7 @@
 #include <DuinoCube.h>
 
 #include "game_entity.h"
+#include "printf.h"
 
 // TODO: This should be included from a ChronoCube library file.
 #define MAX_NUM_SPRITES      128
@@ -109,8 +110,8 @@ namespace Graphics {
             int num_objects_of_type = num_objects_per_type[type];
             num_sprites_per_type[type] = num_objects_of_type;
             sprite_index_bases[type] = sprite_index;
-            printf("Allocated %u sprites starting at %u for object type %d\n",
-                   num_objects_of_type, sprite_index, type);
+            printf_P("Allocated %u sprites starting at %u for object type %d\n",
+                     num_objects_of_type, sprite_index, type);
 
             if (num_objects_of_type == 0)
                 continue;
@@ -134,8 +135,8 @@ namespace Graphics {
             sprite_index += num_objects_of_type;
         }
         if (sprite_index == MAX_NUM_SPRITES) {
-            fprintf(stderr, "Attempted to allocate too many sprites: %d\n",
-                    sprite_index);
+            printf_P("Attempted to allocate too many sprites: %d\n",
+                     sprite_index);
         }
     }
 

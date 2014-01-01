@@ -38,6 +38,7 @@
 
 #include <DuinoCube.h>
 
+#include "printf.h"
 #include "screen.h"
 
 #define MAX_LINE_SIZE     64
@@ -51,12 +52,12 @@ void generate_starfield(Graphics::Screen* screen,
                         uint8_t num_tiles, uint16_t num_stars,
                         uint8_t min_brightness, uint8_t max_brightness) {
     if (tile_width > MAX_LINE_SIZE) {
-        fprintf(stderr, "Starfield tiles cannot be wider than %u pixels.\n",
-                MAX_LINE_SIZE);
+        printf_P("Starfield tiles cannot be wider than %u pixels.\n",
+                 MAX_LINE_SIZE);
         return;
     }
     if (max_brightness < min_brightness) {
-        fprintf(stderr, " Min brightness must be lower than max brightness.\n");
+        printf_P(" Min brightness must be lower than max brightness.\n");
         return;
     }
 
@@ -64,8 +65,8 @@ void generate_starfield(Graphics::Screen* screen,
     uint16_t vram_base;
     uint16_t tile_size = tile_width * tile_height;
     if (!screen->allocate_vram(tile_size * num_tiles, &vram_base)) {
-        fprintf(stderr, "Could not allocate %u bytes in VRAM\n",
-                tile_size * num_tiles);
+        printf_P("Could not allocate %u bytes in VRAM\n",
+                 tile_size * num_tiles);
         return;
     }
     DC.Core.writeWord(REG_SYS_CTRL, (1 << REG_SYS_CTRL_VRAM_ACCESS));
@@ -87,8 +88,8 @@ void generate_starfield(Graphics::Screen* screen,
                         (uint8_t)rand() % (max_brightness - min_brightness + 1);
                 buffer[x] = brightness;
             }
-            printf("Writing %d bytes of starfield data to 0x%04x\n",
-                   tile_width, vram_base + offset);
+            printf_P("Writing %d bytes of starfield data to 0x%04x\n",
+                     tile_width, vram_base + offset);
             DC.Core.writeData(vram_base + offset, buffer, tile_width);
         }
     }

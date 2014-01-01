@@ -44,6 +44,7 @@
 
 #include "game.h"
 #include "game_defs.h"
+#include "printf.h"
 #include "screen.h"
 #include "system.h"
 
@@ -112,7 +113,7 @@ void loadResources() {
     // Append the filename from program memory.
     size_t filename_len = strlen_P(kFilenames + string_offset);
     if (filename_len + len + 1 > sizeof(filename)) {
-      printf("Filename is too long.\n");
+      printf_P("Filename is too long.\n");
       continue;
     }
     memcpy_P(filename + len, kFilenames + string_offset, filename_len + 1);
@@ -121,15 +122,15 @@ void loadResources() {
     // Open the file.
     uint16_t handle = DC.File.open(filename, FILE_READ_ONLY);
     if (!handle) {
-      printf("Could not open file %s.\n", filename);
+      printf_P("Could not open file %s.\n", filename);
       continue;
     }
 
     uint16_t file_size = DC.File.size(handle);
-    printf("File %s is 0x%x bytes\n", filename, file_size);
+    printf_P("File %s is 0x%x bytes\n", filename, file_size);
 
     if (file_size > file.max_size) {
-      printf("File is too big!\n");
+      printf_P("File is too big!\n");
       DC.File.close(handle);
       continue;
     }
@@ -162,7 +163,7 @@ void loadResources() {
       dest_bank = file.bank;
     }
 
-    printf("Writing to 0x%x with bank = %d\n", dest_addr, dest_bank);
+    printf_P("Writing to 0x%x with bank = %d\n", dest_addr, dest_bank);
     DC.Core.writeWord(REG_MEM_BANK, dest_bank);
     DC.File.readToCore(handle, dest_addr, file_size);
 
@@ -182,12 +183,12 @@ void setup() {
     Serial.begin(115200);
     DC.begin();
 
-    printf("Stack ranges from 0x%x (%u) to 0x%x (%u)\n",
-           &__bss_end, &__bss_end, &__stack, &__stack);
+    printf_P("Stack ranges from 0x%x (%u) to 0x%x (%u)\n",
+             &__bss_end, &__bss_end, &__stack, &__stack);
 
     Graphics::Screen screen;
-    printf("Allocated screen controller: %u bytes at 0x%x (%u bytes)\n",
-           sizeof(screen), &screen, &screen);
+    printf_P("Allocated screen controller: %u bytes at 0x%x (%u bytes)\n",
+             sizeof(screen), &screen, &screen);
 
     loadResources();
 
@@ -197,7 +198,7 @@ void setup() {
     Game::Game game(&screen);
     game.game_control();
 
-    printf("End of program.\n");
+    printf_P("End of program.\n");
 }
 
 

@@ -34,6 +34,7 @@
 
 #include "game_defs.h"
 #include "game_entity.h"
+#include "printf.h"
 #include "rand_num_gen.h"
 #include "screen.h"
 #include "shields.h"
@@ -117,17 +118,17 @@ namespace Game {
 
     void Game::game_control()
     {
-        printf("Memory needed for game data: %u bytes\n",
-               sizeof(GameData) + sizeof(Game));
-        printf("Memory needed for one game entity: %u bytes\n",
-               sizeof(GameEntity));
-        printf("Memory needed for game entity type properties: %u bytes\n",
-               sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
+        printf_P("Memory needed for game data: %u bytes\n",
+                 sizeof(GameData) + sizeof(Game));
+        printf_P("Memory needed for one game entity: %u bytes\n",
+                 sizeof(GameEntity));
+        printf_P("Memory needed for game entity type properties: %u bytes\n",
+                 sizeof(GameEntityTypeProperties) * NUM_GAME_ENTITY_TYPES);
 
         // Define arrays statically, so they can be freed when the game loop exits.
         GameData data;
 
-        printf("Game data allocated at 0x%x (%u bytes)\n", &data, &data);
+        printf_P("Game data allocated at 0x%x (%u bytes)\n", &data, &data);
 
         // Populate the game data pointers.
         aliens = data.alien_array;
@@ -534,7 +535,7 @@ namespace Game {
         }
         init_aliens(alien_odd_range);
 #ifdef FRAME_COUNTER
-        printf("wave %d\n", wave + 1);
+        printf_P("wave %d\n", wave + 1);
 #endif
     }
     void Game::game_loop()
@@ -564,7 +565,7 @@ namespace Game {
             ++fps;
             // update fps counter
             if (last_fps_time >= 1000) {
-                printf("FPS: %d\n", fps);
+                printf_P("FPS: %d\n", fps);
                 last_fps_time = 0;
                 fps = 0;
             }
