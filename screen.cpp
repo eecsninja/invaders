@@ -102,6 +102,11 @@ namespace Graphics {
     }
 
     void Screen::allocate_sprites(const int* num_objects_per_type) {
+        // Disable all sprites first.
+        for (int i = 0; i < MAX_NUM_SPRITES; ++i) {
+            DC.Core.writeWord(SPRITE_REG(i, SPRITE_CTRL_0), 0);
+        }
+
         uint16_t sprite_index = 0;
         for (int type = 0; type < NUM_GAME_ENTITY_TYPES; ++type) {
             int num_objects_of_type = num_objects_per_type[type];
