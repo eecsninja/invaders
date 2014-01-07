@@ -86,6 +86,10 @@ namespace Graphics {
 
         DC.Core.writeWord(REG_SPRITE_Z, SPRITE_LAYER_INDEX);
 
+        // Disable all tilemap layers.
+        for (int i = 0; i < NUM_TILEMAPS; ++i)
+          DC.Core.writeWord(TILE_LAYER_REG(i, TILE_CTRL_0), 0);
+
         return true;
     }
 
