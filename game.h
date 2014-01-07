@@ -68,6 +68,31 @@ namespace Game {
         bool intact:1;   // Status of shield.
     };
 
+    // Use a reduced-size struct to represent aliens, since they all move and
+    // animate in tandem.
+    struct ReducedAlien {
+        // Entity state flags.
+        bool alive:1;
+        bool active:1;
+        bool dirty:1;     // Used to determine if object should be redrawn.
+
+        // Used by Aliens to determine if and when to fire.  Max value is 10.
+        uint8_t fire_chance:4;
+
+        uint8_t row:4;    // Location in the alien formation.
+        uint8_t col:4;
+
+        // Accessors.
+        bool is_alive() const { return alive; }
+        bool is_active() const { return active; }
+        bool is_dirty() const { return dirty; }
+        int get_fire_chance() const { return fire_chance; }
+
+        // Mutators.
+        void activate() { alive = true; active = true; dirty = true; }
+
+    };
+
     struct ShieldGroupTiles;
 
     class Game {
@@ -77,7 +102,15 @@ namespace Game {
         // Ui::Status status;
         Graphics::Screen& screen;
         GameEntityPtr player, rbonus, sbonus, bonus;
-        GameEntities::Alien* aliens;
+
+        // Instantiate one actual alien object as a reference.
+        // e.g. use its animation counter and location to generate the other
+        // aliens from ReducedAliens.
+        GameEntities::Alien* reference_alien;
+        ReducedAlien* aliens;
+        // Keep count of number of aliens in each column.
+        uint8_t* num_aliens_per_col;
+
         ShieldPiece* shields;  // Points to an array of shield states.
         GameEntities::Shot* player_shots, *alien_shots;
         GameEntities::Explosion* explosions;
@@ -124,7 +157,12 @@ namespace Game {
         void msg_alien_killed(int index, int points);
         void msg_alien_player_collide();
         void msg_bonus_ship_destroyed(int bonus);
-        void run_logic() { logic_this_loop = true; }
+        void run_logic(const GameEntities::GameEntity* entity) {
+            // The reference alien movement is used to update location and
+            // animation. Do run change-of-direction logic on it.
+            if (entity != reference_alien)
+                logic_this_loop = true;
+        }
     };
 
 }

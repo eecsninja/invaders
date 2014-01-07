@@ -71,10 +71,30 @@ EventCounter event_counter;
 #define SHIELD_LAYER_INDEX       3
 
 namespace {
+
+  // Determines which type of alien is in each row.
+  const uint8_t kAlienTypesByRow[ALIEN_ARRAY_HEIGHT] = {
+    GAME_ENTITY_ALIEN3,
+    GAME_ENTITY_ALIEN2,
+    GAME_ENTITY_ALIEN2,
+    GAME_ENTITY_ALIEN,
+    GAME_ENTITY_ALIEN,
+  };
+
+  // Keep count of per-type index offsets in each row.
+  uint8_t per_type_index_offsets[ALIEN_ARRAY_HEIGHT] = { 0, 0, 0, 0, 0 };
+
+  inline int get_alien_type_by_row(int row) {
+    return kAlienTypesByRow[row];
+  }
+
     // Put all the data arrays needed by Game into a separate struct, so the
     // amount of memory required can be easily obtained using sizeof().
     struct GameData {
-        Alien alien_array[NUM_ALIENS];
+        Game::ReducedAlien alien_array[NUM_ALIENS];
+        Alien reference;
+        uint8_t num_aliens_per_col[ALIEN_ARRAY_WIDTH];
+
         ShieldPiece shield_array[NUM_SHIELDS];
 
         Shot player_shot_array[num_player_shots];
@@ -111,7 +131,24 @@ namespace {
         else
             return speed - 1;
      }
-}
+
+    // Generates a full alien object.
+    void make_alien(const Game::ReducedAlien& alien, const Alien* reference,
+                    Alien* new_alien) {
+        uint8_t type = get_alien_type_by_row(alien.row);
+        uint8_t index = per_type_index_offsets[alien.row] + alien.col;
+        int x = reference->get_x() + alien.col * ALIEN_STEP_X;
+        int y = reference->get_y() + alien.row * ALIEN_STEP_Y;
+        new_alien->Alien_init(type, index, x, y,
+                              alien.is_active(),
+                              alien.get_fire_chance());
+        if (!alien.is_alive() && new_alien->is_alive()) {
+            new_alien->kill();
+        }
+        new_alien->set_image_num(reference->get_image_num());
+    }
+
+}  // namespace
 
 namespace Game {
 
@@ -131,6 +168,8 @@ namespace Game {
 
         // Populate the game data pointers.
         aliens = data.alien_array;
+        reference_alien = &data.reference;
+        num_aliens_per_col = data.num_aliens_per_col;
         shields = data.shield_array;
 
         player_shots = data.player_shot_array;
@@ -181,11 +220,17 @@ namespace Game {
     }
     void Game::init_aliens(int rand_max)
     {
+        // Keep count of both the total number of aliens and the number of each
+        // type of alien.
         alien_count = 0;
         uint8_t alien_type_counts[NUM_GAME_ENTITY_TYPES];
         memset(alien_type_counts, 0, sizeof(alien_type_counts));
         // Create a formation of aliens.
         for (int row = 0; row < ALIEN_ARRAY_HEIGHT; ++row) {
+            int type = get_alien_type_by_row(row);
+            // For the first alien in each row, store its index relative to
+            // other aliens of its own class.
+            per_type_index_offsets[row] = alien_type_counts[type];
             for (int col = 0; col < ALIEN_ARRAY_WIDTH; ++col) {
                 // Populate the alien count for each column.  This is redundant
                 // because it goes through the same initialization
@@ -195,7 +240,6 @@ namespace Game {
 
                 // initialize the bottom row of aliens to fire
                 bool active = (row == ALIEN_ARRAY_HEIGHT - 1);
-                int type = get_alien_type_by_row(row);
                 int index = alien_type_counts[type]++;
 
                 // Instantiate an alien.
@@ -216,8 +260,6 @@ namespace Game {
                 if (alien_count == 0) {
                   *reference_alien = temp_alien;
                 }
-                aliens[alien_count].Alien_init(type, index, alien_x,
-                                               alien_y, active, RAND(rand_max));
                 ++alien_count;
             }
         }
@@ -569,9 +611,36 @@ namespace Game {
             // with different widths.
             fixed alien_movement =
                 (current_alien_speed * (int32_t)delta) / 1000;
-            for (int i = 0; i < NUM_ALIENS; ++i) {
-                if (aliens[i].is_alive())
-                    aliens[i].movement(delta, alien_movement);
+            // All the aliens move in tandem so just update the reference alien.
+            reference_alien->movement(delta, alien_movement);
+            // Now find an alien on each edge of the formation and use it for
+            // edge collision detection.
+            int8_t left_col, right_col;
+            for (left_col = 0; left_col < ALIEN_ARRAY_WIDTH; ++left_col) {
+              if (num_aliens_per_col[left_col] > 0)
+                break;
+            }
+            for (right_col = ALIEN_ARRAY_WIDTH - 1; right_col >= 0;
+                 --right_col) {
+              if (num_aliens_per_col[right_col] > 0)
+                break;
+            }
+            // Move these edge aliens and test edge collision.
+            uint8_t num_aliens_to_test = (left_col == right_col) ? 1 : 2;
+            uint8_t alien_cols[] = { left_col, right_col };
+            for (uint8_t index = 0; index < num_aliens_to_test; ++index) {
+                uint8_t offset;
+                for (uint8_t row = 0, offset = 0;
+                     row < ALIEN_ARRAY_HEIGHT;
+                     ++row, offset += ALIEN_ARRAY_WIDTH) {
+                  if (aliens[offset + alien_cols[index]].is_alive()) {
+                    Alien alien;
+                    make_alien(aliens[offset + alien_cols[index]],
+                               reference_alien, &alien);
+                    alien.movement(delta, alien_movement);
+                    break;
+                  }
+                }
             }
 #ifdef EVENT_COUNTER
         event_counter.end_game_logic_section(1);
@@ -674,9 +743,23 @@ namespace Game {
                 }
                 if (!shot->is_active())
                     continue;
+                // TODO: Should be able to check only nearby aliens using array.
                 for (int i = 0; i < NUM_ALIENS; ++i) {
-                    if (aliens[i].is_alive() && shot->collides_with(&aliens[i])) {
-                        shot->shot_alien_collision(&aliens[i]);
+                    if (!aliens[i].is_alive())
+                      continue;
+                    // Construct full alien from reduced alien for collision
+                    // testing.
+                    Alien temp_alien;
+                    make_alien(aliens[i], reference_alien, &temp_alien);
+                    if (shot->collides_with(&temp_alien)) {
+                        shot->shot_alien_collision(&temp_alien);
+                        // Update the reduced alien.
+                        aliens[i].active = temp_alien.is_active();
+                        aliens[i].dirty = temp_alien.is_dirty();
+                        if (!temp_alien.is_alive()) {
+                          aliens[i].alive = false;
+                          --num_aliens_per_col[aliens[i].col];
+                        }
                         if (!shot->is_active())
                             break;
                     }
@@ -711,9 +794,13 @@ namespace Game {
             for (int k = 0; k < ALIEN_ARRAY_HEIGHT; ++k) {
                 uint8_t alien_index = k * ALIEN_ARRAY_WIDTH;
                 for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j, ++alien_index) {
-                    Alien* alien = &aliens[alien_index];
-                    if (!alien->is_alive())
+                    if (!aliens[alien_index].is_alive())
                         continue;
+
+                    Alien temp_alien;
+                    make_alien(aliens[alien_index], reference_alien,
+                               &temp_alien);
+                    Alien* alien = &temp_alien;
 
                     // If the alien is higher than the shield groups, so are all
                     // other aliens in the row, so skip the rest of the row.
@@ -762,9 +849,11 @@ namespace Game {
             for (int k = 0; k < ALIEN_ARRAY_HEIGHT && player->is_active(); ++k) {
                 uint8_t alien_index = k * ALIEN_ARRAY_WIDTH;
                 for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j, ++alien_index) {
-                    Alien& alien = aliens[alien_index];
-                    if (!alien.is_alive())
+                    ReducedAlien& reduced_alien = aliens[alien_index];
+                    if (!reduced_alien.is_alive())
                         continue;
+                    Alien alien;
+                    make_alien(reduced_alien, reference_alien, &alien);
                     // If the alien doesn't overlap with the player along the
                     // vertical axis, skip the entire row of aliens.
                     if (alien.get_y() + alien.get_h() < player->get_y() ||
@@ -775,6 +864,11 @@ namespace Game {
                         player->player_alien_collision(&alien);
                         if (!player->is_alive())
                             break;
+                        if (!alien.is_alive()) {
+                          reduced_alien.alive = false;
+                          --num_aliens_per_col[reduced_alien.col];
+                        }
+                        reduced_alien.dirty = alien.is_dirty();
                     }
                 }
             }
@@ -844,9 +938,7 @@ namespace Game {
             // run alien logic if neccessary
             if (logic_this_loop) {
                 current_alien_speed = -current_alien_speed;
-                for (int i = 0; i < NUM_ALIENS; ++i) {
-                    aliens[i].do_alien_logic();
-                }
+                reference_alien->do_alien_logic();
                 logic_this_loop = false;
             }
 
@@ -861,8 +953,11 @@ namespace Game {
                 bonus->draw();
 
             for (int i = 0; i < NUM_ALIENS; ++i) {
-                if (aliens[i].is_dirty())
-                  aliens[i].draw();
+                if (!aliens[i].is_dirty())
+                  continue;
+                Alien alien;
+                make_alien(aliens[i], reference_alien, &alien);
+                alien.draw();
             }
             for (int i = 0; i < num_player_shots; ++i) {
                 if (player_shots[i].is_dirty()) {
@@ -917,7 +1012,9 @@ namespace Game {
             shield_group_tiles[i].draw(&screen, SHIELD_LAYER_INDEX, x, 0);
         }
         for (int i = 0; i < NUM_ALIENS; ++i) {
-            aliens[i].draw();
+            Alien alien;
+            make_alien(aliens[i], reference_alien, &alien);
+            alien.draw();
         }
         screen.update();
         //sound.play_player_rebirth();
@@ -1010,10 +1107,12 @@ namespace Game {
         static int alien_to_fire = 0;
         ++alien_to_fire;
         for (int i = 0; i < NUM_ALIENS; ++i) {
-            Alien* alien = &aliens[i];
-            if (alien->is_active() && alien->get_fire_chance() == alien_to_fire) {
-                alien_shots[alien_shot_counter].init_x(alien->get_x()+alien_init_x_shot_pos);
-                alien_shots[alien_shot_counter].init_y(alien->get_y()+alien_init_y_shot_pos);
+            ReducedAlien& alien = aliens[i];
+            if (alien.is_active() && alien.get_fire_chance() == alien_to_fire) {
+                Alien temp_alien;
+                make_alien(alien, reference_alien, &temp_alien);
+                alien_shots[alien_shot_counter].init_x(temp_alien.get_x()+alien_init_x_shot_pos);
+                alien_shots[alien_shot_counter].init_y(temp_alien.get_y()+alien_init_y_shot_pos);
                 alien_shots[alien_shot_counter].set_hit(false);
                 alien_shots[alien_shot_counter].activate();
                 if (++alien_shot_counter == num_alien_shots) {

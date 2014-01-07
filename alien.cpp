@@ -63,10 +63,10 @@ namespace GameEntities {
         int dx = displacement;
         // change direction and move down
         if (dx < 0 && x_int() < side_padding) {
-            game->run_logic();
+            game->run_logic(this);
         }
         else if (dx > 0 && x_int() > properties()->right_limit - side_padding) {
-            game->run_logic();
+            game->run_logic(this);
         }
 
         x += displacement;

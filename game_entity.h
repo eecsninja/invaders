@@ -140,6 +140,8 @@ namespace GameEntities {
         uint8_t get_current_image() const {
             return properties()->images[image_num];
         }
+        uint8_t get_image_num() const { return image_num; }
+        void set_image_num(uint8_t num) { image_num = num; }
         bool collides_with(GameEntity* other);
         // can be used by classes with in-place animation
         void set_frame_duration(uint16_t dur) { properties()->frame_duration = dur; }
