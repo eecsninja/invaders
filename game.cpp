@@ -35,7 +35,6 @@
 #include "game_defs.h"
 #include "game_entity.h"
 #include "printf.h"
-#include "rand_num_gen.h"
 #include "screen.h"
 #include "shields.h"
 #include "starfield.h"
@@ -183,42 +182,39 @@ namespace Game {
     void Game::init_aliens(int rand_max)
     {
         alien_count = 0;
-        int index = 0;
-        // create a block of aliens (5 rows, by 12 columns), 800x600 res
-        for (int i = 0; i < ALIEN_ARRAY_HEIGHT; ++i) {
-            for (int j = 0; j < ALIEN_ARRAY_WIDTH; ++j) {
-                int alien_x = ALIEN_BASE_X+(j*ALIEN_STEP_X);
-                int alien_y = ALIEN_BASE_Y+(i*ALIEN_STEP_Y);
-                bool active = false;
-                int type = 0;
-                switch (i) {
-                case 4:
-                    // initialize the bottom row of aliens to fire
-                    active = true;
-                    type = GAME_ENTITY_ALIEN;
-                    index = j;
-                    break;
-                case 3:
-                    active = false;
-                    type = GAME_ENTITY_ALIEN;
-                    index = j + ALIEN_ARRAY_WIDTH;
-                    break;
-                case 2:
-                    active = false;
-                    type = GAME_ENTITY_ALIEN2;
-                    index = j;
-                    break;
-                case 1:
-                    active = false;
-                    type = GAME_ENTITY_ALIEN2;
-                    index = j + ALIEN_ARRAY_WIDTH;
-                    break;
-                case 0:
-                default:
-                    active = false;
-                    type = GAME_ENTITY_ALIEN3;
-                    index = j;
-                    break;
+        uint8_t alien_type_counts[NUM_GAME_ENTITY_TYPES];
+        memset(alien_type_counts, 0, sizeof(alien_type_counts));
+        // Create a formation of aliens.
+        for (int row = 0; row < ALIEN_ARRAY_HEIGHT; ++row) {
+            for (int col = 0; col < ALIEN_ARRAY_WIDTH; ++col) {
+                // Populate the alien count for each column.  This is redundant
+                // because it goes through the same initialization
+                // |ALIEN_ARRAY_HEIGHT| times, but it saves code space by not
+                // having a separate for loop from 0 to |ALIEN_ARRAY_WIDTH - 1|.
+                num_aliens_per_col[col] = ALIEN_ARRAY_HEIGHT;
+
+                // initialize the bottom row of aliens to fire
+                bool active = (row == ALIEN_ARRAY_HEIGHT - 1);
+                int type = get_alien_type_by_row(row);
+                int index = alien_type_counts[type]++;
+
+                // Instantiate an alien.
+                Alien temp_alien;
+                temp_alien.Alien_init(type, index, ALIEN_BASE_X, ALIEN_BASE_Y,
+                                      active, rand() % (rand_max + 1));
+
+                // Convert it to a reduced alien.
+                ReducedAlien& alien = aliens[alien_count];
+                alien.alive = temp_alien.is_alive();
+                alien.active = temp_alien.is_active();
+                alien.dirty = temp_alien.is_dirty();
+                alien.fire_chance = temp_alien.get_fire_chance();
+                alien.row = row;
+                alien.col = col;
+
+                // If this is the first alien, save it as a reference.
+                if (alien_count == 0) {
+                  *reference_alien = temp_alien;
                 }
                 aliens[alien_count].Alien_init(type, index, alien_x,
                                                alien_y, active, RAND(rand_max));
@@ -450,79 +446,18 @@ namespace Game {
 
         player_shot_delay = 225;
         bonus_launch_delay = base_launch_delay;
+        int array_select;
         // increase difficulty and chance for bonus points as waves progress
-        switch (wave) {
-        case 0:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_5());
-                launch_delay[i] = (gen1_4());
-            }
-            alien_shot_delay = 400;
-            num_alien_shots = 16;
-            alien_odd_range = 10;
-            break;
-        case 1:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_5());
-                launch_delay[i] = (gen1_4());
-            }
-            alien_shot_delay = 375;
-            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
-            num_alien_shots = 17;
-            alien_odd_range = 9;
-            break;
-        case 2:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_4());
-                launch_delay[i] = (gen1_3());
-            }
-            alien_shot_delay = 350;
-            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
-            num_alien_shots = 20;
-            alien_odd_range = 8;
-            break;
-        case 3:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_4());
-                launch_delay[i] = (gen1_3());
-            }
-            alien_shot_delay = 325;
-            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
-            num_alien_shots = 20;
-            alien_odd_range = 8;
-            break;
-        case 4:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_3());
-                launch_delay[i] = (gen1_3());
-            }
-            alien_shot_delay = 300;
-            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
-            num_alien_shots = 21;
-            alien_odd_range = 7;
-            break;
-        case 5:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_2());
-                launch_delay[i] = (gen1_3());
-            }
-            alien_shot_delay = 300;
-            current_alien_speed += INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
-            num_alien_shots = 22;
-            alien_odd_range = 6;
-            break;
-        default:
-            for (int i = 0; i < random_list_len; ++i) {
-                direction[i] = (gen1_2());
-                bonus_select[i] = (gen1_2());
-                launch_delay[i] = (gen1_2());
-            }
+        if (wave < 6) {
+            alien_shot_delay = 400 - wave * 25;
+            num_alien_shots = 16 + wave;
+
+            current_alien_speed +=
+                INT_TO_FIXED(ALIEN_BASE_SPEED) +
+                wave * INT_TO_FIXED(ALIEN_WAVE_SPEED_INCREASE);
+
+            array_select = wave;
+        } else {  // if (wave >= 6)
             if (alien_shot_delay > 200) {
                 alien_shot_delay -= 20;
                 num_alien_shots += 3;
@@ -530,8 +465,16 @@ namespace Game {
                     num_alien_shots = MAX_NUM_ALIEN_SHOTS;
             }
             current_alien_speed += INT_TO_FIXED(ALIEN_HIGH_WAVE_SPEED_INCREASE);
-            alien_odd_range = 6;
-            break;
+            array_select = 6;
+        }
+        const uint8_t kAlienOddRangeValues[] = {10, 9, 8, 8, 7, 6, 6};
+        const uint8_t kBonusSelectMax[] = {5, 5, 4, 4, 3, 2, 2};
+        const uint8_t kLaunchDelayMax[] = {4, 4, 3, 3, 3, 3, 2};
+        alien_odd_range = kAlienOddRangeValues[array_select];
+        for (int i = 0; i < random_list_len; ++i) {
+            direction[i] = (rand() % 3);
+            bonus_select[i] = (rand() % (kBonusSelectMax[array_select] + 1));
+            launch_delay[i] = (rand() % (kLaunchDelayMax[array_select] + 1));
         }
         init_aliens(alien_odd_range);
 #ifdef FRAME_COUNTER
