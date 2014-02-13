@@ -38,10 +38,6 @@
 #include <DuinoCube.h>
 #include <SPI.h>
 
-#if defined(__AVR_ATmega32U4__)
-#include <Esplora.h>
-#endif  // defined(__AVR_ATmega32U4__)
-
 #include "game.h"
 #include "game_defs.h"
 #include "printf.h"
